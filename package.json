@@ -1,20 +1,31 @@
 {
-  "name": "plobie-temp",
+  "name": "plobie",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "seed": "tsx scripts/seed-dev.ts",
+    "seed:products": "tsx scripts/seed-products.ts"
   },
   "dependencies": {
+    "@sentry/nextjs": "^10.25.0",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.81.1",
+    "jsonwebtoken": "^9.0.2",
     "next": "16.0.3",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "stripe": "^19.3.1",
+    "tsx": "^4.20.6",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
