@@ -2,7 +2,8 @@ import { createServerSupabaseClient } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import AddToCartButton from '@/components/shop/AddToCartButton';
 
-export default async function ProductDetailPage({ params }: { params: { id: string } }) {
+export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const supabase = await createServerSupabaseClient();
   
   const { data: product } = await supabase
@@ -11,7 +12,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
       *,
       variants:product_variants(*)
     `)
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
 
   if (!product) {
