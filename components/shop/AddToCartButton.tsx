@@ -24,7 +24,7 @@ export default function AddToCartButton({
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const router = useRouter();
+  const router = useRouter(); // Used for login redirect
 
   const selectedVariant = variants.find(v => v.id === selectedVariantId);
   const isInStock = selectedVariant && selectedVariant.stock_qty > 0;
@@ -56,10 +56,15 @@ export default function AddToCartButton({
         // Redirect to Stripe Checkout
         window.location.href = result.data.url;
       } else {
+        // Handle authentication error
+        if (result.error?.code === 'UNAUTHORIZED') {
+          router.push('/login?redirect=' + encodeURIComponent(window.location.pathname));
+          return;
+        }
         setError(result.error?.message || 'Failed to create checkout session');
         setLoading(false);
       }
-    } catch (err) {
+    } catch (_err) {
       setError('An error occurred. Please try again.');
       setLoading(false);
     }
