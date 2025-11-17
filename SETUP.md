@@ -94,13 +94,16 @@ UPSTASH_REDIS_REST_TOKEN=...
    - **Secret key** → `STRIPE_SECRET_KEY` (⚠️ Keep secret!)
 
 ### B. Set Up Webhook (for production/staging)
-1. Go to **Developers → Webhooks**
-2. Click **Add endpoint**
-3. Endpoint URL: `https://plobie.vercel.app/api/stripe/webhook`
-4. Events to send:
-   - `checkout.session.completed`
-   - `checkout.session.expired`
-5. Copy **Signing secret** → `STRIPE_WEBHOOK_SECRET`
+✅ **Already configured!** Webhook is live at:
+- **Endpoint:** `https://plobie.vercel.app/api/stripe/webhook`
+- **Status:** Active
+- **Events:** `checkout.session.completed`, `checkout.session.expired`
+- **Signing Secret:** `whsec_3B3RNUdx1W8tsA4DdL41qEoFzcPANRUU`
+
+**Add to production `.env` on Vercel:**
+```
+STRIPE_WEBHOOK_SECRET=whsec_3B3RNUdx1W8tsA4DdL41qEoFzcPANRUU
+```
 
 ### C. Test Locally (optional)
 ```bash
