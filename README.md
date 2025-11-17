@@ -2,6 +2,17 @@
 
 A plant-centered social commerce platform connecting real-world pottery, digital gardens, and a vibrant community of plant enthusiasts.
 
+## 🚀 Status
+
+**Week 2 Complete** - Core infrastructure and auth system live!
+- ✅ Database: 14 tables with RLS
+- ✅ Auth: Email + OAuth (Google, Apple)
+- ✅ Shop: Products, variants, Stripe checkout
+- ✅ Test Suite: 37 tests passing
+- ✅ Navigation & Pages: All 4 main sections
+
+**See SETUP.md for detailed setup instructions.**
+
 ## Overview
 
 Plobie combines four core experiences:

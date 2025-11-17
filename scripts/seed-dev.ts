@@ -1,4 +1,8 @@
+import { config } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
+
+// Load .env.local
+config({ path: '.env.local' });
 
 // This script seeds development data
 // Run with: npm run seed
