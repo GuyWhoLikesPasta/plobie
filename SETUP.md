@@ -98,12 +98,13 @@ UPSTASH_REDIS_REST_TOKEN=...
 - **Endpoint:** `https://plobie.vercel.app/api/stripe/webhook`
 - **Status:** Active
 - **Events:** `checkout.session.completed`, `checkout.session.expired`
-- **Signing Secret:** `whsec_3B3RNUdx1W8tsA4DdL41qEoFzcPANRUU`
+- **Signing Secret:** See Stripe Dashboard (do NOT commit this!)
 
-**Add to production `.env` on Vercel:**
-```
-STRIPE_WEBHOOK_SECRET=whsec_3B3RNUdx1W8tsA4DdL41qEoFzcPANRUU
-```
+**To get the webhook secret:**
+1. Go to Stripe Dashboard → Developers → Webhooks
+2. Click on your webhook endpoint
+3. Click "Reveal" on the Signing Secret
+4. Add to Vercel Environment Variables as `STRIPE_WEBHOOK_SECRET`
 
 ### C. Test Locally (optional)
 ```bash
