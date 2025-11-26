@@ -222,12 +222,14 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
 
     if (postError) {
       console.error('Post creation error:', postError);
+      console.error('Post creation error details:', JSON.stringify(postError, null, 2));
       return NextResponse.json(
         {
           success: false,
           error: {
             code: ErrorCodes.DATABASE_ERROR,
-            message: 'Failed to create post',
+            message: `Failed to create post: ${postError.message || postError.code || 'Unknown error'}`,
+            details: postError,
           },
         },
         { status: 500 }
