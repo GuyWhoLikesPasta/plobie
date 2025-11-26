@@ -119,6 +119,7 @@ export async function POST(
       .from('comments')
       .insert({
         post_id: postId,
+        author_id: user.id,
         profile_id: profile.id,
         content,
       })
