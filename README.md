@@ -4,13 +4,27 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 
 ## 🚀 Features
 
-- **Authentication** - Email and OAuth (Google, Apple)
-- **Shop** - E-commerce with Stripe integration
-- **QR Claiming** - Link physical pots to digital profiles
-- **XP System** - Gamification with daily rewards and caps
-- **Community** - Posts, comments, and discussions
-- **Learn** - Educational articles and guides
-- **Test Coverage** - 52 tests and counting
+**Core Systems:**
+- ✅ Authentication - Email and OAuth (Google, Apple)
+- ✅ Shop - E-commerce with Stripe integration
+- ✅ QR Claiming - Link physical pots (+50 XP per pot)
+- ✅ XP System - Gamification with daily rewards and caps
+
+**Community (NEW):**
+- ✅ Posts & Comments - Create content, earn XP
+- ✅ Image Uploads - Share photos (5MB limit)
+- ✅ Reactions - Like posts with ❤️
+- ✅ Search - Find posts by keyword
+- ✅ User Profiles - View stats, posts, and achievements
+
+**Content:**
+- ✅ Learn Articles - Educational guides (+1 XP per article)
+- ✅ My Plants Dashboard - View collection and stats
+
+**Quality:**
+- ✅ 52 Tests passing
+- ✅ TypeScript strict mode
+- ✅ Mobile responsive
 
 **Production:** https://plobie.vercel.app  
 **Setup:** See SETUP.md for installation instructions
