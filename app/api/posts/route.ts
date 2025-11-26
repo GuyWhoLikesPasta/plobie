@@ -30,15 +30,20 @@ const ListPostsSchema = z.object({
 export async function GET(request: NextRequest): Promise<NextResponse<ApiResponse<{ posts: any[]; total: number }>>> {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const validation = ListPostsSchema.safeParse({
-      hobby_group: searchParams.get('hobby_group'),
-      search: searchParams.get('search'),
-      sort: searchParams.get('sort'),
-      limit: searchParams.get('limit'),
-      offset: searchParams.get('offset'),
-    });
+    
+    const rawParams = {
+      hobby_group: searchParams.get('hobby_group') || undefined,
+      search: searchParams.get('search') || undefined,
+      sort: searchParams.get('sort') || undefined,
+      limit: searchParams.get('limit') || undefined,
+      offset: searchParams.get('offset') || undefined,
+    };
+    
+    const validation = ListPostsSchema.safeParse(rawParams);
 
     if (!validation.success) {
+      console.error('Validation failed for params:', rawParams);
+      console.error('Validation errors:', validation.error.flatten());
       return NextResponse.json(
         {
           success: false,
