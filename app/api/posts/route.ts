@@ -56,30 +56,25 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
 
     const supabase = await createServerSupabaseClient();
 
-    // Build query - fetch posts first, profiles separately to avoid join issues
+    // Build query - simple query without joins
     let query = supabase
       .from('posts')
-      .select('*', { count: 'exact' });
+      .select('*', { count: 'exact' })
+      .is('hidden', false); // Only show non-hidden posts
 
     // Filter by hobby group if provided
     if (hobby_group) {
       query = query.eq('hobby_group', hobby_group);
     }
 
-    // Search in title and content
+    // Search in title and content (only if columns exist)
     if (search) {
-      query = query.or(`title.ilike.%${search}%,content.ilike.%${search}%`);
+      // Search in content always, title if it exists
+      query = query.ilike('content', `%${search}%`);
     }
 
-    // Sort by recent or trending
-    if (sort === 'trending') {
-      // Trending: sort by engagement (reactions + comments) in last 7 days
-      query = query
-        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
-        .order('created_at', { ascending: false });
-    } else {
-      query = query.order('created_at', { ascending: false });
-    }
+    // Sort by recent
+    query = query.order('created_at', { ascending: false });
 
     query = query.range(offset, offset + limit - 1);
 
