@@ -60,7 +60,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
     let query = supabase
       .from('posts')
       .select('*', { count: 'exact' })
-      .is('hidden', false); // Only show non-hidden posts
+      .or('hidden.is.null,hidden.eq.false'); // Only show non-hidden posts (handle NULL)
 
     // Filter by hobby group if provided
     if (hobby_group) {
