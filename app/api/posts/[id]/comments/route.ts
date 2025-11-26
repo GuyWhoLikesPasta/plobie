@@ -143,7 +143,7 @@ export async function POST(
     const { data: xpData } = await adminSupabase.rpc('apply_xp', {
       p_profile_id: profile.id,
       p_action_type: 'comment_create',
-      p_amount: 0,
+      p_amount: 1,
       p_reference_type: 'comment',
       p_reference_id: comment.id,
     });

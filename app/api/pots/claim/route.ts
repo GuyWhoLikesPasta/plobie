@@ -109,8 +109,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     // Get pot details
     const { data: pot, error: potError } = await supabase
       .from('pots')
-      .select('id, pot_code')
-      .eq('pot_code', payload.pot_code)
+      .select('id, code')
+      .eq('code', payload.pot_code)
       .single();
 
     if (potError || !pot) {

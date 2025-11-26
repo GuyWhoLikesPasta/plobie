@@ -61,8 +61,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     const supabase = await createServerSupabaseClient();
     const { data: pot, error: potError } = await supabase
       .from('pots')
-      .select('id, pot_code')
-      .eq('pot_code', pot_code)
+      .select('id, code')
+      .eq('code', pot_code)
       .single();
 
     if (potError || !pot) {
