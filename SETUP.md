@@ -257,9 +257,9 @@ npm run seed:products    # Seed shop products
 
 If you run into issues:
 1. Check this guide first
-2. Look at `CLAUDE.local.md` for dev notes (local only)
-3. Check GitHub Issues
-4. Message in Upwork
+2. Check GitHub Issues
+3. Review error logs in Sentry
+4. Contact the development team
 
 ---
 

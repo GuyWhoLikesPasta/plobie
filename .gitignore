@@ -39,3 +39,24 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Claude AI - Keep all AI traces local only
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+
+# All docs - Keep local only (no AI traces, no PM docs in repo)
+/docs/
+
+# PM/Budget/Scope docs - NEVER COMMIT
+**/budget*
+**/cost*
+**/hours*
+**/contract*
+**/proposal*
+**/scope*
+**/SOW*
+**/statement-of-work*
+**/*SUMMARY*
+WEEK*
+DEPLOY_NOTES*
