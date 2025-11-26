@@ -94,19 +94,30 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
 
     const { data: posts, error, count } = await query;
 
+    console.log('Posts query result:', { 
+      postsCount: posts?.length, 
+      totalCount: count, 
+      hasError: !!error,
+      error: error ? JSON.stringify(error) : null 
+    });
+
     if (error) {
       console.error('Posts fetch error:', error);
+      console.error('Posts fetch error details:', JSON.stringify(error, null, 2));
       return NextResponse.json(
         {
           success: false,
           error: {
             code: ErrorCodes.DATABASE_ERROR,
-            message: 'Failed to fetch posts',
+            message: `Failed to fetch posts: ${error.message || error.code || 'Unknown error'}`,
+            details: error,
           },
         },
         { status: 500 }
       );
     }
+
+    console.log('Returning posts:', posts?.length || 0);
 
     return NextResponse.json(
       {
