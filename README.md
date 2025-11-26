@@ -4,12 +4,16 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 
 ## 🚀 Status
 
-**Week 2 Complete** - Core infrastructure and auth system live!
-- ✅ Database: 14 tables with RLS
+**Week 3 Session 1 Complete** - XP system and community features live! 🎉
+- ✅ Database: 14 tables with RLS + XP stored procedure
 - ✅ Auth: Email + OAuth (Google, Apple)
 - ✅ Shop: Products, variants, Stripe checkout
-- ✅ Test Suite: 37 tests passing
-- ✅ Navigation & Pages: All 4 main sections
+- ✅ QR Claiming: Scan codes, claim pots, earn +50 XP
+- ✅ XP System: Atomic application with daily caps
+- ✅ Posts & Comments: Create, engage, earn XP
+- ✅ Learn Articles: Read guides, earn +1 XP each
+- ✅ Test Suite: 52 tests passing
+- ✅ Production: https://plobie.vercel.app
 
 **See SETUP.md for detailed setup instructions.**
 
