@@ -56,11 +56,18 @@ export default function HobbiesPage() {
       const response = await fetch(`/api/posts?${params.toString()}`);
       const data = await response.json();
 
+      console.log('Posts API response:', data);
+
       if (data.success) {
+        console.log('Setting posts:', data.data.posts.length);
         setPosts(data.data.posts);
+      } else {
+        console.error('API returned error:', data.error);
+        alert(`Failed to load posts: ${data.error?.message || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Failed to fetch posts:', error);
+      alert('Network error loading posts');
     } finally {
       setLoading(false);
     }
