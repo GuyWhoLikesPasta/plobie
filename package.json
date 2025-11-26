@@ -12,7 +12,8 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "seed": "tsx scripts/seed-dev.ts",
-    "seed:products": "tsx scripts/seed-products.ts"
+    "seed:products": "tsx scripts/seed-products.ts",
+    "seed:pots": "tsx scripts/seed-pots.ts"
   },
   "dependencies": {
     "@sentry/nextjs": "^10.25.0",

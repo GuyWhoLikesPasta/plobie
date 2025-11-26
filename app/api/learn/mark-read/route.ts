@@ -77,7 +77,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     const { data: xpData } = await adminSupabase.rpc('apply_xp', {
       p_profile_id: profile.id,
       p_action_type: 'learn_read',
-      p_amount: 0,
+      p_amount: 1,
       p_reference_type: 'article',
       p_reference_id: article_id,
     });
