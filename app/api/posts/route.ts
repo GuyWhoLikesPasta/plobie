@@ -21,6 +21,8 @@ const CreatePostSchema = z.object({
 
 const ListPostsSchema = z.object({
   hobby_group: z.string().optional(),
+  search: z.string().optional(),
+  sort: z.enum(['recent', 'trending']).optional().default('recent'),
   limit: z.coerce.number().int().min(1).max(50).default(20),
   offset: z.coerce.number().int().min(0).default(0),
 });
@@ -30,6 +32,8 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
     const searchParams = request.nextUrl.searchParams;
     const validation = ListPostsSchema.safeParse({
       hobby_group: searchParams.get('hobby_group'),
+      search: searchParams.get('search'),
+      sort: searchParams.get('sort'),
       limit: searchParams.get('limit'),
       offset: searchParams.get('offset'),
     });
@@ -48,7 +52,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
       );
     }
 
-    const { hobby_group, limit, offset } = validation.data;
+    const { hobby_group, search, sort, limit, offset } = validation.data;
 
     const supabase = await createServerSupabaseClient();
 
@@ -62,15 +66,31 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
           username,
           avatar_url
         ),
-        comments:comments(count)
-      `, { count: 'exact' })
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+        comments:comments(count),
+        reactions:reactions(count)
+      `, { count: 'exact' });
 
     // Filter by hobby group if provided
     if (hobby_group) {
       query = query.eq('hobby_group', hobby_group);
     }
+
+    // Search in title and content
+    if (search) {
+      query = query.or(`title.ilike.%${search}%,content.ilike.%${search}%`);
+    }
+
+    // Sort by recent or trending
+    if (sort === 'trending') {
+      // Trending: sort by engagement (reactions + comments) in last 7 days
+      query = query
+        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+        .order('created_at', { ascending: false });
+    } else {
+      query = query.order('created_at', { ascending: false });
+    }
+
+    query = query.range(offset, offset + limit - 1);
 
     const { data: posts, error, count } = await query;
 

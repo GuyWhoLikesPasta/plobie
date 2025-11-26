@@ -10,6 +10,8 @@ export default function HobbiesPage() {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedGroup, setSelectedGroup] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [sortBy, setSortBy] = useState<'recent' | 'trending'>('recent');
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [formData, setFormData] = useState({
@@ -34,7 +36,7 @@ export default function HobbiesPage() {
   useEffect(() => {
     checkAuth();
     fetchPosts();
-  }, [selectedGroup]);
+  }, [selectedGroup, searchQuery, sortBy]);
 
   const checkAuth = async () => {
     const supabase = createClient();
@@ -45,11 +47,13 @@ export default function HobbiesPage() {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      const url = selectedGroup
-        ? `/api/posts?hobby_group=${encodeURIComponent(selectedGroup)}&limit=20`
-        : '/api/posts?limit=20';
+      const params = new URLSearchParams();
+      params.append('limit', '50');
+      if (selectedGroup) params.append('hobby_group', selectedGroup);
+      if (searchQuery) params.append('search', searchQuery);
+      if (sortBy) params.append('sort', sortBy);
 
-      const response = await fetch(url);
+      const response = await fetch(`/api/posts?${params.toString()}`);
       const data = await response.json();
 
       if (data.success) {
@@ -171,6 +175,28 @@ export default function HobbiesPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Search Bar */}
+        <div className="mb-6 flex gap-3">
+          <div className="flex-1 relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search posts..."
+              className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
+            />
+            <span className="absolute left-4 top-3.5 text-gray-400 text-xl">🔍</span>
+          </div>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as 'recent' | 'trending')}
+            className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 bg-white"
+          >
+            <option value="recent">Recent</option>
+            <option value="trending">Trending</option>
+          </select>
+        </div>
+
         {/* Hobby Group Filter */}
         <div className="mb-8 flex flex-wrap gap-2">
           <button
