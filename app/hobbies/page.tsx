@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
+import LikeButton from '@/components/posts/LikeButton';
 
 export default function HobbiesPage() {
   const router = useRouter();
@@ -16,6 +17,9 @@ export default function HobbiesPage() {
     title: '',
     content: '',
   });
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
+  const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const hobbyGroups = [
@@ -66,15 +70,62 @@ export default function HobbiesPage() {
     setShowCreateForm(true);
   };
 
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedImage(null);
+    setImagePreview('');
+  };
+
   const handleSubmitPost = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
 
     try {
+      let imageUrl = '';
+
+      // Upload image if one is selected
+      if (selectedImage) {
+        setUploading(true);
+        const uploadFormData = new FormData();
+        uploadFormData.append('image', selectedImage);
+
+        const uploadResponse = await fetch('/api/upload/image', {
+          method: 'POST',
+          body: uploadFormData,
+        });
+
+        const uploadData = await uploadResponse.json();
+
+        if (!uploadData.success) {
+          alert(uploadData.error?.message || 'Failed to upload image');
+          setUploading(false);
+          setSubmitting(false);
+          return;
+        }
+
+        imageUrl = uploadData.data.url;
+        setUploading(false);
+      }
+
+      // Create post with optional image URL
       const response = await fetch('/api/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          image_url: imageUrl || undefined,
+        }),
       });
 
       const data = await response.json();
@@ -82,6 +133,8 @@ export default function HobbiesPage() {
       if (data.success) {
         setShowCreateForm(false);
         setFormData({ hobby_group: 'Indoor Plants', title: '', content: '' });
+        setSelectedImage(null);
+        setImagePreview('');
         fetchPosts();
         alert(`Post created! You earned +${data.data.xp_awarded} XP!`);
       } else {
@@ -91,6 +144,7 @@ export default function HobbiesPage() {
       alert('Network error. Please try again.');
     } finally {
       setSubmitting(false);
+      setUploading(false);
     }
   };
 
@@ -186,7 +240,7 @@ export default function HobbiesPage() {
                     placeholder="Give your post a title..."
                   />
                 </div>
-                <div className="mb-6">
+                <div className="mb-4">
                   <label className="block text-gray-700 font-medium mb-2">
                     Content
                   </label>
@@ -202,13 +256,56 @@ export default function HobbiesPage() {
                     placeholder="Share your thoughts..."
                   />
                 </div>
+                <div className="mb-6">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Image (Optional)
+                  </label>
+                  {imagePreview ? (
+                    <div className="relative">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="w-full max-h-64 object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleRemoveImage}
+                        className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-all"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-500 transition-all">
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                        onChange={handleImageSelect}
+                        className="hidden"
+                        id="image-upload"
+                      />
+                      <label
+                        htmlFor="image-upload"
+                        className="cursor-pointer flex flex-col items-center"
+                      >
+                        <span className="text-4xl mb-2">📸</span>
+                        <span className="text-gray-600 font-medium">
+                          Click to upload an image
+                        </span>
+                        <span className="text-gray-400 text-sm mt-1">
+                          JPG, PNG, WebP, or GIF (max 5MB)
+                        </span>
+                      </label>
+                    </div>
+                  )}
+                </div>
                 <div className="flex space-x-3">
                   <button
                     type="submit"
-                    disabled={submitting}
+                    disabled={submitting || uploading}
                     className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all disabled:opacity-50"
                   >
-                    {submitting ? 'Posting...' : 'Post (+3 XP)'}
+                    {uploading ? 'Uploading Image...' : submitting ? 'Posting...' : 'Post (+3 XP)'}
                   </button>
                   <button
                     type="button"
@@ -259,9 +356,15 @@ export default function HobbiesPage() {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-2">
-                      <span className="font-semibold text-gray-900">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(`/profile/${post.profiles?.username}`);
+                        }}
+                        className="font-semibold text-gray-900 hover:text-green-600 transition-colors"
+                      >
                         {post.profiles?.username || 'Anonymous'}
-                      </span>
+                      </button>
                       <span className="text-gray-400">·</span>
                       <span className="text-sm text-gray-500">
                         {post.hobby_group}
@@ -275,8 +378,18 @@ export default function HobbiesPage() {
                       {post.title}
                     </h3>
                     <p className="text-gray-700 line-clamp-3">{post.content}</p>
-                    <div className="mt-4 flex items-center space-x-4 text-sm text-gray-500">
-                      <span>💬 {post.comments?.[0]?.count || 0} comments</span>
+                    {post.image_url && (
+                      <img
+                        src={post.image_url}
+                        alt={post.title}
+                        className="mt-4 w-full max-h-64 object-cover rounded-lg"
+                      />
+                    )}
+                    <div className="mt-4 flex items-center space-x-3">
+                      <LikeButton postId={post.id} initialCount={0} initialLiked={false} />
+                      <span className="text-sm text-gray-500">
+                        💬 {post.comments?.[0]?.count || 0}
+                      </span>
                     </div>
                   </div>
                 </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
+import LikeButton from '@/components/posts/LikeButton';
 
 export default function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -107,9 +108,12 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
               {post.profiles?.username?.[0]?.toUpperCase() || '?'}
             </div>
             <div>
-              <div className="font-semibold text-gray-900">
+              <button
+                onClick={() => router.push(`/profile/${post.profiles?.username}`)}
+                className="font-semibold text-gray-900 hover:text-green-600 transition-colors"
+              >
                 {post.profiles?.username || 'Anonymous'}
-              </div>
+              </button>
               <div className="text-sm text-gray-500">
                 {post.hobby_group} · {new Date(post.created_at).toLocaleDateString()}
               </div>
@@ -132,8 +136,11 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
             />
           )}
 
-          <div className="flex items-center space-x-4 text-sm text-gray-500 pt-6 border-t">
-            <span>💬 {post.comments?.length || 0} comments</span>
+          <div className="flex items-center space-x-3 pt-6 border-t">
+            <LikeButton postId={post.id} initialCount={0} initialLiked={false} />
+            <span className="text-sm text-gray-500">
+              💬 {post.comments?.length || 0} comments
+            </span>
           </div>
         </div>
 
