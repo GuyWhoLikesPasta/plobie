@@ -129,12 +129,12 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     // Check if pot is already claimed
     const { data: existingClaim } = await supabase
       .from('pot_claims')
-      .select('id, profile_id')
+      .select('id, user_id')
       .eq('pot_id', pot.id)
       .maybeSingle();
 
     if (existingClaim) {
-      const isOwnClaim = existingClaim.profile_id === profile.id;
+      const isOwnClaim = existingClaim.user_id === user.id;
       return NextResponse.json(
         {
           success: false,
@@ -157,7 +157,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
       .from('pot_claims')
       .insert({
         pot_id: pot.id,
-        profile_id: profile.id,
+        user_id: user.id,
         claimed_at: new Date().toISOString(),
       })
       .select('id')
@@ -177,16 +177,18 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
       );
     }
 
-    // Award +50 XP for pot linking
+    // Award +50 XP for pot linking (using the original apply_xp function)
     const xpAmount = 50;
     const { error: xpError } = await adminSupabase
       .from('xp_events')
       .insert({
-        profile_id: profile.id,
+        user_id: user.id,
         action_type: 'pot_link',
         amount: xpAmount,
-        reference_type: 'pot',
-        reference_id: pot.id,
+        metadata: {
+          pot_id: pot.id,
+          pot_code: payload.pot_code
+        }
       });
 
     if (xpError) {
@@ -197,17 +199,16 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     // Update XP balance
     const { data: currentBalance } = await adminSupabase
       .from('xp_balances')
-      .select('total_xp')
-      .eq('profile_id', profile.id)
+      .select('balance')
+      .eq('user_id', user.id)
       .single();
 
-    const newTotal = (currentBalance?.total_xp || 0) + xpAmount;
+    const newTotal = (currentBalance?.balance || 0) + xpAmount;
     await adminSupabase
       .from('xp_balances')
       .upsert({
-        profile_id: profile.id,
-        total_xp: newTotal,
-        level: Math.floor(newTotal / 100) + 1, // Simple level calculation
+        user_id: user.id,
+        balance: newTotal,
         updated_at: new Date().toISOString(),
       });
 

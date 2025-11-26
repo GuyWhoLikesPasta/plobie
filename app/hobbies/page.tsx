@@ -164,12 +164,20 @@ export default function HobbiesPage() {
                 Connect with fellow plant enthusiasts
               </p>
             </div>
-            <button
-              onClick={handleCreatePost}
-              className="bg-white text-green-600 px-6 py-3 rounded-lg font-medium hover:bg-green-50 transition-all"
-            >
-              ✏️ New Post
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={() => router.push('/hobbies/learn')}
+                className="bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition-all"
+              >
+                📚 Learn (+1 XP)
+              </button>
+              <button
+                onClick={handleCreatePost}
+                className="bg-white text-green-600 px-6 py-3 rounded-lg font-medium hover:bg-green-50 transition-all"
+              >
+                ✏️ New Post
+              </button>
+            </div>
           </div>
         </div>
       </div>
