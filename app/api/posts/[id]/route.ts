@@ -22,14 +22,14 @@ export async function GET(
       .from('posts')
       .select(`
         *,
-        profiles:profile_id (
+        profiles:author_id (
           id,
           username,
           avatar_url
         ),
         comments (
           *,
-          profiles:profile_id (
+          profiles:author_id (
             id,
             username,
             avatar_url
