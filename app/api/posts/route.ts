@@ -61,13 +61,13 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
       .from('posts')
       .select(`
         *,
-        profiles:profile_id (
+        profiles:author_id (
           id,
           username,
           avatar_url
         ),
         comments:comments(count),
-        reactions:reactions(count)
+        reactions:post_reactions(count)
       `, { count: 'exact' });
 
     // Filter by hobby group if provided
