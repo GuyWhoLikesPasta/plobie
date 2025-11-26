@@ -56,19 +56,10 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
 
     const supabase = await createServerSupabaseClient();
 
-    // Build query
+    // Build query - fetch posts first, profiles separately to avoid join issues
     let query = supabase
       .from('posts')
-      .select(`
-        *,
-        profiles:author_id (
-          id,
-          username,
-          avatar_url
-        ),
-        comments:comments(count),
-        reactions:post_reactions(count)
-      `, { count: 'exact' });
+      .select('*', { count: 'exact' });
 
     // Filter by hobby group if provided
     if (hobby_group) {
@@ -118,6 +109,47 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
     }
 
     console.log('Returning posts:', posts?.length || 0);
+
+    // Fetch profiles and counts separately
+    if (posts && posts.length > 0) {
+      const authorIds = [...new Set(posts.map((p: any) => p.author_id))];
+      
+      // Get profiles
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, user_id, username, avatar_url')
+        .in('user_id', authorIds);
+
+      // Get comment counts
+      const { data: commentCounts } = await supabase
+        .from('comments')
+        .select('post_id')
+        .in('post_id', posts.map((p: any) => p.id));
+
+      // Get reaction counts
+      const { data: reactionCounts } = await supabase
+        .from('post_reactions')
+        .select('post_id')
+        .in('post_id', posts.map((p: any) => p.id));
+
+      // Map counts
+      const commentCountMap = (commentCounts || []).reduce((acc: any, c: any) => {
+        acc[c.post_id] = (acc[c.post_id] || 0) + 1;
+        return acc;
+      }, {});
+
+      const reactionCountMap = (reactionCounts || []).reduce((acc: any, r: any) => {
+        acc[r.post_id] = (acc[r.post_id] || 0) + 1;
+        return acc;
+      }, {});
+
+      // Attach profiles and counts to posts
+      posts.forEach((post: any) => {
+        post.profiles = profiles?.find((p: any) => p.user_id === post.author_id) || null;
+        post.comments = [{ count: commentCountMap[post.id] || 0 }];
+        post.reactions = [{ count: reactionCountMap[post.id] || 0 }];
+      });
+    }
 
     return NextResponse.json(
       {

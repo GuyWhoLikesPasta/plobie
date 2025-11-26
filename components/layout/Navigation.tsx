@@ -79,9 +79,12 @@ export default function Navigation() {
               <div className="w-20 h-8 bg-gray-200 rounded animate-pulse"></div>
             ) : user ? (
               <div className="flex items-center space-x-3">
-                <span className="text-sm text-gray-700 hidden sm:inline">
+                <Link
+                  href={`/profile/${user.email?.split('@')[0]}`}
+                  className="text-sm text-gray-700 hover:text-green-600 font-medium hidden sm:inline transition"
+                >
                   {user.email?.split('@')[0]}
-                </span>
+                </Link>
                 <button
                   onClick={handleSignOut}
                   className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"

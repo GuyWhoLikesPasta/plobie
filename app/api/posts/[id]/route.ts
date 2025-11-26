@@ -17,25 +17,10 @@ export async function GET(
 
     const supabase = await createServerSupabaseClient();
 
-    // Fetch post with profile and comments
+    // Fetch post (no joins to avoid FK issues)
     const { data: post, error } = await supabase
       .from('posts')
-      .select(`
-        *,
-        profiles:author_id (
-          id,
-          username,
-          avatar_url
-        ),
-        comments (
-          *,
-          profiles:author_id (
-            id,
-            username,
-            avatar_url
-          )
-        )
-      `)
+      .select('*')
       .eq('id', id)
       .single();
 
@@ -52,10 +37,49 @@ export async function GET(
       );
     }
 
+    // Get post author profile
+    const { data: authorProfile } = await supabase
+      .from('profiles')
+      .select('id, username, avatar_url')
+      .eq('user_id', post.author_id)
+      .single();
+
+    // Get comments with author profiles
+    const { data: comments } = await supabase
+      .from('comments')
+      .select('*')
+      .eq('post_id', id)
+      .order('created_at', { ascending: true });
+
+    // Get comment author profiles
+    let commentProfiles: any[] = [];
+    if (comments && comments.length > 0) {
+      const commentAuthorIds = [...new Set(comments.map((c: any) => c.author_id))];
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, user_id, username, avatar_url')
+        .in('user_id', commentAuthorIds);
+      
+      commentProfiles = profiles || [];
+    }
+
+    // Attach profiles to comments
+    const commentsWithProfiles = (comments || []).map((comment: any) => ({
+      ...comment,
+      profiles: commentProfiles.find((p: any) => p.user_id === comment.author_id) || null,
+    }));
+
+    // Attach to post
+    const postWithData = {
+      ...post,
+      profiles: authorProfile,
+      comments: commentsWithProfiles,
+    };
+
     return NextResponse.json(
       {
         success: true,
-        data: { post },
+        data: { post: postWithData },
       },
       { status: 200 }
     );
