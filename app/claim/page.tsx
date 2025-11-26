@@ -7,13 +7,13 @@
  * Users land here after scanning a QR code on a pot.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 
 type ClaimState = 'loading' | 'ready' | 'claiming' | 'success' | 'error';
 
-export default function ClaimPage() {
+function ClaimContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const potCode = searchParams.get('code');
@@ -232,6 +232,18 @@ export default function ClaimPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function ClaimPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      </div>
+    }>
+      <ClaimContent />
+    </Suspense>
   );
 }
 
