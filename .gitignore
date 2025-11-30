@@ -46,6 +46,12 @@ CLAUDE.local.md
 .claude/
 .local-docs/
 
+# ALL docs except README.md - Keep local only
+SETUP.md
+*.local.md
+CONTRIBUTING.md
+CHANGELOG.md
+
 # All docs - Keep local only (no AI traces, no PM docs in repo)
 /docs/
 
