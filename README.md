@@ -10,21 +10,29 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - ✅ QR Claiming - Link physical pots (+50 XP per pot)
 - ✅ XP System - Gamification with daily rewards and caps
 
-**Community (NEW):**
+**Community:**
 - ✅ Posts & Comments - Create content, earn XP
 - ✅ Image Uploads - Share photos (5MB limit)
 - ✅ Reactions - Like posts with ❤️
-- ✅ Search - Find posts by keyword
+- ✅ Search & Filters - Find posts by keyword or hobby group
 - ✅ User Profiles - View stats, posts, and achievements
 
 **Content:**
 - ✅ Learn Articles - Educational guides (+1 XP per article)
 - ✅ My Plants Dashboard - View collection and stats
 
+**Admin:**
+- ✅ User Management - Promote admins, view user stats
+- ✅ Content Moderation - Delete/hide posts and comments
+- ✅ Feature Flags - Toggle features on/off
+- ✅ Analytics Dashboard - View platform metrics
+
 **Quality:**
-- ✅ 52 Tests passing
+- ✅ 74 unit tests + 19 E2E tests passing
 - ✅ TypeScript strict mode
 - ✅ Mobile responsive
+- ✅ Toast notifications
+- ✅ Skeleton loading states
 
 **Production:** https://plobie.vercel.app
 
