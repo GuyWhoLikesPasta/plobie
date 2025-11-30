@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
+import toast from 'react-hot-toast';
 
 interface User {
   id: string;
@@ -82,7 +83,7 @@ export default function AdminDashboard() {
         .single();
 
       if (!profile?.is_admin) {
-        alert('Access denied. Admin privileges required.');
+        toast.error('Access denied. Admin privileges required.');
         router.push('/');
         return;
       }
@@ -279,11 +280,11 @@ export default function AdminDashboard() {
 
       if (error) throw error;
 
-      alert(`User ${!currentStatus ? 'promoted to' : 'removed from'} admin`);
+      toast.success(`User ${!currentStatus ? 'promoted to' : 'removed from'} admin`);
       fetchUsers();
     } catch (error) {
       console.error('Toggle admin error:', error);
-      alert('Failed to update admin status');
+      toast.error('Failed to update admin status');
     }
   };
 
@@ -298,12 +299,12 @@ export default function AdminDashboard() {
 
       if (error) throw error;
 
-      alert('Post deleted successfully');
+      toast.success('Post deleted successfully');
       fetchPosts();
       fetchAnalytics();
     } catch (error) {
       console.error('Delete post error:', error);
-      alert('Failed to delete post');
+      toast.error('Failed to delete post');
     }
   };
 
@@ -316,11 +317,11 @@ export default function AdminDashboard() {
 
       if (error) throw error;
 
-      alert(`Post ${!currentHidden ? 'hidden' : 'unhidden'} successfully`);
+      toast.success(`Post ${!currentHidden ? 'hidden' : 'unhidden'} successfully`);
       fetchPosts();
     } catch (error) {
       console.error('Toggle post visibility error:', error);
-      alert('Failed to toggle post visibility');
+      toast.error('Failed to toggle post visibility');
     }
   };
 
@@ -335,14 +336,14 @@ export default function AdminDashboard() {
       const data = await response.json();
 
       if (data.success) {
-        alert(`Flag ${flagName} ${!currentValue ? 'enabled' : 'disabled'}`);
+        toast.success(`Flag ${flagName} ${!currentValue ? 'enabled' : 'disabled'}`);
         fetchFlags();
       } else {
-        alert('Failed to toggle flag');
+        toast.error('Failed to toggle flag');
       }
     } catch (error) {
       console.error('Toggle flag error:', error);
-      alert('Failed to toggle flag');
+      toast.error('Failed to toggle flag');
     }
   };
 

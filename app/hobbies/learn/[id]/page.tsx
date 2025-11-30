@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
+import toast from 'react-hot-toast';
 
 // Sample articles (will move to database later)
 const articles: Record<string, any> = {
@@ -205,17 +206,17 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
 
       if (data.success) {
         setHasRead(true);
-        alert(`Great! You earned +${data.data.xp_awarded} XP for reading this article!`);
+        toast.success(`Great! You earned +${data.data.xp_awarded} XP for reading this article!`);
       } else {
         if (data.error?.code === 'ALREADY_EXISTS') {
           setHasRead(true);
-          alert("You've already read this article!");
+          toast.success("You've already read this article!");
         } else {
-          alert(data.error?.message || 'Failed to mark as read');
+          toast.error(data.error?.message || 'Failed to mark as read');
         }
       }
     } catch (error) {
-      alert('Network error. Please try again.');
+      toast.error('Network error. Please try again.');
     } finally {
       setMarking(false);
     }

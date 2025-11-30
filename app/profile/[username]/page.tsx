@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export default function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const router = useRouter();
@@ -26,7 +27,7 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
         setProfile(data.data.profile);
         setPosts(data.data.posts);
       } else {
-        alert('Profile not found');
+        toast.error('Profile not found');
         router.push('/hobbies');
       }
     } catch (error) {

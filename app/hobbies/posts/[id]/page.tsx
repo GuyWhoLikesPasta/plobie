@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import LikeButton from '@/components/posts/LikeButton';
+import toast from 'react-hot-toast';
 
 export default function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
       if (data.success) {
         setPost(data.data.post);
       } else {
-        alert('Post not found');
+        toast.error('Post not found');
         router.push('/hobbies');
       }
     } catch (error) {
@@ -68,12 +69,12 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
       if (data.success) {
         setCommentContent('');
         fetchPost(postId);
-        alert(`Comment posted! You earned +${data.data.xp_awarded} XP!`);
+        toast.success(`Comment posted! You earned +${data.data.xp_awarded} XP!`);
       } else {
-        alert(data.error?.message || 'Failed to post comment');
+        toast.error(data.error?.message || 'Failed to post comment');
       }
     } catch (error) {
-      alert('Network error. Please try again.');
+      toast.error('Network error. Please try again.');
     } finally {
       setSubmitting(false);
     }

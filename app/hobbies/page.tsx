@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import LikeButton from '@/components/posts/LikeButton';
+import toast from 'react-hot-toast';
 
 export default function HobbiesPage() {
   const router = useRouter();
@@ -63,11 +64,11 @@ export default function HobbiesPage() {
         setPosts(data.data.posts);
       } else {
         console.error('API returned error:', data.error);
-        alert(`Failed to load posts: ${data.error?.message || 'Unknown error'}`);
+        toast.error(`Failed to load posts: ${data.error?.message || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Failed to fetch posts:', error);
-      alert('Network error loading posts');
+      toast.error('Network error loading posts');
     } finally {
       setLoading(false);
     }
@@ -119,7 +120,7 @@ export default function HobbiesPage() {
         const uploadData = await uploadResponse.json();
 
         if (!uploadData.success) {
-          alert(uploadData.error?.message || 'Failed to upload image');
+          toast.error(uploadData.error?.message || 'Failed to upload image');
           setUploading(false);
           setSubmitting(false);
           return;
@@ -147,12 +148,12 @@ export default function HobbiesPage() {
         setSelectedImage(null);
         setImagePreview('');
         fetchPosts();
-        alert(`Post created! You earned +${data.data.xp_awarded} XP!`);
+        toast.success(`Post created! You earned +${data.data.xp_awarded} XP!`);
       } else {
-        alert(data.error?.message || 'Failed to create post');
+        toast.error(data.error?.message || 'Failed to create post');
       }
     } catch (error) {
-      alert('Network error. Please try again.');
+      toast.error('Network error. Please try again.');
     } finally {
       setSubmitting(false);
       setUploading(false);
