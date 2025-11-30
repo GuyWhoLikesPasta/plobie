@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import toast from 'react-hot-toast';
+import { StatsCardSkeleton, PostCardSkeleton } from '@/components/skeletons';
 
 interface User {
   id: string;

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
+import { StatsCardSkeleton } from '@/components/skeletons';
 import Link from 'next/link';
 
 export default function MyPlantsPage() {

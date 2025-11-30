@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import LikeButton from '@/components/posts/LikeButton';
 import toast from 'react-hot-toast';
+import { PostCardSkeleton } from '@/components/skeletons';
 
 export default function HobbiesPage() {
   const router = useRouter();
@@ -363,12 +364,13 @@ export default function HobbiesPage() {
         )}
 
         {/* Posts Feed */}
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading posts...</p>
-          </div>
-        ) : posts.length === 0 ? (
+      {loading ? (
+        <div className="space-y-4">
+          <PostCardSkeleton />
+          <PostCardSkeleton />
+          <PostCardSkeleton />
+        </div>
+      ) : posts.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-lg shadow">
             <div className="text-6xl mb-4">🌱</div>
             <h3 className="text-xl font-semibold text-gray-800 mb-2">
