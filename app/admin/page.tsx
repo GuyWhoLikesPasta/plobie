@@ -323,18 +323,18 @@ export default function AdminDashboard() {
     }
   };
 
-  const toggleFlag = async (flagName: string, currentValue: boolean) => {
+  const toggleFlag = async (flagKey: string, currentValue: boolean) => {
     try {
       const response = await fetch('/api/flags', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ flag_name: flagName, is_enabled: !currentValue }),
+        body: JSON.stringify({ key: flagKey, enabled: !currentValue }),
       });
 
       const data = await response.json();
 
       if (data.success) {
-        toast.success(`Flag ${flagName} ${!currentValue ? 'enabled' : 'disabled'}`);
+        toast.success(`Flag ${flagKey} ${!currentValue ? 'enabled' : 'disabled'}`);
         fetchFlags();
       } else {
         toast.error('Failed to toggle flag');
@@ -551,24 +551,24 @@ export default function AdminDashboard() {
             </div>
             <div className="divide-y divide-gray-200">
               {flags.map((flag) => (
-                <div key={flag.flag_name} className="px-6 py-4 flex items-center justify-between">
+                <div key={flag.key} className="px-6 py-4 flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-900">{flag.flag_name}</p>
+                    <p className="text-sm font-medium text-gray-900">{flag.key}</p>
                     <p className="text-sm text-gray-500">
-                      {flag.is_enabled ? 'Enabled' : 'Disabled'}
+                      {flag.enabled ? 'Enabled' : 'Disabled'}
                     </p>
                   </div>
                   <button
-                    onClick={() => toggleFlag(flag.flag_name, flag.is_enabled)}
+                    onClick={() => toggleFlag(flag.key, flag.enabled)}
                     className={`
                       relative inline-flex h-6 w-11 items-center rounded-full transition-colors
-                      ${flag.is_enabled ? 'bg-green-600' : 'bg-gray-200'}
+                      ${flag.enabled ? 'bg-green-600' : 'bg-gray-200'}
                     `}
                   >
                     <span
                       className={`
                         inline-block h-4 w-4 transform rounded-full bg-white transition-transform
-                        ${flag.is_enabled ? 'translate-x-6' : 'translate-x-1'}
+                        ${flag.enabled ? 'translate-x-6' : 'translate-x-1'}
                       `}
                     />
                   </button>

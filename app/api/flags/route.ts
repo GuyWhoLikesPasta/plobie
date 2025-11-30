@@ -20,13 +20,20 @@ export async function GET() {
       );
     }
 
-    // Return as key-value map for easy client access
-    const flags = (data as FeatureFlag[]).reduce((acc, flag) => {
+    // Return both array (for admin) and map (for client usage)
+    const flagsArray = data as FeatureFlag[];
+    const flagsMap = flagsArray.reduce((acc, flag) => {
       acc[flag.key] = flag.enabled;
       return acc;
     }, {} as Record<string, boolean>);
 
-    return NextResponse.json({ success: true, data: flags });
+    return NextResponse.json({ 
+      success: true, 
+      data: { 
+        flags: flagsArray,  // For admin dashboard
+        map: flagsMap       // For client usage
+      } 
+    });
   } catch (error) {
     console.error('Unexpected error:', error);
     return NextResponse.json(
