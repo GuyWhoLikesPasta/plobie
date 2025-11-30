@@ -186,12 +186,9 @@ export default function AdminDashboard() {
             .select('*', { count: 'exact', head: true })
             .eq('profile_id', profile.id);
 
-          // Get email from auth
-          const { data: userData } = await supabase.auth.admin.getUserById(profile.user_id);
-
           return {
             id: profile.user_id,
-            email: userData?.user?.email || 'N/A',
+            email: profile.username + '@plobie', // Show username instead of email for privacy
             created_at: profile.created_at,
             profiles: {
               username: profile.username,
