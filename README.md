@@ -26,8 +26,7 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - ✅ TypeScript strict mode
 - ✅ Mobile responsive
 
-**Production:** https://plobie.vercel.app  
-**Setup:** See SETUP.md for installation instructions
+**Production:** https://plobie.vercel.app
 
 ## Overview
 
