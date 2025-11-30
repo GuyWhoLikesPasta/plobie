@@ -9,6 +9,7 @@ import type { User } from '@supabase/supabase-js';
 export default function Navigation() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
@@ -18,11 +19,28 @@ export default function Navigation() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
       setLoading(false);
+      
+      // Check if user is admin
+      if (user) {
+        supabase
+          .from('profiles')
+          .select('is_admin')
+          .eq('user_id', user.id)
+          .single()
+          .then(({ data }) => {
+            setIsAdmin(data?.is_admin || false);
+          });
+      } else {
+        setIsAdmin(false);
+      }
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      if (!session?.user) {
+        setIsAdmin(false);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -71,6 +89,19 @@ export default function Navigation() {
                 </Link>
               );
             })}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                  pathname === '/admin'
+                    ? 'bg-red-100 text-red-800'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <span className="mr-1">⚙️</span>
+                Admin
+              </Link>
+            )}
           </div>
 
           {/* Auth Section */}
