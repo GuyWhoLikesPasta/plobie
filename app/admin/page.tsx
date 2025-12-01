@@ -347,10 +347,10 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Verifying admin access...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-500 border-t-transparent mx-auto"></div>
+          <p className="mt-6 text-gray-400 text-lg animate-pulse">Verifying admin access...</p>
         </div>
       </div>
     );
@@ -372,26 +372,33 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-black py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="mt-2 text-gray-600">Manage users, content, and system settings</p>
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">
+              ⚙️
+            </div>
+            <div>
+              <h1 className="text-5xl font-black text-white">Admin Dashboard</h1>
+              <p className="mt-1 text-gray-400">Manage users, content, and system settings</p>
+            </div>
+          </div>
         </div>
 
         {/* Tabs */}
-        <div className="border-b border-gray-200 mb-6">
-          <nav className="-mb-px flex space-x-8">
+        <div className="glass-strong rounded-2xl p-2 mb-8 border border-white/10">
+          <nav className="flex space-x-2">
             {['analytics', 'users', 'posts', 'flags'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as any)}
                 className={`
-                  py-4 px-1 border-b-2 font-medium text-sm capitalize
+                  flex-1 py-3 px-4 rounded-xl font-bold text-sm capitalize transition-all
                   ${activeTab === tab
-                    ? 'border-green-600 text-green-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                    : 'text-gray-400 hover:text-white hover:bg-white/10'
                   }
                 `}
               >
@@ -405,29 +412,35 @@ export default function AdminDashboard() {
         {activeTab === 'analytics' && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500">Total Users</h3>
-                <p className="mt-2 text-3xl font-bold text-gray-900">{analytics.total_users}</p>
+              <div className="glass-strong p-8 rounded-2xl shadow-lg border border-purple-500/30 hover:scale-105 transition-transform">
+                <div className="text-4xl mb-3">👥</div>
+                <h3 className="text-sm font-medium text-gray-400">Total Users</h3>
+                <p className="mt-2 text-4xl font-black text-white">{analytics.total_users}</p>
               </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500">Total Posts</h3>
-                <p className="mt-2 text-3xl font-bold text-gray-900">{analytics.total_posts}</p>
+              <div className="glass-strong p-8 rounded-2xl shadow-lg border border-emerald-500/30 hover:scale-105 transition-transform">
+                <div className="text-4xl mb-3">💬</div>
+                <h3 className="text-sm font-medium text-gray-400">Total Posts</h3>
+                <p className="mt-2 text-4xl font-black text-white">{analytics.total_posts}</p>
               </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500">Total Comments</h3>
-                <p className="mt-2 text-3xl font-bold text-gray-900">{analytics.total_comments}</p>
+              <div className="glass-strong p-8 rounded-2xl shadow-lg border border-cyan-500/30 hover:scale-105 transition-transform">
+                <div className="text-4xl mb-3">💭</div>
+                <h3 className="text-sm font-medium text-gray-400">Total Comments</h3>
+                <p className="mt-2 text-4xl font-black text-white">{analytics.total_comments}</p>
               </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500">XP Awarded Today</h3>
-                <p className="mt-2 text-3xl font-bold text-green-600">{analytics.xp_awarded_today}</p>
+              <div className="glass-strong p-8 rounded-2xl shadow-lg border border-amber-500/30 hover:scale-105 transition-transform">
+                <div className="text-4xl mb-3">🎯</div>
+                <h3 className="text-sm font-medium text-gray-400">XP Awarded Today</h3>
+                <p className="mt-2 text-4xl font-black bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">{analytics.xp_awarded_today}</p>
               </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500">Posts Today</h3>
-                <p className="mt-2 text-3xl font-bold text-gray-900">{analytics.posts_today}</p>
+              <div className="glass-strong p-8 rounded-2xl shadow-lg border border-pink-500/30 hover:scale-105 transition-transform">
+                <div className="text-4xl mb-3">📝</div>
+                <h3 className="text-sm font-medium text-gray-400">Posts Today</h3>
+                <p className="mt-2 text-4xl font-black text-white">{analytics.posts_today}</p>
               </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500">Posts This Week</h3>
-                <p className="mt-2 text-3xl font-bold text-gray-900">{analytics.posts_this_week}</p>
+              <div className="glass-strong p-8 rounded-2xl shadow-lg border border-blue-500/30 hover:scale-105 transition-transform">
+                <div className="text-4xl mb-3">📊</div>
+                <h3 className="text-sm font-medium text-gray-400">Posts This Week</h3>
+                <p className="mt-2 text-4xl font-black text-white">{analytics.posts_this_week}</p>
               </div>
             </div>
           </div>
@@ -435,51 +448,51 @@ export default function AdminDashboard() {
 
         {/* Users Tab */}
         {activeTab === 'users' && (
-          <div className="space-y-4">
-            <div className="bg-white p-4 rounded-lg shadow">
+          <div className="space-y-6">
+            <div className="glass-strong p-4 rounded-2xl border border-white/10">
               <input
                 type="text"
-                placeholder="Search users by email or username..."
+                placeholder="🔍 Search users by email or username..."
                 value={userSearch}
                 onChange={(e) => setUserSearch(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg"
+                className="w-full px-6 py-3 glass text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-purple-500 border-none font-medium"
               />
             </div>
             
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+            <div className="glass-strong rounded-2xl shadow-lg overflow-hidden border border-white/10">
+              <table className="min-w-full divide-y divide-white/10">
+                <thead className="glass">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stats</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Joined</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">User</th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Stats</th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Joined</th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-white/10">
                   {filteredUsers.map((user) => (
-                    <tr key={user.id}>
+                    <tr key={user.id} className="hover:bg-white/5 transition-colors">
                       <td className="px-6 py-4">
-                        <div className="text-sm font-medium text-gray-900">{user.profiles.username}</div>
+                        <div className="text-sm font-bold text-white">{user.profiles.username}</div>
                         <div className="text-sm text-gray-500">{user.email}</div>
                         {user.profiles.is_admin && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                            Admin
+                          <span className="inline-flex items-center px-3 py-1 mt-2 rounded-full text-xs font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                            ⚡ Admin
                           </span>
                         )}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
-                        <div>XP: {user.profiles.xp_total}</div>
-                        <div>Posts: {user.post_count}</div>
-                        <div>Comments: {user.comment_count}</div>
+                      <td className="px-6 py-4 text-sm">
+                        <div className="text-gray-300"><span className="text-amber-400 font-bold">XP:</span> {user.profiles.xp_total}</div>
+                        <div className="text-gray-300"><span className="text-emerald-400 font-bold">Posts:</span> {user.post_count}</div>
+                        <div className="text-gray-300"><span className="text-cyan-400 font-bold">Comments:</span> {user.comment_count}</div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
+                      <td className="px-6 py-4 text-sm text-gray-400">
                         {new Date(user.created_at).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 text-sm">
                         <button
                           onClick={() => toggleAdmin(user.id, user.profiles.is_admin)}
-                          className="text-green-600 hover:text-green-900 mr-4"
+                          className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-bold hover:shadow-lg hover:scale-105 transition-all"
                         >
                           {user.profiles.is_admin ? 'Remove Admin' : 'Make Admin'}
                         </button>
@@ -494,45 +507,45 @@ export default function AdminDashboard() {
 
         {/* Posts Tab */}
         {activeTab === 'posts' && (
-          <div className="space-y-4">
-            <div className="bg-white p-4 rounded-lg shadow">
+          <div className="space-y-6">
+            <div className="glass-strong p-4 rounded-2xl border border-white/10">
               <input
                 type="text"
-                placeholder="Search posts by title, content, or author..."
+                placeholder="🔍 Search posts by title, content, or author..."
                 value={postSearch}
                 onChange={(e) => setPostSearch(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg"
+                className="w-full px-6 py-3 glass text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-purple-500 border-none font-medium"
               />
             </div>
 
             <div className="space-y-4">
               {filteredPosts.map((post) => (
-                <div key={post.id} className="bg-white p-6 rounded-lg shadow">
+                <div key={post.id} className="glass-strong p-6 rounded-2xl shadow-lg border border-white/10 hover:border-purple-500/50 transition-all">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900">{post.title || 'Untitled'}</h3>
-                      <p className="mt-1 text-sm text-gray-600">
-                        By {post.profiles?.username} • {new Date(post.created_at).toLocaleDateString()}
+                      <h3 className="text-2xl font-bold text-white mb-2">{post.title || 'Untitled'}</h3>
+                      <p className="text-sm text-gray-400 mb-3">
+                        By <span className="text-emerald-400 font-bold">{post.profiles?.username}</span> • {new Date(post.created_at).toLocaleDateString()}
                       </p>
-                      <p className="mt-2 text-gray-700 line-clamp-2">{post.content}</p>
+                      <p className="text-gray-300 line-clamp-2 mb-3">{post.content}</p>
                       {post.hidden && (
-                        <span className="inline-flex items-center px-2 py-1 mt-2 rounded text-xs font-medium bg-red-100 text-red-800">
-                          Hidden
+                        <span className="inline-flex items-center px-3 py-1 mt-2 rounded-full text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30">
+                          👁️ Hidden
                         </span>
                       )}
                     </div>
                     <div className="ml-4 flex flex-col space-y-2">
                       <button
                         onClick={() => togglePostVisibility(post.id, post.hidden || false)}
-                        className="px-3 py-1 text-sm text-yellow-600 hover:text-yellow-900 border border-yellow-600 rounded"
+                        className="px-4 py-2 text-sm glass text-amber-400 hover:bg-white/20 border border-amber-500/30 rounded-xl font-bold transition-all hover:scale-105"
                       >
-                        {post.hidden ? 'Unhide' : 'Hide'}
+                        {post.hidden ? '👁️ Unhide' : '🚫 Hide'}
                       </button>
                       <button
                         onClick={() => deletePost(post.id)}
-                        className="px-3 py-1 text-sm text-red-600 hover:text-red-900 border border-red-600 rounded"
+                        className="px-4 py-2 text-sm bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 rounded-xl font-bold transition-all hover:scale-105"
                       >
-                        Delete
+                        🗑️ Delete
                       </button>
                     </div>
                   </div>
@@ -544,31 +557,35 @@ export default function AdminDashboard() {
 
         {/* Flags Tab */}
         {activeTab === 'flags' && (
-          <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900">Feature Flags</h3>
-              <p className="mt-1 text-sm text-gray-500">Toggle features on and off</p>
+          <div className="glass-strong rounded-2xl shadow-lg border border-white/10 overflow-hidden">
+            <div className="px-8 py-6 border-b border-white/10">
+              <h3 className="text-2xl font-black text-white">Feature Flags</h3>
+              <p className="mt-1 text-sm text-gray-400">Toggle features on and off instantly</p>
             </div>
-            <div className="divide-y divide-gray-200">
+            <div className="divide-y divide-white/10">
               {flags.map((flag) => (
-                <div key={flag.key} className="px-6 py-4 flex items-center justify-between">
+                <div key={flag.key} className="px-8 py-6 flex items-center justify-between hover:bg-white/5 transition-colors group">
                   <div>
-                    <p className="text-sm font-medium text-gray-900">{flag.key}</p>
-                    <p className="text-sm text-gray-500">
-                      {flag.enabled ? 'Enabled' : 'Disabled'}
+                    <p className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors">{flag.key}</p>
+                    <p className="text-sm mt-1">
+                      {flag.enabled ? (
+                        <span className="text-emerald-400 font-bold">✅ Enabled</span>
+                      ) : (
+                        <span className="text-gray-500 font-bold">⭕ Disabled</span>
+                      )}
                     </p>
                   </div>
                   <button
                     onClick={() => toggleFlag(flag.key, flag.enabled)}
                     className={`
-                      relative inline-flex h-6 w-11 items-center rounded-full transition-colors
-                      ${flag.enabled ? 'bg-green-600' : 'bg-gray-200'}
+                      relative inline-flex h-8 w-16 items-center rounded-full transition-all shadow-lg hover:scale-110
+                      ${flag.enabled ? 'bg-gradient-to-r from-emerald-500 to-cyan-500' : 'bg-gray-700'}
                     `}
                   >
                     <span
                       className={`
-                        inline-block h-4 w-4 transform rounded-full bg-white transition-transform
-                        ${flag.enabled ? 'translate-x-6' : 'translate-x-1'}
+                        inline-block h-6 w-6 transform rounded-full bg-white transition-transform shadow-md
+                        ${flag.enabled ? 'translate-x-9' : 'translate-x-1'}
                       `}
                     />
                   </button>

@@ -162,27 +162,31 @@ export default function HobbiesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+    <div className="min-h-screen bg-black">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-4xl font-bold mb-2">🌿 Hobbies</h1>
-              <p className="text-xl text-green-100">
-                Connect with fellow plant enthusiasts
+      <div className="relative overflow-hidden bg-gradient-to-br from-emerald-900/40 via-black to-cyan-900/40 py-16 border-b border-white/10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.15),transparent_70%)]"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h1 className="text-5xl md:text-6xl font-black mb-3">
+                <span className="gradient-text">Community</span>
+              </h1>
+              <p className="text-xl text-gray-400">
+                Share your journey with plant enthusiasts worldwide
               </p>
             </div>
             <div className="flex gap-3">
               <button
                 onClick={() => router.push('/hobbies/learn')}
-                className="bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition-all"
+                className="px-6 py-3 glass-strong text-white rounded-xl font-bold hover:bg-white/20 transition-all group"
               >
-                📚 Learn (+1 XP)
+                <span className="mr-2 group-hover:scale-110 inline-block transition-transform">📚</span> 
+                Learn (+1 XP)
               </button>
               <button
                 onClick={handleCreatePost}
-                className="bg-white text-green-600 px-6 py-3 rounded-lg font-medium hover:bg-green-50 transition-all"
+                className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white rounded-xl font-bold hover:shadow-glow transition-all"
               >
                 ✏️ New Post
               </button>
@@ -200,17 +204,17 @@ export default function HobbiesPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search posts..."
-              className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
+              className="w-full px-4 py-3 pl-12 glass-strong text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-emerald-500 border-none"
             />
             <span className="absolute left-4 top-3.5 text-gray-400 text-xl">🔍</span>
           </div>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'recent' | 'trending')}
-            className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 bg-white"
+            className="px-4 py-3 glass-strong text-white rounded-xl focus:ring-2 focus:ring-emerald-500 border-none font-medium"
           >
-            <option value="recent">Recent</option>
-            <option value="trending">Trending</option>
+            <option value="recent" className="bg-gray-900">Recent</option>
+            <option value="trending" className="bg-gray-900">Trending</option>
           </select>
         </div>
 
@@ -218,10 +222,10 @@ export default function HobbiesPage() {
         <div className="mb-8 flex flex-wrap gap-2">
           <button
             onClick={() => setSelectedGroup('')}
-            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            className={`px-4 py-2 rounded-xl font-medium transition-all ${
               selectedGroup === ''
-                ? 'bg-green-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-100'
+                ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg'
+                : 'glass text-gray-300 hover:text-white hover:bg-white/20'
             }`}
           >
             All Groups
@@ -230,10 +234,10 @@ export default function HobbiesPage() {
             <button
               key={group.slug}
               onClick={() => setSelectedGroup(group.name)}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+              className={`px-4 py-2 rounded-xl font-medium transition-all ${
                 selectedGroup === group.name
-                  ? 'bg-green-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                  ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg'
+                  : 'glass text-gray-300 hover:text-white hover:bg-white/20'
               }`}
             >
               {group.icon} {group.name}
@@ -243,14 +247,14 @@ export default function HobbiesPage() {
 
         {/* Create Post Form Modal */}
         {showCreateForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="glass-strong rounded-3xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-white/20">
+              <h2 className="text-3xl font-bold text-white mb-6">
                 Create a Post
               </h2>
               <form onSubmit={handleSubmitPost}>
                 <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">
+                  <label className="block text-gray-300 font-medium mb-2">
                     Hobby Group
                   </label>
                   <select
@@ -258,17 +262,17 @@ export default function HobbiesPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, hobby_group: e.target.value })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-3 glass text-white rounded-xl focus:ring-2 focus:ring-emerald-500 border-none font-medium"
                   >
                     {hobbyGroups.map((group) => (
-                      <option key={group.slug} value={group.name}>
+                      <option key={group.slug} value={group.name} className="bg-gray-900">
                         {group.icon} {group.name}
                       </option>
                     ))}
                   </select>
                 </div>
                 <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">
+                  <label className="block text-gray-300 font-medium mb-2">
                     Title
                   </label>
                   <input
@@ -279,12 +283,12 @@ export default function HobbiesPage() {
                     }
                     required
                     maxLength={200}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
+                    className="w-full px-4 py-3 glass text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-emerald-500 border-none"
                     placeholder="Give your post a title..."
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">
+                  <label className="block text-gray-300 font-medium mb-2">
                     Content
                   </label>
                   <textarea
@@ -295,12 +299,12 @@ export default function HobbiesPage() {
                     required
                     maxLength={10000}
                     rows={6}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
+                    className="w-full px-4 py-3 glass text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-emerald-500 border-none"
                     placeholder="Share your thoughts..."
                   />
                 </div>
                 <div className="mb-6">
-                  <label className="block text-gray-700 font-medium mb-2">
+                  <label className="block text-gray-300 font-medium mb-2">
                     Image (Optional)
                   </label>
                   {imagePreview ? (
@@ -308,18 +312,18 @@ export default function HobbiesPage() {
                       <img
                         src={imagePreview}
                         alt="Preview"
-                        className="w-full max-h-64 object-cover rounded-lg"
+                        className="w-full max-h-64 object-cover rounded-xl"
                       />
                       <button
                         type="button"
                         onClick={handleRemoveImage}
-                        className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-all"
+                        className="absolute top-3 right-3 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 hover:scale-110 transition-all shadow-lg"
                       >
                         ✕
                       </button>
                     </div>
                   ) : (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-500 transition-all">
+                    <div className="border-2 border-dashed border-white/20 glass rounded-xl p-6 text-center hover:border-emerald-500/50 transition-all">
                       <input
                         type="file"
                         accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
@@ -332,10 +336,10 @@ export default function HobbiesPage() {
                         className="cursor-pointer flex flex-col items-center"
                       >
                         <span className="text-4xl mb-2">📸</span>
-                        <span className="text-gray-600 font-medium">
+                        <span className="text-gray-300 font-medium">
                           Click to upload an image
                         </span>
-                        <span className="text-gray-400 text-sm mt-1">
+                        <span className="text-gray-500 text-sm mt-1">
                           JPG, PNG, WebP, or GIF (max 5MB)
                         </span>
                       </label>
@@ -346,14 +350,14 @@ export default function HobbiesPage() {
                   <button
                     type="submit"
                     disabled={submitting || uploading}
-                    className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all disabled:opacity-50"
+                    className="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-6 py-4 rounded-xl font-bold hover:shadow-glow transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {uploading ? 'Uploading Image...' : submitting ? 'Posting...' : 'Post (+3 XP)'}
+                    {uploading ? 'Uploading Image...' : submitting ? 'Posting...' : 'Post (+3 XP) →'}
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowCreateForm(false)}
-                    className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-all"
+                    className="px-6 py-4 glass text-gray-300 rounded-xl font-bold hover:text-white hover:bg-white/20 transition-all"
                   >
                     Cancel
                   </button>
@@ -365,23 +369,23 @@ export default function HobbiesPage() {
 
         {/* Posts Feed */}
       {loading ? (
-        <div className="space-y-4">
+        <div className="space-y-6">
           <PostCardSkeleton />
           <PostCardSkeleton />
           <PostCardSkeleton />
         </div>
       ) : posts.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow">
-            <div className="text-6xl mb-4">🌱</div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">
+          <div className="text-center py-20 glass-strong rounded-3xl border border-white/10">
+            <div className="text-8xl mb-6">🌱</div>
+            <h3 className="text-3xl font-bold text-white mb-3">
               No posts yet
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-400 mb-8 text-lg">
               Be the first to share something with the community!
             </p>
             <button
               onClick={handleCreatePost}
-              className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all"
+              className="bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 py-4 rounded-xl font-bold hover:shadow-glow hover:scale-105 transition-all"
             >
               Create First Post
             </button>
@@ -391,11 +395,11 @@ export default function HobbiesPage() {
             {posts.map((post) => (
               <div
                 key={post.id}
-                className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 cursor-pointer"
+                className="glass-strong rounded-3xl shadow-lg hover:shadow-2xl transition-all p-6 cursor-pointer border border-white/10 hover:border-emerald-500/50 group"
                 onClick={() => router.push(`/hobbies/posts/${post.id}`)}
               >
                 <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
+                  <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
                     {post.profiles?.username?.[0]?.toUpperCase() || '?'}
                   </div>
                   <div className="flex-1">
@@ -405,33 +409,33 @@ export default function HobbiesPage() {
                           e.stopPropagation();
                           router.push(`/profile/${post.profiles?.username}`);
                         }}
-                        className="font-semibold text-gray-900 hover:text-green-600 transition-colors"
+                        className="font-bold text-white hover:text-emerald-400 transition-colors"
                       >
                         {post.profiles?.username || 'Anonymous'}
                       </button>
-                      <span className="text-gray-400">·</span>
-                      <span className="text-sm text-gray-500">
+                      <span className="text-gray-600">·</span>
+                      <span className="text-sm text-gray-400 px-3 py-1 glass rounded-full">
                         {post.hobby_group}
                       </span>
-                      <span className="text-gray-400">·</span>
-                      <span className="text-sm text-gray-500">
+                      <span className="text-gray-600">·</span>
+                      <span className="text-sm text-gray-400">
                         {new Date(post.created_at).toLocaleDateString()}
                       </span>
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors">
                       {post.title}
                     </h3>
-                    <p className="text-gray-700 line-clamp-3">{post.content}</p>
+                    <p className="text-gray-300 line-clamp-3 mb-4">{post.content}</p>
                     {post.image_url && (
                       <img
                         src={post.image_url}
                         alt={post.title}
-                        className="mt-4 w-full max-h-64 object-cover rounded-lg"
+                        className="mt-4 w-full max-h-96 object-cover rounded-2xl border border-white/10"
                       />
                     )}
-                    <div className="mt-4 flex items-center space-x-3">
+                    <div className="mt-4 flex items-center space-x-4">
                       <LikeButton postId={post.id} initialCount={0} initialLiked={false} />
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-gray-400 flex items-center gap-2 px-3 py-2 glass rounded-full">
                         💬 {post.comments?.[0]?.count || 0}
                       </span>
                     </div>

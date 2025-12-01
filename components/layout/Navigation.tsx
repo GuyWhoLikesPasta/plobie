@@ -61,13 +61,15 @@ export default function Navigation() {
   ];
 
   return (
-    <nav className="bg-white shadow-sm border-b">
+    <nav className="sticky top-0 z-50 glass-strong border-b border-white/10">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="text-2xl">🌱</span>
-            <span className="text-xl font-bold text-green-800">Plobie</span>
+          <Link href="/" className="flex items-center space-x-2 group">
+            <span className="text-2xl group-hover:scale-110 transition-transform">🌱</span>
+            <span className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+              Plobie
+            </span>
           </Link>
 
           {/* Main Navigation */}
@@ -78,13 +80,13 @@ export default function Navigation() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                     isActive
-                      ? 'bg-green-100 text-green-800'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg'
+                      : 'text-gray-300 hover:text-white hover:bg-white/10'
                   }`}
                 >
-                  <span className="mr-1">{item.icon}</span>
+                  <span className="mr-1.5">{item.icon}</span>
                   {item.name}
                 </Link>
               );
@@ -92,33 +94,33 @@ export default function Navigation() {
             {isAdmin && (
               <Link
                 href="/admin"
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                   pathname === '/admin'
-                    ? 'bg-red-100 text-red-800'
-                    : 'text-gray-700 hover:bg-gray-100'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                    : 'text-gray-300 hover:text-white hover:bg-white/10'
                 }`}
               >
-                <span className="mr-1">⚙️</span>
+                <span className="mr-1.5">⚙️</span>
                 Admin
               </Link>
             )}
           </div>
 
           {/* Auth Section */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             {loading ? (
-              <div className="w-20 h-8 bg-gray-200 rounded animate-pulse"></div>
+              <div className="w-20 h-8 bg-white/10 rounded-lg animate-pulse"></div>
             ) : user ? (
               <div className="flex items-center space-x-3">
                 <Link
                   href={`/profile/${user.email?.split('@')[0]}`}
-                  className="text-sm text-gray-700 hover:text-green-600 font-medium hidden sm:inline transition"
+                  className="text-sm text-gray-300 hover:text-emerald-400 font-medium hidden sm:inline transition-colors"
                 >
                   {user.email?.split('@')[0]}
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
+                  className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition-all"
                 >
                   Sign Out
                 </button>
@@ -127,13 +129,13 @@ export default function Navigation() {
               <div className="flex items-center space-x-2">
                 <Link
                   href="/login"
-                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
+                  className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition-all"
                 >
                   Login
                 </Link>
                 <Link
                   href="/signup"
-                  className="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition"
+                  className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-emerald-500 to-cyan-500 hover:shadow-glow rounded-xl transition-all"
                 >
                   Sign Up
                 </Link>
@@ -143,17 +145,17 @@ export default function Navigation() {
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden pb-3 flex space-x-1 overflow-x-auto">
+        <div className="md:hidden pb-3 flex space-x-2 overflow-x-auto scrollbar-hide">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition ${
+                className={`px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
                   isActive
-                    ? 'bg-green-100 text-green-800'
-                    : 'text-gray-700 hover:bg-gray-100'
+                    ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white'
+                    : 'text-gray-300 hover:text-white hover:bg-white/10'
                 }`}
               >
                 <span className="mr-1">{item.icon}</span>
@@ -161,6 +163,19 @@ export default function Navigation() {
               </Link>
             );
           })}
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className={`px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
+                pathname === '/admin'
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                  : 'text-gray-300 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              <span className="mr-1">⚙️</span>
+              Admin
+            </Link>
+          )}
         </div>
       </div>
     </nav>

@@ -93,15 +93,20 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center px-4 py-12">
-      <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-green-800 mb-2">🌱 Plobie</h1>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Join Our Community</h2>
-          <p className="text-gray-600">Start your plant journey today</p>
+    <div className="min-h-screen bg-black flex items-center justify-center px-4 py-12 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/20 via-black to-cyan-900/20"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.1),transparent_50%)]"></div>
+      
+      <div className="max-w-md w-full relative z-10">
+        <div className="text-center mb-8 animate-slide-up">
+          <h1 className="text-5xl font-black mb-3">
+            <span className="text-5xl">🌱</span> <span className="gradient-text">Plobie</span>
+          </h1>
+          <h2 className="text-3xl font-black text-white mb-3">Join Our Community</h2>
+          <p className="text-gray-400 text-lg">Start your plant journey today</p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-8">
+        <div className="glass-strong rounded-3xl shadow-2xl p-10 border border-white/10">
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
               {error}
