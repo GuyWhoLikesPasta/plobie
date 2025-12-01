@@ -82,8 +82,11 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-emerald-500 border-t-transparent"></div>
+          <p className="text-gray-400 animate-pulse">Loading post...</p>
+        </div>
       </div>
     );
   }
@@ -93,39 +96,41 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+    <div className="min-h-screen bg-black">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <button
           onClick={() => router.push('/hobbies')}
-          className="mb-6 text-green-600 hover:text-green-700 font-medium flex items-center"
+          className="mb-6 text-emerald-400 hover:text-emerald-300 font-bold flex items-center transition-colors"
         >
-          ← Back to Hobbies
+          ← Back to Community
         </button>
 
         {/* Post Card */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
+        <div className="glass-strong rounded-3xl shadow-2xl p-8 md:p-10 mb-6 border border-white/10">
           <div className="flex items-start space-x-4 mb-6">
-            <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
+            <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg">
               {post.profiles?.username?.[0]?.toUpperCase() || '?'}
             </div>
-            <div>
+            <div className="flex-1">
               <button
                 onClick={() => router.push(`/profile/${post.profiles?.username}`)}
-                className="font-semibold text-gray-900 hover:text-green-600 transition-colors"
+                className="font-bold text-white hover:text-emerald-400 transition-colors text-lg"
               >
                 {post.profiles?.username || 'Anonymous'}
               </button>
-              <div className="text-sm text-gray-500">
-                {post.hobby_group} · {new Date(post.created_at).toLocaleDateString()}
+              <div className="text-sm text-gray-400 flex items-center gap-2 mt-1">
+                <span className="glass px-3 py-1 rounded-full">{post.hobby_group}</span>
+                <span>·</span>
+                <span>{new Date(post.created_at).toLocaleDateString()}</span>
               </div>
             </div>
           </div>
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl md:text-4xl font-black text-white mb-6">
             {post.title}
           </h1>
 
-          <p className="text-gray-700 whitespace-pre-wrap mb-6">
+          <p className="text-gray-300 whitespace-pre-wrap mb-6 text-lg leading-relaxed">
             {post.content}
           </p>
 
@@ -133,21 +138,21 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
             <img
               src={post.image_url}
               alt={post.title}
-              className="rounded-lg w-full max-h-96 object-cover mb-6"
+              className="rounded-2xl w-full max-h-[600px] object-cover mb-6 border border-white/10"
             />
           )}
 
-          <div className="flex items-center space-x-3 pt-6 border-t">
+          <div className="flex items-center space-x-4 pt-6 border-t border-white/10">
             <LikeButton postId={post.id} initialCount={0} initialLiked={false} />
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-gray-400 flex items-center gap-2 px-4 py-2 glass rounded-full">
               💬 {post.comments?.length || 0} comments
             </span>
           </div>
         </div>
 
         {/* Comment Form */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <div className="glass-strong rounded-3xl shadow-lg p-8 mb-6 border border-white/10">
+          <h2 className="text-2xl font-black text-white mb-6">
             Add a Comment
           </h2>
           {isAuthenticated ? (
@@ -159,26 +164,26 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
                 maxLength={2000}
                 rows={4}
                 placeholder="Share your thoughts..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent mb-4 text-gray-900"
+                className="w-full px-4 py-3 glass text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-emerald-500 border-none mb-4 font-medium"
               />
               <button
                 type="submit"
                 disabled={submitting}
-                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all disabled:opacity-50"
+                className="bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 py-4 rounded-xl font-bold hover:shadow-glow transition-all disabled:opacity-50"
               >
-                {submitting ? 'Posting...' : 'Post Comment (+1 XP)'}
+                {submitting ? 'Posting...' : 'Post Comment (+1 XP) →'}
               </button>
             </form>
           ) : (
-            <div className="text-center py-4">
-              <p className="text-gray-600 mb-4">
+            <div className="text-center py-8">
+              <p className="text-gray-300 mb-6 text-lg">
                 Please log in to comment
               </p>
               <button
                 onClick={() => router.push(`/login?redirect=/hobbies/posts/${postId}`)}
-                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all"
+                className="bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 py-4 rounded-xl font-bold hover:shadow-glow transition-all"
               >
-                Log In
+                Log In →
               </button>
             </div>
           )}
@@ -188,22 +193,22 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
         <div className="space-y-4">
           {post.comments && post.comments.length > 0 ? (
             post.comments.map((comment: any) => (
-              <div key={comment.id} className="bg-white rounded-lg shadow p-6">
+              <div key={comment.id} className="glass-strong rounded-2xl shadow-lg p-6 border border-white/10">
                 <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-xl flex items-center justify-center text-white font-bold shadow-lg">
                     {comment.profiles?.username?.[0]?.toUpperCase() || '?'}
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <span className="font-semibold text-gray-900">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <span className="font-bold text-white">
                         {comment.profiles?.username || 'Anonymous'}
                       </span>
-                      <span className="text-gray-400">·</span>
-                      <span className="text-sm text-gray-500">
+                      <span className="text-gray-600">·</span>
+                      <span className="text-sm text-gray-400">
                         {new Date(comment.created_at).toLocaleDateString()}
                       </span>
                     </div>
-                    <p className="text-gray-700 whitespace-pre-wrap">
+                    <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">
                       {comment.content}
                     </p>
                   </div>
@@ -211,8 +216,9 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
               </div>
             ))
           ) : (
-            <div className="bg-white rounded-lg shadow p-8 text-center">
-              <p className="text-gray-500">No comments yet. Be the first to comment!</p>
+            <div className="glass-strong rounded-2xl shadow-lg p-12 text-center border border-white/10">
+              <div className="text-6xl mb-4">💬</div>
+              <p className="text-gray-400 text-lg">No comments yet. Be the first to comment!</p>
             </div>
           )}
         </div>
@@ -220,4 +226,3 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
     </div>
   );
 }
-

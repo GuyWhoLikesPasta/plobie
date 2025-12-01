@@ -138,7 +138,6 @@ Use a well-draining cactus/succulent mix or create your own with:
 
 Happy planting! 🌵`,
   },
-  // Add minimal content for other articles
 };
 
 // Fill in minimal content for remaining articles
@@ -224,100 +223,102 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
 
   if (!article) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-4 border-cyan-500 border-t-transparent"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+    <div className="min-h-screen bg-black">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <button
           onClick={() => router.push('/hobbies/learn')}
-          className="mb-6 text-green-600 hover:text-green-700 font-medium flex items-center"
+          className="mb-6 text-cyan-400 hover:text-cyan-300 font-bold flex items-center transition-colors"
         >
           ← Back to Learn
         </button>
 
         {/* Article Card */}
-        <article className="bg-white rounded-lg shadow-lg p-8 mb-6">
-          <div className="text-6xl mb-4">{article.icon}</div>
-          <div className="text-sm text-green-600 font-medium mb-2">
+        <article className="glass-strong rounded-3xl shadow-2xl p-8 md:p-12 mb-6 border border-white/10">
+          <div className="text-7xl mb-6">{article.icon}</div>
+          <div className="text-sm text-cyan-400 font-bold mb-3 px-4 py-2 glass rounded-full inline-block">
             {article.category}
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-6">
             {article.title}
           </h1>
-          <div className="flex items-center space-x-4 text-sm text-gray-500 mb-8 pb-8 border-b">
+          <div className="flex items-center space-x-4 text-sm text-gray-400 mb-8 pb-8 border-b border-white/10">
             <span>{article.readTime}</span>
             <span>•</span>
-            <span className="text-green-600 font-medium">+1 XP on completion</span>
+            <span className="text-cyan-400 font-bold">+1 XP on completion</span>
           </div>
 
           {/* Article Content */}
-          <div className="prose prose-lg max-w-none text-gray-800">
+          <div className="prose prose-lg max-w-none">
             {article.content.split('\n').map((line: string, index: number) => {
               if (line.startsWith('# ')) {
-                return <h1 key={index} className="text-3xl font-bold mt-8 mb-4 text-gray-900">{line.slice(2)}</h1>;
+                return <h1 key={index} className="text-3xl font-black mt-8 mb-4 text-white">{line.slice(2)}</h1>;
               } else if (line.startsWith('## ')) {
-                return <h2 key={index} className="text-2xl font-bold mt-6 mb-3 text-gray-900">{line.slice(3)}</h2>;
+                return <h2 key={index} className="text-2xl font-bold mt-6 mb-3 text-gray-200">{line.slice(3)}</h2>;
               } else if (line.startsWith('### ')) {
-                return <h3 key={index} className="text-xl font-semibold mt-4 mb-2 text-gray-900">{line.slice(4)}</h3>;
+                return <h3 key={index} className="text-xl font-semibold mt-4 mb-2 text-gray-300">{line.slice(4)}</h3>;
               } else if (line.startsWith('**') && line.endsWith('**')) {
-                return <p key={index} className="font-bold mt-2 text-gray-900">{line.slice(2, -2)}</p>;
+                return <p key={index} className="font-bold mt-2 text-gray-200">{line.slice(2, -2)}</p>;
               } else if (line.startsWith('- ')) {
-                return <li key={index} className="ml-6 text-gray-700">{line.slice(2)}</li>;
+                return <li key={index} className="ml-6 text-gray-300">{line.slice(2)}</li>;
               } else if (line.trim() === '') {
                 return <br key={index} />;
               } else {
-                return <p key={index} className="mb-4 text-gray-700 leading-relaxed">{line}</p>;
+                return <p key={index} className="mb-4 text-gray-300 leading-relaxed">{line}</p>;
               }
             })}
           </div>
         </article>
 
         {/* Mark as Read Button */}
-        <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg shadow-lg p-6 text-center">
-          {hasRead ? (
-            <div>
-              <div className="text-4xl mb-2">✅</div>
-              <h3 className="text-xl font-bold text-white mb-2">
-                Article Completed!
-              </h3>
-              <p className="text-green-100">
-                You have earned XP for reading this article
-              </p>
-            </div>
-          ) : isAuthenticated ? (
-            <div>
-              <h3 className="text-xl font-bold text-white mb-4">
-                Finished reading?
-              </h3>
-              <button
-                onClick={handleMarkAsRead}
-                disabled={marking}
-                className="bg-white text-green-600 px-8 py-3 rounded-lg font-medium hover:bg-green-50 transition-all disabled:opacity-50"
-              >
-                {marking ? 'Marking...' : 'Mark as Read (+1 XP)'}
-              </button>
-            </div>
-          ) : (
-            <div>
-              <h3 className="text-xl font-bold text-white mb-4">
-                Log in to earn XP for reading
-              </h3>
-              <button
-                onClick={() => router.push(`/login?redirect=/hobbies/learn/${articleId}`)}
-                className="bg-white text-green-600 px-8 py-3 rounded-lg font-medium hover:bg-green-50 transition-all"
-              >
-                Log In
-              </button>
-            </div>
-          )}
+        <div className="glass-strong rounded-3xl shadow-lg p-8 md:p-10 text-center border border-white/10 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-blue-500/20"></div>
+          <div className="relative z-10">
+            {hasRead ? (
+              <div>
+                <div className="text-5xl mb-4">✅</div>
+                <h3 className="text-2xl font-black text-white mb-3">
+                  Article Completed!
+                </h3>
+                <p className="text-gray-300">
+                  You have earned XP for reading this article
+                </p>
+              </div>
+            ) : isAuthenticated ? (
+              <div>
+                <h3 className="text-2xl font-black text-white mb-6">
+                  Finished reading?
+                </h3>
+                <button
+                  onClick={handleMarkAsRead}
+                  disabled={marking}
+                  className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-10 py-4 rounded-xl font-bold hover:shadow-glow transition-all disabled:opacity-50 text-lg"
+                >
+                  {marking ? 'Marking...' : 'Mark as Read (+1 XP) →'}
+                </button>
+              </div>
+            ) : (
+              <div>
+                <h3 className="text-2xl font-black text-white mb-6">
+                  Log in to earn XP for reading
+                </h3>
+                <button
+                  onClick={() => router.push(`/login?redirect=/hobbies/learn/${articleId}`)}
+                  className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-10 py-4 rounded-xl font-bold hover:shadow-glow transition-all text-lg"
+                >
+                  Log In →
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
