@@ -47,12 +47,14 @@ body {
   overflow-x: hidden;
 }
 
-/* Glassmorphism utility classes */
+/* Glassmorphism utility classes with full browser support */
 .glass {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
+  -moz-backdrop-filter: var(--glass-blur);
+  -o-backdrop-filter: var(--glass-blur);
 }
 
 .glass-strong {
@@ -60,14 +62,32 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  -moz-backdrop-filter: blur(20px);
+  -o-backdrop-filter: blur(20px);
 }
 
-/* Gradient text */
+/* Fallback for browsers without backdrop-filter support */
+@supports not (backdrop-filter: blur(12px)) {
+  .glass, .glass-strong {
+    background: rgba(17, 17, 17, 0.95);
+  }
+}
+
+/* Gradient text with fallback */
 .gradient-text {
   background: var(--gradient-primary);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -moz-background-clip: text;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+
+/* Fallback for browsers without background-clip support */
+@supports not (background-clip: text) {
+  .gradient-text {
+    color: #10b981;
+  }
 }
 
 /* Smooth animations */
