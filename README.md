@@ -36,6 +36,33 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 
 **Production:** https://plobie.vercel.app
 
+## 🎨 Design System
+
+Plobie features a **2026 luxury dark mode design** with:
+- Glassmorphism effects (frosted glass)
+- Gradient accents (Emerald → Cyan)
+- Premium typography (Geist Sans)
+- Smooth animations & micro-interactions
+- Fully responsive (mobile → 4K displays)
+- Browser compatible (Chrome, Firefox, Safari, Edge)
+
+**📚 Full Style Guide:** `.local-docs/STYLE_GUIDE.md`
+
+### Quick Reference
+```css
+/* Colors */
+Background: #0a0a0a (Pure black)
+Primary: #10b981 (Emerald)
+Secondary: #06b6d4 (Cyan)
+Accent: #8b5cf6 (Purple)
+
+/* Utilities */
+.glass          - Light glassmorphism
+.glass-strong   - Strong glassmorphism
+.gradient-text  - Gradient text effect
+.animate-float  - Floating animation
+```
+
 ## Overview
 
 Plobie combines four core experiences:
