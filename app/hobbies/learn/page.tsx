@@ -58,61 +58,62 @@ export default function LearnPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+    <div className="min-h-screen bg-black">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold mb-2">📚 Learn</h1>
-          <p className="text-xl text-blue-100">
-            Expand your plant knowledge and earn +1 XP per article (cap 5/day)
+      <div className="relative overflow-hidden glass-strong py-16 border-b border-white/10">
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-transparent to-blue-500/20"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h1 className="text-5xl md:text-6xl font-black text-white mb-3">📚 Learn</h1>
+          <p className="text-xl md:text-2xl text-gray-300">
+            Expand your knowledge and earn <span className="text-cyan-400 font-bold">+1 XP</span> per article (max 5/day)
           </p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* XP Notice */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
-          <div className="flex items-center space-x-2">
-            <span className="text-2xl">⭐</span>
-            <p className="text-blue-900">
-              <strong>Earn +1 XP</strong> for each article you read (up to 5 articles per day)
+        <div className="glass-strong border border-cyan-500/30 rounded-2xl p-6 mb-8">
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">⭐</span>
+            <p className="text-gray-300">
+              <strong className="text-cyan-400">Earn +1 XP</strong> for each article you read (up to 5 articles per day)
             </p>
           </div>
         </div>
 
         {/* Articles Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((article) => (
             <div
               key={article.id}
               onClick={() => router.push(`/hobbies/learn/${article.id}`)}
-              className="bg-white rounded-lg shadow hover:shadow-xl transition-all cursor-pointer p-6"
+              className="glass-strong rounded-2xl shadow-lg hover:shadow-2xl transition-all cursor-pointer p-6 border border-white/10 hover:border-cyan-500/50 group"
             >
-              <div className="text-5xl mb-4">{article.icon}</div>
-              <div className="text-sm text-green-600 font-medium mb-2">
+              <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">{article.icon}</div>
+              <div className="text-sm text-cyan-400 font-bold mb-2 px-3 py-1 glass rounded-full inline-block">
                 {article.category}
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+              <h3 className="text-2xl font-black text-white mb-3 group-hover:text-cyan-400 transition-colors">
                 {article.title}
               </h3>
-              <p className="text-gray-600 mb-4 text-sm">
+              <p className="text-gray-300 mb-4 text-sm">
                 {article.description}
               </p>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-500">{article.readTime}</span>
-                <span className="text-green-600 font-medium">+1 XP</span>
+                <span className="text-cyan-400 font-bold px-3 py-1 glass rounded-full">+1 XP</span>
               </div>
             </div>
           ))}
         </div>
 
         {/* More Coming Soon */}
-        <div className="mt-12 text-center bg-white rounded-lg shadow p-8">
-          <div className="text-5xl mb-4">🌱</div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+        <div className="mt-12 text-center glass-strong rounded-3xl shadow-lg p-12 border border-white/10">
+          <div className="text-7xl mb-6 animate-float">🌱</div>
+          <h3 className="text-3xl font-black text-white mb-3">
             More Articles Coming Soon
           </h3>
-          <p className="text-gray-600">
+          <p className="text-gray-300 text-lg">
             We're constantly adding new content to help you become a better plant parent!
           </p>
         </div>
@@ -120,4 +121,3 @@ export default function LearnPage() {
     </div>
   );
 }
-
