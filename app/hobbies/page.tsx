@@ -176,17 +176,17 @@ export default function HobbiesPage() {
                 Share your journey with plant enthusiasts worldwide
               </p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               <button
                 onClick={() => router.push('/hobbies/learn')}
-                className="px-6 py-3 glass-strong text-white rounded-xl font-bold hover:bg-white/20 transition-all group"
+                className="px-6 py-3 min-h-[48px] glass-strong text-white rounded-xl font-bold hover:bg-white/20 transition-all group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 <span className="mr-2 group-hover:scale-110 inline-block transition-transform">📚</span> 
                 Learn (+1 XP)
               </button>
               <button
                 onClick={handleCreatePost}
-                className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white rounded-xl font-bold hover:shadow-glow transition-all"
+                className="px-6 py-3 min-h-[48px] bg-gradient-to-r from-emerald-500 to-cyan-500 text-white rounded-xl font-bold hover:shadow-glow transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 ✏️ New Post
               </button>
@@ -197,7 +197,7 @@ export default function HobbiesPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search Bar */}
-        <div className="mb-6 flex gap-3">
+        <div className="mb-6 flex gap-4">
           <div className="flex-1 relative">
             <input
               type="text"
@@ -219,7 +219,7 @@ export default function HobbiesPage() {
         </div>
 
         {/* Hobby Group Filter */}
-        <div className="mb-8 flex flex-wrap gap-2">
+        <div className="mb-8 flex flex-wrap gap-3">
           <button
             onClick={() => setSelectedGroup('')}
             className={`px-4 py-2 rounded-xl font-medium transition-all ${
@@ -346,20 +346,21 @@ export default function HobbiesPage() {
                     </div>
                   )}
                 </div>
-                <div className="flex space-x-3">
-                  <button
-                    type="submit"
-                    disabled={submitting || uploading}
-                    className="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-6 py-4 rounded-xl font-bold hover:shadow-glow transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {uploading ? 'Uploading Image...' : submitting ? 'Posting...' : 'Post (+3 XP) →'}
-                  </button>
+                {/* Button Group: Cancel on left, Submit on right (UX standard) */}
+                <div className="flex gap-4 pt-2">
                   <button
                     type="button"
                     onClick={() => setShowCreateForm(false)}
-                    className="px-6 py-4 glass text-gray-300 rounded-xl font-bold hover:text-white hover:bg-white/20 transition-all"
+                    className="px-6 py-4 min-h-[52px] glass text-gray-300 rounded-xl font-bold hover:text-white hover:bg-white/20 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
                   >
                     Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submitting || uploading}
+                    className="flex-1 min-h-[52px] bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-6 py-4 rounded-xl font-bold hover:shadow-glow transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                  >
+                    {uploading ? 'Uploading Image...' : submitting ? 'Posting...' : 'Post (+3 XP) →'}
                   </button>
                 </div>
               </form>

@@ -29,17 +29,17 @@ export default function HomePage() {
           </p>
           
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
             <Link
               href="/signup"
-              className="group relative px-10 py-5 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white rounded-2xl font-bold text-lg hover:shadow-glow hover:scale-105 transition-all overflow-hidden"
+              className="group relative px-10 py-5 min-h-[56px] bg-gradient-to-r from-emerald-500 to-cyan-500 text-white rounded-2xl font-bold text-lg hover:shadow-glow hover:scale-105 transition-all overflow-hidden focus:outline-none focus-visible:ring-4 focus-visible:ring-emerald-400/50"
             >
               <span className="relative z-10">Start Your Journey</span>
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </Link>
             <Link
               href="/shop"
-              className="px-10 py-5 glass-strong text-white rounded-2xl font-bold text-lg hover:border-emerald-400/50 hover:scale-105 transition-all"
+              className="px-10 py-5 min-h-[56px] glass-strong text-white rounded-2xl font-bold text-lg hover:border-emerald-400/50 hover:scale-105 transition-all focus:outline-none focus-visible:ring-4 focus-visible:ring-white/30"
             >
               Explore Shop →
             </Link>
@@ -167,7 +167,7 @@ export default function HomePage() {
           </p>
           <Link
             href="/signup"
-            className="inline-block px-12 py-6 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white rounded-2xl font-bold text-xl hover:shadow-glow hover:scale-105 transition-all"
+            className="inline-block px-12 py-6 min-h-[60px] bg-gradient-to-r from-emerald-500 to-cyan-500 text-white rounded-2xl font-bold text-xl hover:shadow-glow hover:scale-105 transition-all focus:outline-none focus-visible:ring-4 focus-visible:ring-emerald-400/50"
           >
             Sign Up Free →
           </Link>

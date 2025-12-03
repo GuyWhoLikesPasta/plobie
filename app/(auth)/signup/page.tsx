@@ -164,29 +164,29 @@ export default function SignupPage() {
               <p className="mt-2 text-xs text-gray-500">At least 6 characters</p>
             </div>
 
-            <div className="space-y-3 pt-2">
-              <label className="flex items-start">
+            <div className="space-y-4 pt-4">
+              <label className="flex items-start gap-3 cursor-pointer group p-3 glass rounded-xl hover:bg-white/5 transition-all">
                 <input
                   type="checkbox"
                   checked={ageConfirmed}
                   onChange={(e) => setAgeConfirmed(e.target.checked)}
-                  className="mt-1 mr-3 h-4 w-4 rounded accent-emerald-500"
+                  className="mt-0.5 h-5 w-5 rounded accent-emerald-500 cursor-pointer focus:ring-2 focus:ring-emerald-500"
                   disabled={loading}
                 />
-                <span className="text-sm text-gray-300">
+                <span className="text-sm text-gray-300 group-hover:text-white transition-colors">
                   I confirm that I am at least 13 years old
                 </span>
               </label>
 
-              <label className="flex items-start">
+              <label className="flex items-start gap-3 cursor-pointer group p-3 glass rounded-xl hover:bg-white/5 transition-all">
                 <input
                   type="checkbox"
                   checked={conductConfirmed}
                   onChange={(e) => setConductConfirmed(e.target.checked)}
-                  className="mt-1 mr-3 h-4 w-4 rounded accent-emerald-500"
+                  className="mt-0.5 h-5 w-5 rounded accent-emerald-500 cursor-pointer focus:ring-2 focus:ring-emerald-500"
                   disabled={loading}
                 />
-                <span className="text-sm text-gray-300">
+                <span className="text-sm text-gray-300 group-hover:text-white transition-colors">
                   I agree to communicate respectfully and follow Plobie's community guidelines
                 </span>
               </label>

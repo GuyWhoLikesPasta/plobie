@@ -73,14 +73,14 @@ export default function Navigation() {
           </Link>
 
           {/* Main Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden md:flex items-center gap-2">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                  className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
                     isActive
                       ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg'
                       : 'text-gray-300 hover:text-white hover:bg-white/10'
@@ -126,16 +126,16 @@ export default function Navigation() {
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-3">
                 <Link
                   href="/login"
-                  className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition-all"
+                  className="px-5 py-2.5 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
                 >
                   Login
                 </Link>
                 <Link
                   href="/signup"
-                  className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-emerald-500 to-cyan-500 hover:shadow-glow rounded-xl transition-all"
+                  className="px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-emerald-500 to-cyan-500 hover:shadow-glow rounded-xl transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                 >
                   Sign Up
                 </Link>
@@ -145,7 +145,7 @@ export default function Navigation() {
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden pb-3 flex space-x-2 overflow-x-auto scrollbar-hide">
+        <div className="md:hidden pb-3 flex gap-3 overflow-x-auto scrollbar-hide">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
