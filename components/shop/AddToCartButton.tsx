@@ -71,17 +71,17 @@ export default function AddToCartButton({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Variant Selector */}
       {variants.length > 1 && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-bold text-gray-300 mb-3">
             Select Option
           </label>
           <select
             value={selectedVariantId}
             onChange={(e) => setSelectedVariantId(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-4 py-3 glass text-white rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             disabled={loading}
           >
             {variants.map((variant) => (
@@ -99,14 +99,14 @@ export default function AddToCartButton({
       {/* Quantity Selector */}
       {isInStock && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-bold text-gray-300 mb-3">
             Quantity
           </label>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center gap-4">
             <button
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
               disabled={loading || quantity <= 1}
-              className="w-10 h-10 border border-gray-300 rounded-lg hover:bg-gray-100 disabled:bg-gray-50 disabled:cursor-not-allowed transition"
+              className="w-12 h-12 glass border border-white/10 rounded-xl hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition font-bold text-white text-xl"
             >
               −
             </button>
@@ -116,17 +116,17 @@ export default function AddToCartButton({
               onChange={(e) => setQuantity(Math.min(maxQuantity, Math.max(1, parseInt(e.target.value) || 1)))}
               min={1}
               max={maxQuantity}
-              className="w-20 px-4 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-24 px-4 py-3 glass text-white text-center rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-bold text-lg"
               disabled={loading}
             />
             <button
               onClick={() => setQuantity(Math.min(maxQuantity, quantity + 1))}
               disabled={loading || quantity >= maxQuantity}
-              className="w-10 h-10 border border-gray-300 rounded-lg hover:bg-gray-100 disabled:bg-gray-50 disabled:cursor-not-allowed transition"
+              className="w-12 h-12 glass border border-white/10 rounded-xl hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition font-bold text-white text-xl"
             >
               +
             </button>
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-gray-400 font-medium">
               {maxQuantity} available
             </span>
           </div>
@@ -135,17 +135,17 @@ export default function AddToCartButton({
 
       {/* Error Message */}
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+        <div className="p-4 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl text-sm font-medium">
           {error}
         </div>
       )}
 
       {/* Total Price */}
       {selectedVariant && isInStock && (
-        <div className="bg-gray-50 rounded-lg p-4">
-          <div className="flex items-center justify-between text-lg">
-            <span className="font-medium text-gray-700">Total</span>
-            <span className="font-bold text-gray-900">
+        <div className="glass-strong rounded-xl p-6 border border-white/10">
+          <div className="flex items-center justify-between text-xl">
+            <span className="font-bold text-gray-300">Total</span>
+            <span className="font-black text-white text-2xl">
               ${((selectedVariant.price_cents * quantity) / 100).toFixed(2)}
             </span>
           </div>
@@ -156,13 +156,13 @@ export default function AddToCartButton({
       <button
         onClick={handleCheckout}
         disabled={loading || !isInStock}
-        className="w-full py-4 bg-green-600 text-white rounded-lg font-semibold text-lg hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+        className="w-full py-4 min-h-[56px] bg-gradient-to-r from-emerald-500 to-cyan-500 text-white rounded-xl font-black text-lg hover:from-emerald-600 hover:to-cyan-600 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed transition-all hover:scale-[1.02]"
       >
         {loading ? 'Processing...' : !isInStock ? 'Out of Stock' : '🛒 Checkout with Stripe'}
       </button>
 
       {/* Info Text */}
-      <p className="text-xs text-gray-500 text-center">
+      <p className="text-xs text-gray-500 text-center font-medium">
         Secure checkout powered by Stripe. You'll be redirected to complete your purchase.
       </p>
     </div>

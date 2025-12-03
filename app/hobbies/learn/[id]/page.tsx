@@ -248,7 +248,7 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
           <h1 className="text-4xl md:text-5xl font-black text-white mb-6">
             {article.title}
           </h1>
-          <div className="flex items-center space-x-4 text-sm text-gray-400 mb-8 pb-8 border-b border-white/10">
+          <div className="flex items-center gap-4 text-sm text-gray-400 mb-8 pb-8 border-b border-white/10">
             <span>{article.readTime}</span>
             <span>•</span>
             <span className="text-cyan-400 font-bold">+1 XP on completion</span>

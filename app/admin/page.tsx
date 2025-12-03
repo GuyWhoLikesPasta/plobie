@@ -534,16 +534,16 @@ export default function AdminDashboard() {
                         </span>
                       )}
                     </div>
-                    <div className="ml-4 flex flex-col space-y-2">
+                    <div className="ml-4 flex flex-col gap-3">
                       <button
                         onClick={() => togglePostVisibility(post.id, post.hidden || false)}
-                        className="px-4 py-2 text-sm glass text-amber-400 hover:bg-white/20 border border-amber-500/30 rounded-xl font-bold transition-all hover:scale-105"
+                        className="px-4 py-2 min-h-[40px] text-sm glass text-amber-400 hover:bg-white/20 border border-amber-500/30 rounded-xl font-bold transition-all hover:scale-105"
                       >
                         {post.hidden ? '👁️ Unhide' : '🚫 Hide'}
                       </button>
                       <button
                         onClick={() => deletePost(post.id)}
-                        className="px-4 py-2 text-sm bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 rounded-xl font-bold transition-all hover:scale-105"
+                        className="px-4 py-2 min-h-[40px] text-sm bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 rounded-xl font-bold transition-all hover:scale-105"
                       >
                         🗑️ Delete
                       </button>
@@ -567,7 +567,7 @@ export default function AdminDashboard() {
                 <div key={flag.key} className="px-8 py-6 flex items-center justify-between hover:bg-white/5 transition-colors group">
                   <div>
                     <p className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors">{flag.key}</p>
-                    <p className="text-sm mt-1">
+                    <p className="text-sm mt-2">
                       {flag.enabled ? (
                         <span className="text-emerald-400 font-bold">✅ Enabled</span>
                       ) : (

@@ -101,25 +101,25 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
                   <div className="text-2xl md:text-3xl font-black text-white">
                     {profile.posts}
                   </div>
-                  <div className="text-xs text-gray-400 font-medium mt-1">Posts</div>
+                  <div className="text-xs text-gray-400 font-medium mt-2">Posts</div>
                 </div>
                 <div className="glass rounded-xl p-4 md:p-5 text-center hover:scale-105 transition-transform border border-white/10">
                   <div className="text-2xl md:text-3xl font-black text-white">
                     {profile.comments}
                   </div>
-                  <div className="text-xs text-gray-400 font-medium mt-1">Comments</div>
+                  <div className="text-xs text-gray-400 font-medium mt-2">Comments</div>
                 </div>
                 <div className="glass rounded-xl p-4 md:p-5 text-center hover:scale-105 transition-transform border border-white/10">
                   <div className="text-2xl md:text-3xl font-black text-white">
                     {profile.pots}
                   </div>
-                  <div className="text-xs text-gray-400 font-medium mt-1">Pots</div>
+                  <div className="text-xs text-gray-400 font-medium mt-2">Pots</div>
                 </div>
                 <div className="glass rounded-xl p-4 md:p-5 text-center hover:scale-105 transition-transform border border-white/10">
                   <div className="text-2xl md:text-3xl font-black text-white">
                     {profile.xp}
                   </div>
-                  <div className="text-xs text-gray-400 font-medium mt-1">Total XP</div>
+                  <div className="text-xs text-gray-400 font-medium mt-2">Total XP</div>
                 </div>
               </div>
             </div>
@@ -145,7 +145,7 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
                   onClick={() => router.push(`/hobbies/posts/${post.id}`)}
                   className="glass rounded-2xl p-6 hover:bg-white/10 transition-all cursor-pointer border border-white/10 hover:border-emerald-500/50 group"
                 >
-                  <div className="flex items-center space-x-2 mb-3 text-sm">
+                  <div className="flex items-center gap-2 mb-3 text-sm">
                     <span className="glass px-3 py-1 rounded-full text-gray-400 font-medium">
                       {post.hobby_group}
                     </span>

@@ -29,7 +29,7 @@ export default function HomePage() {
           </p>
           
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               href="/signup"
               className="group relative px-10 py-5 min-h-[56px] bg-gradient-to-r from-emerald-500 to-cyan-500 text-white rounded-2xl font-bold text-lg hover:shadow-glow hover:scale-105 transition-all overflow-hidden focus:outline-none focus-visible:ring-4 focus-visible:ring-emerald-400/50"

@@ -107,7 +107,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
 
         {/* Post Card */}
         <div className="glass-strong rounded-3xl shadow-2xl p-8 md:p-10 mb-6 border border-white/10">
-          <div className="flex items-start space-x-4 mb-6">
+          <div className="flex items-start gap-4 mb-6">
             <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg">
               {post.profiles?.username?.[0]?.toUpperCase() || '?'}
             </div>
@@ -118,7 +118,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
               >
                 {post.profiles?.username || 'Anonymous'}
               </button>
-              <div className="text-sm text-gray-400 flex items-center gap-2 mt-1">
+              <div className="text-sm text-gray-400 flex items-center gap-2 mt-2">
                 <span className="glass px-3 py-1 rounded-full">{post.hobby_group}</span>
                 <span>·</span>
                 <span>{new Date(post.created_at).toLocaleDateString()}</span>
@@ -142,7 +142,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
             />
           )}
 
-          <div className="flex items-center space-x-4 pt-6 border-t border-white/10">
+          <div className="flex items-center gap-4 pt-6 border-t border-white/10">
             <LikeButton postId={post.id} initialCount={0} initialLiked={false} />
             <span className="text-sm text-gray-400 flex items-center gap-2 px-4 py-2 glass rounded-full">
               💬 {post.comments?.length || 0} comments
@@ -194,12 +194,12 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
           {post.comments && post.comments.length > 0 ? (
             post.comments.map((comment: any) => (
               <div key={comment.id} className="glass-strong rounded-2xl shadow-lg p-6 border border-white/10">
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-xl flex items-center justify-center text-white font-bold shadow-lg">
                     {comment.profiles?.username?.[0]?.toUpperCase() || '?'}
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-3">
+                    <div className="flex items-center gap-2 mb-3">
                       <span className="font-bold text-white">
                         {comment.profiles?.username || 'Anonymous'}
                       </span>

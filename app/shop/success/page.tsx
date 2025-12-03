@@ -72,18 +72,18 @@ export default async function CheckoutSuccessPage({
             <h3 className="font-bold text-white mb-4 text-lg">
               What's Next?
             </h3>
-            <ul className="text-sm text-gray-300 space-y-2">
-              <li className="flex items-start gap-2">
-                <span className="text-cyan-400">✓</span>
-                You'll receive an email confirmation shortly
+            <ul className="text-sm text-gray-300 space-y-3">
+              <li className="flex items-start gap-3">
+                <span className="text-cyan-400 text-lg">✓</span>
+                <span>You'll receive an email confirmation shortly</span>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="text-cyan-400">✓</span>
-                Your order will be processed within 1-2 business days
+              <li className="flex items-start gap-3">
+                <span className="text-cyan-400 text-lg">✓</span>
+                <span>Your order will be processed within 1-2 business days</span>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="text-cyan-400">✓</span>
-                Check your pottery's QR code to link it to your garden!
+              <li className="flex items-start gap-3">
+                <span className="text-cyan-400 text-lg">✓</span>
+                <span>Check your pottery's QR code to link it to your garden!</span>
               </li>
             </ul>
           </div>

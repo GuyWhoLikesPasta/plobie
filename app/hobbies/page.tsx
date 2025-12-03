@@ -339,7 +339,7 @@ export default function HobbiesPage() {
                         <span className="text-gray-300 font-medium">
                           Click to upload an image
                         </span>
-                        <span className="text-gray-500 text-sm mt-1">
+                        <span className="text-gray-500 text-sm mt-2">
                           JPG, PNG, WebP, or GIF (max 5MB)
                         </span>
                       </label>
@@ -399,12 +399,12 @@ export default function HobbiesPage() {
                 className="glass-strong rounded-3xl shadow-lg hover:shadow-2xl transition-all p-6 cursor-pointer border border-white/10 hover:border-emerald-500/50 group"
                 onClick={() => router.push(`/hobbies/posts/${post.id}`)}
               >
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
                     {post.profiles?.username?.[0]?.toUpperCase() || '?'}
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-2">
+                    <div className="flex items-center gap-2 mb-3">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -434,7 +434,7 @@ export default function HobbiesPage() {
                         className="mt-4 w-full max-h-96 object-cover rounded-2xl border border-white/10"
                       />
                     )}
-                    <div className="mt-4 flex items-center space-x-4">
+                    <div className="mt-6 flex items-center gap-4">
                       <LikeButton postId={post.id} initialCount={0} initialLiked={false} />
                       <span className="text-sm text-gray-400 flex items-center gap-2 px-3 py-2 glass rounded-full">
                         💬 {post.comments?.[0]?.count || 0}

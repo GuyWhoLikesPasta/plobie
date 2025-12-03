@@ -65,7 +65,7 @@ export default function Navigation() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 group">
+          <Link href="/" className="flex items-center gap-2 group">
             <span className="text-2xl group-hover:scale-110 transition-transform">🌱</span>
             <span className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
               Plobie
@@ -107,11 +107,11 @@ export default function Navigation() {
           </div>
 
           {/* Auth Section */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center gap-3">
             {loading ? (
               <div className="w-20 h-8 bg-white/10 rounded-lg animate-pulse"></div>
             ) : user ? (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center gap-3">
                 <Link
                   href={`/profile/${user.email?.split('@')[0]}`}
                   className="text-sm text-gray-300 hover:text-emerald-400 font-medium hidden sm:inline transition-colors"

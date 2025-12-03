@@ -67,14 +67,14 @@ export default function LikeButton({ postId, initialCount = 0, initialLiked = fa
     <button
       onClick={handleLike}
       disabled={loading}
-      className={`flex items-center space-x-1 px-3 py-1.5 rounded-lg font-medium transition-all ${
+      className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all min-h-[44px] ${
         liked
-          ? 'bg-red-100 text-red-600 hover:bg-red-200'
-          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          ? 'glass text-red-400 border border-red-500/30 hover:bg-red-500/10'
+          : 'glass text-gray-300 border border-white/10 hover:bg-white/10'
       } disabled:opacity-50`}
     >
       <span className="text-lg">{liked ? '❤️' : '🤍'}</span>
-      <span className="text-sm">{count}</span>
+      <span className="text-sm font-bold">{count}</span>
     </button>
   );
 }

@@ -25,7 +25,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     <div className="min-h-screen bg-black">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12 max-w-7xl">
         <div className="glass-strong rounded-3xl shadow-2xl overflow-hidden border border-white/10">
-          <div className="grid md:grid-cols-2 gap-8 p-8 md:p-12">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-10 p-8 md:p-12">
             {/* Product Image */}
             <div>
               <div className="relative w-full aspect-square bg-gradient-to-br from-emerald-900/30 via-purple-900/20 to-cyan-900/30 rounded-2xl flex items-center justify-center mb-6 border border-white/10 overflow-hidden">
@@ -115,8 +115,8 @@ function VariantOption({ variant }: { variant: any }) {
     <div className={`glass rounded-xl p-6 border transition-all ${isInStock ? 'border-white/10 hover:border-emerald-500/50' : 'border-white/5 opacity-50'}`}>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex-1">
-          <div className="flex items-center space-x-3 mb-2">
-            <h4 className="font-bold text-white text-lg">
+            <div className="flex items-center gap-3 mb-3">
+                <h4 className="font-bold text-white text-lg">
               {variant.size && <span className="capitalize">{variant.size}</span>}
               {variant.size && variant.color && ' - '}
               {variant.color && <span className="capitalize">{variant.color}</span>}
