@@ -222,7 +222,7 @@ export default function HobbiesPage() {
         <div className="mb-8 flex flex-wrap gap-3">
           <button
             onClick={() => setSelectedGroup('')}
-            className={`px-4 py-2 rounded-xl font-medium transition-all ${
+            className={`px-4 py-2.5 rounded-xl font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
               selectedGroup === ''
                 ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg'
                 : 'glass text-gray-300 hover:text-white hover:bg-white/20'
@@ -234,7 +234,7 @@ export default function HobbiesPage() {
             <button
               key={group.slug}
               onClick={() => setSelectedGroup(group.name)}
-              className={`px-4 py-2 rounded-xl font-medium transition-all ${
+              className={`px-4 py-2.5 rounded-xl font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
                 selectedGroup === group.name
                   ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg'
                   : 'glass text-gray-300 hover:text-white hover:bg-white/20'

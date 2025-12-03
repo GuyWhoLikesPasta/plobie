@@ -65,7 +65,7 @@ export default async function GamesPage() {
                   
                   <button
                     disabled
-                    className="px-6 py-2 glass text-gray-500 rounded-xl font-bold cursor-not-allowed border border-white/10 w-full sm:w-auto"
+                    className="px-6 py-3 min-h-[44px] glass text-gray-500 rounded-xl font-bold cursor-not-allowed border border-white/10 w-full sm:w-auto"
                   >
                     Coming Soon
                   </button>
@@ -96,7 +96,7 @@ export default async function GamesPage() {
                   
                   <button
                     disabled
-                    className="px-6 py-2 glass text-gray-500 rounded-xl font-bold cursor-not-allowed border border-white/10 w-full sm:w-auto"
+                    className="px-6 py-3 min-h-[44px] glass text-gray-500 rounded-xl font-bold cursor-not-allowed border border-white/10 w-full sm:w-auto"
                   >
                     Coming Soon
                   </button>

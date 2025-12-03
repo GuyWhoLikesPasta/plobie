@@ -152,7 +152,7 @@ function ClaimContent() {
             </p>
             <button
               onClick={handleClaim}
-              className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 py-4 rounded-xl font-bold hover:shadow-glow transition-all text-lg"
+              className="w-full min-h-[52px] bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 py-4 rounded-xl font-bold hover:shadow-glow transition-all text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               Claim This Pot →
             </button>
@@ -187,13 +187,13 @@ function ClaimContent() {
             <div className="space-y-3">
               <button
                 onClick={() => router.push('/my-plants')}
-                className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 py-4 rounded-xl font-bold hover:shadow-glow transition-all"
+                className="w-full min-h-[52px] bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 py-4 rounded-xl font-bold hover:shadow-glow transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 View My Plants →
               </button>
               <button
                 onClick={() => router.push('/shop')}
-                className="w-full glass text-white px-8 py-4 rounded-xl font-bold hover:bg-white/20 transition-all border border-white/10"
+                className="w-full min-h-[52px] glass text-white px-8 py-4 rounded-xl font-bold hover:bg-white/20 transition-all border border-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
               >
                 Shop More Pots
               </button>
@@ -219,13 +219,13 @@ function ClaimContent() {
                   setState('loading');
                   generateToken();
                 }}
-                className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 py-4 rounded-xl font-bold hover:shadow-glow transition-all"
+                className="w-full min-h-[52px] bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 py-4 rounded-xl font-bold hover:shadow-glow transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 Try Again
               </button>
               <button
                 onClick={() => router.push('/shop')}
-                className="w-full glass text-gray-300 px-8 py-4 rounded-xl font-bold hover:bg-white/20 transition-all border border-white/10"
+                className="w-full min-h-[52px] glass text-gray-300 px-8 py-4 rounded-xl font-bold hover:bg-white/20 transition-all border border-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
               >
                 Back to Shop
               </button>

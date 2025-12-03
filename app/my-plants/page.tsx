@@ -135,14 +135,14 @@ export default function MyPlantsPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/shop"
-                className="px-10 py-5 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white rounded-2xl font-bold hover:shadow-glow hover:scale-105 transition-all text-lg"
+                className="px-10 py-5 min-h-[56px] bg-gradient-to-r from-emerald-500 to-cyan-500 text-white rounded-2xl font-bold hover:shadow-glow hover:scale-105 transition-all text-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-emerald-400/50 flex items-center justify-center"
               >
                 🛍️ Shop Pottery
               </Link>
               
               <Link
                 href="/claim?code=TEST001"
-                className="px-10 py-5 glass-strong text-white rounded-2xl font-bold hover:bg-white/20 hover:scale-105 transition-all text-lg border border-white/20"
+                className="px-10 py-5 min-h-[56px] glass-strong text-white rounded-2xl font-bold hover:bg-white/20 hover:scale-105 transition-all text-lg border border-white/20 focus:outline-none focus-visible:ring-4 focus-visible:ring-white/30 flex items-center justify-center"
               >
                 📷 Try Claiming (Test)
               </Link>
@@ -191,7 +191,7 @@ export default function MyPlantsPage() {
                     
                     <button
                       disabled
-                      className="w-full py-3 glass text-gray-500 rounded-xl text-sm font-bold cursor-not-allowed border border-white/10"
+                      className="w-full py-3 min-h-[44px] glass text-gray-500 rounded-xl text-sm font-bold cursor-not-allowed border border-white/10"
                     >
                       🎮 View in Unity Garden (Coming Soon)
                     </button>
