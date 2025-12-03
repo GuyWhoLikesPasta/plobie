@@ -22,15 +22,15 @@ export default async function ShopPage() {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
-        <div className="relative overflow-hidden glass-strong rounded-3xl p-12 mb-12 border border-white/10">
+        <div className="relative overflow-hidden glass-strong rounded-3xl p-10 md:p-12 mb-12 border border-white/10">
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 via-transparent to-purple-500/20"></div>
           <div className="relative z-10">
-            <h1 className="text-6xl font-black mb-3">
+            <h1 className="text-5xl md:text-6xl font-black mb-4">
               <span className="gradient-text">Premium Shop</span>
             </h1>
-            <p className="text-xl text-gray-300">
+            <p className="text-lg md:text-xl text-gray-300">
               Handcrafted pottery and curated plant accessories
             </p>
           </div>
@@ -39,12 +39,10 @@ export default async function ShopPage() {
         {/* Featured Products */}
         {featuredProducts.length > 0 && (
           <section className="mb-16">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-4xl font-black text-white">
-                ✨ Featured Collection
-              </h2>
-            </div>
-            <div className="grid md:grid-cols-3 gap-8">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-8">
+              ✨ Featured Collection
+            </h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
               {featuredProducts.map((product: any) => (
                 <ProductCard key={product.id} product={product} featured />
               ))}
@@ -54,7 +52,7 @@ export default async function ShopPage() {
 
         {/* All Products */}
         <section>
-          <h2 className="text-4xl font-black text-white mb-8">All Products</h2>
+          <h2 className="text-3xl md:text-4xl font-black text-white mb-8">All Products</h2>
           
           {!products || products.length === 0 ? (
             <div className="glass-strong rounded-3xl border border-white/10 p-16 text-center">
@@ -65,7 +63,7 @@ export default async function ShopPage() {
               </p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {products.map((product: any) => (
                 <ProductCard key={product.id} product={product} />
               ))}

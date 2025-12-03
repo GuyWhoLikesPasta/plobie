@@ -60,29 +60,29 @@ export default function LearnPage() {
   return (
     <div className="min-h-screen bg-black">
       {/* Hero Section */}
-      <div className="relative overflow-hidden glass-strong py-16 border-b border-white/10">
+      <div className="relative overflow-hidden glass-strong py-12 md:py-16 border-b border-white/10">
         <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-transparent to-blue-500/20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-5xl md:text-6xl font-black text-white mb-3">📚 Learn</h1>
-          <p className="text-xl md:text-2xl text-gray-300">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4">📚 Learn</h1>
+          <p className="text-lg md:text-xl lg:text-2xl text-gray-300">
             Expand your knowledge and earn <span className="text-cyan-400 font-bold">+1 XP</span> per article (max 5/day)
           </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12">
         {/* XP Notice */}
-        <div className="glass-strong border border-cyan-500/30 rounded-2xl p-6 mb-8">
-          <div className="flex items-center gap-3">
-            <span className="text-3xl">⭐</span>
-            <p className="text-gray-300">
+        <div className="glass-strong border border-cyan-500/30 rounded-2xl p-5 md:p-6 mb-10">
+          <div className="flex items-center gap-4">
+            <span className="text-3xl md:text-4xl">⭐</span>
+            <p className="text-gray-300 text-sm md:text-base">
               <strong className="text-cyan-400">Earn +1 XP</strong> for each article you read (up to 5 articles per day)
             </p>
           </div>
         </div>
 
         {/* Articles Grid */}
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((article) => (
             <div
               key={article.id}
@@ -108,12 +108,12 @@ export default function LearnPage() {
         </div>
 
         {/* More Coming Soon */}
-        <div className="mt-12 text-center glass-strong rounded-3xl shadow-lg p-12 border border-white/10">
-          <div className="text-7xl mb-6 animate-float">🌱</div>
-          <h3 className="text-3xl font-black text-white mb-3">
+        <div className="mt-12 md:mt-16 text-center glass-strong rounded-3xl shadow-lg p-10 md:p-12 border border-white/10">
+          <div className="text-6xl md:text-7xl mb-6 animate-float">🌱</div>
+          <h3 className="text-2xl md:text-3xl font-black text-white mb-4">
             More Articles Coming Soon
           </h3>
-          <p className="text-gray-300 text-lg">
+          <p className="text-gray-300 text-base md:text-lg max-w-xl mx-auto">
             We're constantly adding new content to help you become a better plant parent!
           </p>
         </div>

@@ -55,10 +55,10 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Profile Header */}
-        <div className="glass-strong rounded-3xl shadow-2xl p-10 mb-8 border border-white/10">
-          <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8">
+        <div className="glass-strong rounded-3xl shadow-2xl p-8 md:p-10 mb-10 border border-white/10">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8">
             {/* Avatar */}
             <div className="flex-shrink-0 relative group">
               {profile.avatar_url ? (
@@ -96,30 +96,30 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-4 gap-4">
-                <div className="glass rounded-xl p-4 text-center hover:scale-105 transition-transform border border-white/10">
-                  <div className="text-3xl font-black text-white">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="glass rounded-xl p-4 md:p-5 text-center hover:scale-105 transition-transform border border-white/10">
+                  <div className="text-2xl md:text-3xl font-black text-white">
                     {profile.posts}
                   </div>
-                  <div className="text-xs text-gray-400 font-medium">Posts</div>
+                  <div className="text-xs text-gray-400 font-medium mt-1">Posts</div>
                 </div>
-                <div className="glass rounded-xl p-4 text-center hover:scale-105 transition-transform border border-white/10">
-                  <div className="text-3xl font-black text-white">
+                <div className="glass rounded-xl p-4 md:p-5 text-center hover:scale-105 transition-transform border border-white/10">
+                  <div className="text-2xl md:text-3xl font-black text-white">
                     {profile.comments}
                   </div>
-                  <div className="text-xs text-gray-400 font-medium">Comments</div>
+                  <div className="text-xs text-gray-400 font-medium mt-1">Comments</div>
                 </div>
-                <div className="glass rounded-xl p-4 text-center hover:scale-105 transition-transform border border-white/10">
-                  <div className="text-3xl font-black text-white">
+                <div className="glass rounded-xl p-4 md:p-5 text-center hover:scale-105 transition-transform border border-white/10">
+                  <div className="text-2xl md:text-3xl font-black text-white">
                     {profile.pots}
                   </div>
-                  <div className="text-xs text-gray-400 font-medium">Pots</div>
+                  <div className="text-xs text-gray-400 font-medium mt-1">Pots</div>
                 </div>
-                <div className="glass rounded-xl p-4 text-center hover:scale-105 transition-transform border border-white/10">
-                  <div className="text-3xl font-black text-white">
+                <div className="glass rounded-xl p-4 md:p-5 text-center hover:scale-105 transition-transform border border-white/10">
+                  <div className="text-2xl md:text-3xl font-black text-white">
                     {profile.xp}
                   </div>
-                  <div className="text-xs text-gray-400 font-medium">Total XP</div>
+                  <div className="text-xs text-gray-400 font-medium mt-1">Total XP</div>
                 </div>
               </div>
             </div>
@@ -127,8 +127,8 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
         </div>
 
         {/* Posts Section */}
-        <div className="glass-strong rounded-3xl shadow-lg p-8 border border-white/10">
-          <h2 className="text-3xl font-black text-white mb-8">
+        <div className="glass-strong rounded-3xl shadow-lg p-6 md:p-8 border border-white/10">
+          <h2 className="text-2xl md:text-3xl font-black text-white mb-6 md:mb-8">
             Recent Posts
           </h2>
 

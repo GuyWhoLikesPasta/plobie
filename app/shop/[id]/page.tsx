@@ -23,7 +23,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12 max-w-7xl">
         <div className="glass-strong rounded-3xl shadow-2xl overflow-hidden border border-white/10">
           <div className="grid md:grid-cols-2 gap-8 p-8 md:p-12">
             {/* Product Image */}

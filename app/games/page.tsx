@@ -5,12 +5,12 @@ export default async function GamesPage() {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-7xl">
         {/* Hero Section */}
-        <div className="relative glass-strong rounded-3xl p-8 md:p-12 mb-8 border border-white/10 overflow-hidden">
+        <div className="relative glass-strong rounded-3xl p-8 md:p-12 mb-10 border border-white/10 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-pink-500/20 to-transparent"></div>
           <div className="relative z-10">
-            <h1 className="text-4xl md:text-5xl font-black text-white mb-3">🎮 Games</h1>
+            <h1 className="text-4xl md:text-5xl font-black text-white mb-4">🎮 Games</h1>
             <p className="text-lg md:text-xl text-gray-300">
               Play mini-games, earn XP, grow your garden
             </p>
@@ -18,7 +18,7 @@ export default async function GamesPage() {
         </div>
 
         {/* Unity WebGL Integration Notice */}
-        <div className="glass-strong border border-cyan-500/30 rounded-2xl p-6 md:p-8 mb-8">
+        <div className="glass-strong border border-cyan-500/30 rounded-2xl p-6 md:p-8 mb-10">
           <div className="flex items-start gap-4">
             <span className="text-3xl md:text-4xl flex-shrink-0">🎯</span>
             <div>
@@ -37,11 +37,11 @@ export default async function GamesPage() {
 
         {/* Game Previews */}
         <section>
-          <h2 className="text-3xl md:text-4xl font-black text-white mb-6">
+          <h2 className="text-3xl md:text-4xl font-black text-white mb-8">
             Upcoming Games
           </h2>
           
-          <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
             {/* Plant Puzzle */}
             <div className="glass-strong rounded-2xl shadow-lg overflow-hidden border border-white/10 hover:border-emerald-500/50 transition-all group">
               <div className="aspect-video bg-gradient-to-br from-emerald-900/40 to-green-900/40 flex items-center justify-center relative overflow-hidden">
@@ -107,12 +107,12 @@ export default async function GamesPage() {
         </section>
 
         {/* XP Info */}
-        <section className="mt-8 glass-strong rounded-2xl shadow-lg p-6 md:p-8 border border-white/10">
-          <h2 className="text-3xl font-black text-white mb-6">
+        <section className="mt-10 md:mt-12 glass-strong rounded-2xl shadow-lg p-6 md:p-8 border border-white/10">
+          <h2 className="text-2xl md:text-3xl font-black text-white mb-8">
             🎯 How Game XP Works
           </h2>
           
-          <div className="space-y-6">
+          <div className="space-y-6 md:space-y-8">
             <div className="flex items-start gap-4">
               <span className="text-3xl flex-shrink-0">⏱️</span>
               <div>

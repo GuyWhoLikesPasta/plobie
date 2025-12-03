@@ -195,9 +195,9 @@ export default function HobbiesPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12">
         {/* Search Bar */}
-        <div className="mb-6 flex gap-4">
+        <div className="mb-8 flex flex-col sm:flex-row gap-4">
           <div className="flex-1 relative">
             <input
               type="text"
@@ -219,7 +219,7 @@ export default function HobbiesPage() {
         </div>
 
         {/* Hobby Group Filter */}
-        <div className="mb-8 flex flex-wrap gap-3">
+        <div className="mb-10 flex flex-wrap gap-3">
           <button
             onClick={() => setSelectedGroup('')}
             className={`px-4 py-2.5 rounded-xl font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${

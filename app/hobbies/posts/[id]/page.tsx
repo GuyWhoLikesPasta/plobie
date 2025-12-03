@@ -97,7 +97,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12">
         <button
           onClick={() => router.push('/hobbies')}
           className="mb-6 text-emerald-400 hover:text-emerald-300 font-bold flex items-center transition-colors"

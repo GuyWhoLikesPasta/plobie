@@ -121,11 +121,11 @@ function ClaimContent() {
       
       <div className="max-w-md w-full glass-strong rounded-3xl shadow-2xl p-8 md:p-10 border border-white/10 relative z-10">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-24 h-24 bg-gradient-to-br from-emerald-400 via-cyan-500 to-purple-500 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-lg animate-float">
-            <span className="text-5xl">🌱</span>
+        <div className="text-center mb-10">
+          <div className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-emerald-400 via-cyan-500 to-purple-500 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-lg animate-float">
+            <span className="text-4xl md:text-5xl">🌱</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-black text-white mb-3">
+          <h1 className="text-3xl md:text-4xl font-black text-white mb-4">
             Claim Your Pot
           </h1>
           {potCode && (
@@ -146,7 +146,7 @@ function ClaimContent() {
         {/* Ready State */}
         {state === 'ready' && (
           <div className="text-center">
-            <p className="text-gray-300 mb-8 text-lg">
+            <p className="text-gray-300 mb-8 text-base md:text-lg leading-relaxed">
               You're about to claim this pot and add it to your collection.
               You'll earn <span className="font-black text-emerald-400">+50 XP</span>!
             </p>

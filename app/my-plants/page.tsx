@@ -59,22 +59,22 @@ export default function MyPlantsPage() {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
-        <div className="relative overflow-hidden glass-strong rounded-3xl shadow-2xl p-10 mb-10 border border-white/10">
+        <div className="relative overflow-hidden glass-strong rounded-3xl shadow-2xl p-8 md:p-10 mb-10 md:mb-12 border border-white/10">
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 via-transparent to-purple-500/20"></div>
           <div className="relative z-10">
-            <h1 className="text-5xl md:text-6xl font-black mb-3">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4">
               <span className="gradient-text">My Garden</span>
             </h1>
-            <p className="text-xl text-gray-300">
+            <p className="text-lg md:text-xl text-gray-300">
               Your digital collection of claimed pottery
             </p>
           </div>
         </div>
 
         {/* Stats Dashboard */}
-        <div className="grid md:grid-cols-4 gap-6 mb-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10 md:mb-12">
           <div className="glass-strong rounded-2xl shadow-lg p-6 border-l-4 border-emerald-500 hover:scale-105 transition-transform">
             <div className="text-5xl mb-3">🏺</div>
             <p className="text-4xl font-black text-white">{stats?.totalPots || 0}</p>
@@ -102,7 +102,7 @@ export default function MyPlantsPage() {
 
         {/* XP Progress Bar */}
         {stats && (
-          <div className="glass-strong rounded-2xl shadow-lg p-8 mb-10 border border-white/10">
+          <div className="glass-strong rounded-2xl shadow-lg p-6 md:p-8 mb-10 md:mb-12 border border-white/10">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-2xl font-bold text-white">
                 Level {stats.level} Progress
@@ -123,12 +123,12 @@ export default function MyPlantsPage() {
 
         {/* No Pots State */}
         {(!pots || pots.length === 0) && (
-          <div className="glass-strong rounded-3xl shadow-2xl p-16 text-center mb-10 border border-white/10">
-            <div className="text-9xl mb-8 animate-float">🏺</div>
-            <h2 className="text-4xl font-black text-white mb-4">
+          <div className="glass-strong rounded-3xl shadow-2xl p-10 md:p-16 text-center mb-10 md:mb-12 border border-white/10">
+            <div className="text-7xl md:text-9xl mb-6 md:mb-8 animate-float">🏺</div>
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
               No Pots Claimed Yet
             </h2>
-            <p className="text-gray-400 mb-10 text-lg max-w-2xl mx-auto leading-relaxed">
+            <p className="text-gray-400 mb-8 md:mb-10 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
               Purchase pottery from our shop or scan a QR code to claim your first pot and start earning XP!
             </p>
             
@@ -152,14 +152,12 @@ export default function MyPlantsPage() {
 
         {/* Pots Collection */}
         {pots && pots.length > 0 && (
-          <section className="mb-10">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-4xl font-black text-white">
-                Your Collection <span className="text-gray-500">({pots.length})</span>
-              </h2>
-            </div>
+          <section className="mb-10 md:mb-12">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-8">
+              Your Collection <span className="text-gray-500">({pots.length})</span>
+            </h2>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {pots.map((claim: any) => (
                 <div
                   key={claim.id}
@@ -203,15 +201,15 @@ export default function MyPlantsPage() {
         )}
 
         {/* Earn XP Guide */}
-        <section className="relative glass-strong rounded-3xl shadow-2xl p-10 border border-white/10 overflow-hidden">
+        <section className="relative glass-strong rounded-3xl shadow-2xl p-8 md:p-10 border border-white/10 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 via-orange-500/20 to-red-500/20"></div>
           
           <div className="relative z-10">
-            <h2 className="text-4xl font-black text-white mb-8 text-center">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-8 text-center">
               🎯 Earn XP & Level Up
             </h2>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
               <div className="glass-strong rounded-2xl p-6 hover:scale-105 transition-transform border border-white/10">
                 <p className="font-bold mb-2 text-xl text-white">🏺 Claim a Pot</p>
                 <p className="text-sm text-gray-400">+50 XP (one-time per pot)</p>

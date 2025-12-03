@@ -98,15 +98,15 @@ export default function SignupPage() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.1),transparent_50%)]"></div>
       
       <div className="max-w-md w-full relative z-10">
-        <div className="text-center mb-8 animate-slide-up">
-          <h1 className="text-5xl font-black mb-3">
-            <span className="text-5xl">🌱</span> <span className="gradient-text">Plobie</span>
+        <div className="text-center mb-10 animate-slide-up">
+          <h1 className="text-4xl md:text-5xl font-black mb-4">
+            <span className="text-4xl md:text-5xl">🌱</span> <span className="gradient-text">Plobie</span>
           </h1>
-          <h2 className="text-3xl font-black text-white mb-3">Join Our Community</h2>
-          <p className="text-gray-400 text-lg">Start your plant journey today</p>
+          <h2 className="text-2xl md:text-3xl font-black text-white mb-3">Join Our Community</h2>
+          <p className="text-gray-400 text-base md:text-lg">Start your plant journey today</p>
         </div>
 
-        <div className="glass-strong rounded-3xl shadow-2xl p-10 border border-white/10">
+        <div className="glass-strong rounded-3xl shadow-2xl p-8 md:p-10 border border-white/10">
           {error && (
             <div className="mb-6 p-4 glass border border-red-500/30 text-red-400 rounded-xl text-sm font-medium">
               ⚠️ {error}

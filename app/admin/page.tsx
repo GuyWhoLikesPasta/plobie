@@ -372,24 +372,24 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-black py-8">
+    <div className="min-h-screen bg-black py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-10">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-14 h-14 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-3xl shadow-lg">
               ⚙️
             </div>
             <div>
-              <h1 className="text-5xl font-black text-white">Admin Dashboard</h1>
-              <p className="mt-1 text-gray-400">Manage users, content, and system settings</p>
+              <h1 className="text-4xl md:text-5xl font-black text-white">Admin Dashboard</h1>
+              <p className="mt-2 text-gray-400">Manage users, content, and system settings</p>
             </div>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="glass-strong rounded-2xl p-2 mb-8 border border-white/10">
-          <nav className="flex space-x-2">
+        <div className="glass-strong rounded-2xl p-2 mb-10 border border-white/10">
+          <nav className="flex gap-2">
             {['analytics', 'users', 'posts', 'flags'].map((tab) => (
               <button
                 key={tab}
@@ -410,37 +410,37 @@ export default function AdminDashboard() {
 
         {/* Analytics Tab */}
         {activeTab === 'analytics' && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="glass-strong p-8 rounded-2xl shadow-lg border border-purple-500/30 hover:scale-105 transition-transform">
-                <div className="text-4xl mb-3">👥</div>
-                <h3 className="text-sm font-medium text-gray-400">Total Users</h3>
-                <p className="mt-2 text-4xl font-black text-white">{analytics.total_users}</p>
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="glass-strong p-6 md:p-8 rounded-2xl shadow-lg border border-purple-500/30 hover:scale-105 transition-transform">
+                <div className="text-4xl mb-4">👥</div>
+                <h3 className="text-sm font-medium text-gray-400 mb-2">Total Users</h3>
+                <p className="text-3xl md:text-4xl font-black text-white">{analytics.total_users}</p>
               </div>
-              <div className="glass-strong p-8 rounded-2xl shadow-lg border border-emerald-500/30 hover:scale-105 transition-transform">
-                <div className="text-4xl mb-3">💬</div>
-                <h3 className="text-sm font-medium text-gray-400">Total Posts</h3>
-                <p className="mt-2 text-4xl font-black text-white">{analytics.total_posts}</p>
+              <div className="glass-strong p-6 md:p-8 rounded-2xl shadow-lg border border-emerald-500/30 hover:scale-105 transition-transform">
+                <div className="text-4xl mb-4">💬</div>
+                <h3 className="text-sm font-medium text-gray-400 mb-2">Total Posts</h3>
+                <p className="text-3xl md:text-4xl font-black text-white">{analytics.total_posts}</p>
               </div>
-              <div className="glass-strong p-8 rounded-2xl shadow-lg border border-cyan-500/30 hover:scale-105 transition-transform">
-                <div className="text-4xl mb-3">💭</div>
-                <h3 className="text-sm font-medium text-gray-400">Total Comments</h3>
-                <p className="mt-2 text-4xl font-black text-white">{analytics.total_comments}</p>
+              <div className="glass-strong p-6 md:p-8 rounded-2xl shadow-lg border border-cyan-500/30 hover:scale-105 transition-transform">
+                <div className="text-4xl mb-4">💭</div>
+                <h3 className="text-sm font-medium text-gray-400 mb-2">Total Comments</h3>
+                <p className="text-3xl md:text-4xl font-black text-white">{analytics.total_comments}</p>
               </div>
-              <div className="glass-strong p-8 rounded-2xl shadow-lg border border-amber-500/30 hover:scale-105 transition-transform">
-                <div className="text-4xl mb-3">🎯</div>
-                <h3 className="text-sm font-medium text-gray-400">XP Awarded Today</h3>
-                <p className="mt-2 text-4xl font-black bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">{analytics.xp_awarded_today}</p>
+              <div className="glass-strong p-6 md:p-8 rounded-2xl shadow-lg border border-amber-500/30 hover:scale-105 transition-transform">
+                <div className="text-4xl mb-4">🎯</div>
+                <h3 className="text-sm font-medium text-gray-400 mb-2">XP Awarded Today</h3>
+                <p className="text-3xl md:text-4xl font-black bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">{analytics.xp_awarded_today}</p>
               </div>
-              <div className="glass-strong p-8 rounded-2xl shadow-lg border border-pink-500/30 hover:scale-105 transition-transform">
-                <div className="text-4xl mb-3">📝</div>
-                <h3 className="text-sm font-medium text-gray-400">Posts Today</h3>
-                <p className="mt-2 text-4xl font-black text-white">{analytics.posts_today}</p>
+              <div className="glass-strong p-6 md:p-8 rounded-2xl shadow-lg border border-pink-500/30 hover:scale-105 transition-transform">
+                <div className="text-4xl mb-4">📝</div>
+                <h3 className="text-sm font-medium text-gray-400 mb-2">Posts Today</h3>
+                <p className="text-3xl md:text-4xl font-black text-white">{analytics.posts_today}</p>
               </div>
-              <div className="glass-strong p-8 rounded-2xl shadow-lg border border-blue-500/30 hover:scale-105 transition-transform">
-                <div className="text-4xl mb-3">📊</div>
-                <h3 className="text-sm font-medium text-gray-400">Posts This Week</h3>
-                <p className="mt-2 text-4xl font-black text-white">{analytics.posts_this_week}</p>
+              <div className="glass-strong p-6 md:p-8 rounded-2xl shadow-lg border border-blue-500/30 hover:scale-105 transition-transform">
+                <div className="text-4xl mb-4">📊</div>
+                <h3 className="text-sm font-medium text-gray-400 mb-2">Posts This Week</h3>
+                <p className="text-3xl md:text-4xl font-black text-white">{analytics.posts_this_week}</p>
               </div>
             </div>
           </div>
