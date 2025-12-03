@@ -39,14 +39,15 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 ## 🎨 Design System
 
 Plobie features a **2026 luxury dark mode design** with:
-- Glassmorphism effects (frosted glass)
-- Gradient accents (Emerald → Cyan)
-- Premium typography (Geist Sans)
-- Smooth animations & micro-interactions
+- Glassmorphism effects (`.glass`, `.glass-strong`)
+- Gradient accents (Emerald → Cyan primary)
+- Premium typography (Geist Sans/Mono)
+- Smooth animations (`animate-fade-in`, `animate-slide-up`, `animate-float`)
+- 48px+ touch targets (WCAG compliant)
 - Fully responsive (mobile → 4K displays)
 - Browser compatible (Chrome, Firefox, Safari, Edge)
 
-**📚 Full Style Guide:** `.local-docs/STYLE_GUIDE.md`
+**📚 Full Design System:** `.local-docs/DESIGN_SYSTEM.md`
 
 ### Quick Reference
 ```css
