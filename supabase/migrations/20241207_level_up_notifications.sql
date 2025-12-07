@@ -54,6 +54,9 @@ CREATE TRIGGER level_up_notification_trigger
 -- Add XP cap notification to apply_xp function
 -- This modifies the existing apply_xp function to send a notification when daily cap is reached
 
+-- Drop existing function first (required to change return type)
+DROP FUNCTION IF EXISTS public.apply_xp(UUID, TEXT, INT, TEXT, UUID);
+
 CREATE OR REPLACE FUNCTION public.apply_xp(
   p_profile_id UUID,
   p_action_type TEXT,
