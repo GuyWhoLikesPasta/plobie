@@ -17,6 +17,23 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Plobie - Plant-Centered Social Commerce",
   description: "Connect with plant lovers, grow your digital garden, and shop for beautiful pottery.",
+  keywords: ["plants", "pottery", "social commerce", "gardening", "plant community", "indoor plants"],
+  authors: [{ name: "Plobie Team" }],
+  openGraph: {
+    title: "Plobie - Plant-Centered Social Commerce",
+    description: "Connect with plant lovers, grow your digital garden, and shop for beautiful pottery.",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Plobie - Plant-Centered Social Commerce",
+    description: "Connect with plant lovers, grow your digital garden, and shop for beautiful pottery.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

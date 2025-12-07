@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { ProfileCardSkeleton, PostCardSkeleton } from '@/components/skeletons';
 
@@ -59,11 +60,16 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
             {/* Avatar */}
             <div className="flex-shrink-0">
               {profile.avatar_url ? (
-                <img
-                  src={profile.avatar_url}
-                  alt={profile.username}
-                  className="w-24 h-24 rounded-full object-cover"
-                />
+                <div className="relative w-24 h-24 rounded-full overflow-hidden">
+                  <Image
+                    src={profile.avatar_url}
+                    alt={profile.username}
+                    fill
+                    className="object-cover"
+                    sizes="96px"
+                    priority
+                  />
+                </div>
               ) : (
                 <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white text-3xl font-bold">
                   {profile.username[0].toUpperCase()}

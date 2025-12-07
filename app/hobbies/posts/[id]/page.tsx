@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { createClient } from '@/lib/supabase';
 import LikeButton from '@/components/posts/LikeButton';
 import toast from 'react-hot-toast';
@@ -130,11 +131,16 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
           </p>
 
           {post.image_url && (
-            <img
-              src={post.image_url}
-              alt={post.title}
-              className="rounded-lg w-full max-h-96 object-cover mb-6"
-            />
+            <div className="relative w-full h-96 mb-6">
+              <Image
+                src={post.image_url}
+                alt={post.title}
+                fill
+                className="rounded-lg object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority={false}
+              />
+            </div>
           )}
 
           <div className="flex items-center gap-3 pt-4 sm:pt-6 border-t">

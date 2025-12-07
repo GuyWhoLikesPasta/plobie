@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { createClient } from '@/lib/supabase';
 import LikeButton from '@/components/posts/LikeButton';
 import toast from 'react-hot-toast';
@@ -423,11 +424,16 @@ export default function HobbiesPage() {
                     </h3>
                     <p className="text-gray-700 line-clamp-3">{post.content}</p>
                     {post.image_url && (
-                      <img
-                        src={post.image_url}
-                        alt={post.title}
-                        className="mt-4 w-full max-h-64 object-cover rounded-lg"
-                      />
+                      <div className="relative w-full h-64 mt-4">
+                        <Image
+                          src={post.image_url}
+                          alt={post.title}
+                          fill
+                          className="rounded-lg object-cover"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          loading="lazy"
+                        />
+                      </div>
                     )}
                     <div className="mt-4 flex items-center space-x-3">
                       <LikeButton postId={post.id} initialCount={0} initialLiked={false} />
