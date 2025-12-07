@@ -27,12 +27,27 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - ✅ Feature Flags - Toggle features on/off
 - ✅ Analytics Dashboard - View platform metrics
 
+**Notifications:**
+- ✅ Real-time Notifications - Bell icon with unread badge
+- ✅ Notification Types - Comments, likes, level-ups, XP caps
+- ✅ Full Notifications Page - History, filters, management
+- ✅ Auto-refresh - 30-second polling for updates
+
+**Performance:**
+- ✅ Image Optimization - next/image with AVIF/WebP
+- ✅ Lazy Loading - Images load on scroll
+- ✅ Database Indexes - 15+ optimized queries
+- ✅ Bundle Optimization - Code splitting and tree-shaking
+- ✅ Core Web Vitals - Optimized LCP, FID, CLS
+
 **Quality:**
-- ✅ 74 unit tests + 19 E2E tests passing
+- ✅ 128 total tests (84 E2E + 44 unit) passing
 - ✅ TypeScript strict mode
-- ✅ Mobile responsive
+- ✅ 100% mobile responsive (16 pages)
 - ✅ Toast notifications
 - ✅ Skeleton loading states
+- ✅ Error boundaries (loading, error, 404 pages)
+- ✅ SEO optimized (metadata, Open Graph, Twitter Cards)
 
 **Production:** https://plobie.vercel.app
 
@@ -104,11 +119,22 @@ SENTRY_DSN=https://...
 
 1. Go to your Supabase project dashboard
 2. Navigate to SQL Editor
-3. Run migrations in order:
+3. Run migrations in order from `supabase/migrations/`:
    ```
-   supabase/migrations/20241115_initial_schema.sql
-   supabase/migrations/20241115_rls_policies.sql
+   20241115_initial_schema.sql
+   20241115_rls_policies.sql
+   20241126_xp_system.sql
+   20241126_compatibility_fix.sql
+   20241126_posts_compatibility.sql
+   20241126_fix_posts_rls.sql
+   20241202_admin_features.sql
+   20241202_fix_order_items_rls.sql
+   20241207_notifications_system.sql
+   20241207_level_up_notifications.sql
+   20241207_performance_indexes.sql
    ```
+
+**See**: `.local-docs/week5/NOTIFICATIONS_SETUP.md` and `.local-docs/week5/PERFORMANCE_SETUP.md` for detailed migration guides.
 
 ### Seed Development Data
 
@@ -132,12 +158,15 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 ## Available Scripts
 
 ```bash
-npm run dev          # Start development server with Turbopack
-npm run build        # Build for production
-npm run start        # Start production server
-npm run lint         # Run ESLint
-npm run typecheck    # Run TypeScript compiler check
-npm run seed         # Seed development data
+npm run dev             # Start development server with Turbopack
+npm run build           # Build for production
+npm run start           # Start production server
+npm run lint            # Run ESLint
+npm run typecheck       # Run TypeScript compiler check
+npm test                # Run unit tests
+npm test:ui             # Run tests with UI
+npm test:coverage       # Run tests with coverage
+npm run seed            # Seed development data
 ```
 
 ## Project Structure
@@ -194,11 +223,40 @@ Control features dynamically:
 
 ## API Endpoints
 
+**System:**
 - `GET /api/healthz` - Health check
-- `GET /api/flags` - Get all feature flags
-- `POST /api/flags` - Toggle flag (admin only)
-- `POST /api/checkout` - Create checkout session
+- `GET /api/flags` - Get feature flags
+- `PATCH /api/flags` - Toggle flag (admin only)
+
+**Posts & Community:**
+- `GET /api/posts` - List posts with filters
+- `POST /api/posts` - Create post (+3 XP)
+- `GET /api/posts/[id]` - Get post detail
+- `POST /api/posts/[id]/comments` - Add comment (+1 XP)
+- `POST /api/posts/[id]/like` - Like post
+- `DELETE /api/posts/[id]/like` - Unlike post
+
+**Notifications:**
+- `GET /api/notifications` - Fetch notifications
+- `PATCH /api/notifications` - Mark as read
+- `DELETE /api/notifications` - Delete notifications
+- `POST /api/notifications` - Create test notification
+
+**User:**
+- `GET /api/profiles/[username]` - Get user profile
+- `POST /api/profiles/avatar` - Upload avatar
+
+**Shop:**
+- `POST /api/checkout` - Create Stripe checkout
 - `POST /api/stripe/webhook` - Handle Stripe events
+
+**XP & Claims:**
+- `POST /api/xp/award` - Award XP (admin)
+- `POST /api/pots/claim` - Claim pot (+50 XP)
+- `POST /api/learn/mark-read` - Mark article read (+1 XP)
+
+**My Plants:**
+- `GET /api/my-plants` - Get user's garden
 
 ## Development
 
