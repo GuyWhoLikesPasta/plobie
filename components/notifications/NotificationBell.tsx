@@ -217,17 +217,15 @@ export default function NotificationBell() {
           </div>
 
           {/* Footer */}
-          {notifications.length > 0 && (
-            <div className="p-3 border-t border-gray-200 text-center">
-              <Link
-                href="/notifications"
-                onClick={() => setIsOpen(false)}
-                className="text-sm text-green-600 hover:text-green-700 font-medium"
-              >
-                View all notifications
-              </Link>
-            </div>
-          )}
+          <div className="p-3 border-t border-gray-200 text-center">
+            <Link
+              href="/notifications"
+              onClick={() => setIsOpen(false)}
+              className="text-sm text-green-600 hover:text-green-700 font-medium"
+            >
+              View all notifications
+            </Link>
+          </div>
         </div>
       )}
     </div>
