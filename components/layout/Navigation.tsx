@@ -118,7 +118,7 @@ export default function Navigation() {
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="px-4 py-2 min-h-[44px] text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
+                  className="px-4 py-2 min-h-[44px] flex items-center text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
                 >
                   Sign Out
                 </button>
