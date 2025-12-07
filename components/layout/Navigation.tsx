@@ -65,20 +65,20 @@ export default function Navigation() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center gap-2 min-h-[44px]">
             <span className="text-2xl">🌱</span>
             <span className="text-xl font-bold text-green-800">Plobie</span>
           </Link>
 
           {/* Main Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden md:flex items-center gap-2">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                  className={`px-4 py-2 min-h-[44px] flex items-center rounded-lg text-sm font-medium transition ${
                     isActive
                       ? 'bg-green-100 text-green-800'
                       : 'text-gray-700 hover:bg-gray-100'
@@ -92,7 +92,7 @@ export default function Navigation() {
             {isAdmin && (
               <Link
                 href="/admin"
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                className={`px-4 py-2 min-h-[44px] flex items-center rounded-lg text-sm font-medium transition ${
                   pathname === '/admin'
                     ? 'bg-red-100 text-red-800'
                     : 'text-gray-700 hover:bg-gray-100'
@@ -105,11 +105,11 @@ export default function Navigation() {
           </div>
 
           {/* Auth Section */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-3">
             {loading ? (
               <div className="w-20 h-8 bg-gray-200 rounded animate-pulse"></div>
             ) : user ? (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center gap-3">
                 <Link
                   href={`/profile/${user.email?.split('@')[0]}`}
                   className="text-sm text-gray-700 hover:text-green-600 font-medium hidden sm:inline transition"
@@ -118,22 +118,22 @@ export default function Navigation() {
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
+                  className="px-4 py-2 min-h-[44px] text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
                 >
                   Sign Out
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-3">
                 <Link
                   href="/login"
-                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
+                  className="px-4 py-2 min-h-[44px] flex items-center text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
                 >
                   Login
                 </Link>
                 <Link
                   href="/signup"
-                  className="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition"
+                  className="px-4 py-2 min-h-[44px] flex items-center text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition"
                 >
                   Sign Up
                 </Link>
@@ -143,14 +143,14 @@ export default function Navigation() {
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden pb-3 flex space-x-1 overflow-x-auto">
+        <div className="md:hidden pb-3 flex gap-2 overflow-x-auto">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition ${
+                className={`px-3 py-2 min-h-[44px] flex items-center rounded-lg text-xs font-medium whitespace-nowrap transition ${
                   isActive
                     ? 'bg-green-100 text-green-800'
                     : 'text-gray-700 hover:bg-gray-100'
