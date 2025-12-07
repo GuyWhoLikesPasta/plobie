@@ -51,10 +51,10 @@ export async function POST(
       );
     }
 
-    // Verify post exists
+    // Verify post exists and get author info
     const { data: post } = await supabase
       .from('posts')
-      .select('id')
+      .select('id, title, author_id, profile_id')
       .eq('id', postId)
       .single();
 
@@ -108,6 +108,27 @@ export async function POST(
         },
         { status: 500 }
       );
+    }
+
+    // Send notification to post author (if not liking own post)
+    if (post.author_id && post.author_id !== user.id) {
+      const { data: likerProfile } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('id', profile.id)
+        .single();
+
+      await adminSupabase.rpc('create_notification', {
+        p_user_id: post.author_id,
+        p_type: 'like',
+        p_title: '❤️ New like on your post',
+        p_message: `${likerProfile?.username || 'Someone'} liked "${post.title?.substring(0, 50) || 'your post'}"`,
+        p_link: `/hobbies/posts/${postId}`,
+        p_metadata: {
+          post_id: postId,
+          liker_id: user.id,
+        },
+      });
     }
 
     // Get updated reaction count
