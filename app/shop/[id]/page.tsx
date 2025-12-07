@@ -23,10 +23,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6 sm:py-8">
         <div className="max-w-6xl mx-auto">
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div className="grid md:grid-cols-2 gap-8 p-8">
+            <div className="grid md:grid-cols-2 gap-6 sm:gap-8 p-4 sm:p-8">
               {/* Product Image */}
               <div>
                 <div className="w-full aspect-square bg-gradient-to-br from-green-100 to-green-200 rounded-lg flex items-center justify-center mb-4">
@@ -42,11 +42,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
               {/* Product Info */}
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
                   {product.name}
                 </h1>
 
-                <p className="text-gray-600 mb-6 leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 leading-relaxed">
                   {product.description || 'Beautiful handcrafted pottery for your plants'}
                 </p>
 

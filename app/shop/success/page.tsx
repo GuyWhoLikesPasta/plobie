@@ -23,9 +23,9 @@ export default async function CheckoutSuccessPage({
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="max-w-md w-full">
-        <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+        <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8 text-center">
           {/* Success Icon */}
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
             <svg
               className="w-8 h-8 text-green-600"
               fill="none"
@@ -42,11 +42,11 @@ export default async function CheckoutSuccessPage({
           </div>
 
           {/* Success Message */}
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
             Order Confirmed!
           </h1>
           
-          <p className="text-gray-600 mb-6">
+          <p className="text-sm sm:text-base text-gray-600 mb-6">
             Thank you for your purchase. Your order has been successfully placed.
           </p>
 
@@ -80,13 +80,13 @@ export default async function CheckoutSuccessPage({
           <div className="space-y-3">
             <Link
               href="/my-plants"
-              className="block w-full py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
+              className="block w-full py-3 min-h-[48px] flex items-center justify-center bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
             >
               🌿 Go to My Plants
             </Link>
             <Link
               href="/shop"
-              className="block w-full py-3 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 transition"
+              className="block w-full py-3 min-h-[48px] flex items-center justify-center bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 transition"
             >
               Continue Shopping
             </Link>

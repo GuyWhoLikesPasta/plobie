@@ -60,19 +60,19 @@ export default function LearnPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-12">
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold mb-2">📚 Learn</h1>
-          <p className="text-xl text-blue-100">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-2">📚 Learn</h1>
+          <p className="text-base sm:text-xl text-blue-100">
             Expand your plant knowledge and earn +1 XP per article (cap 5/day)
           </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* XP Notice */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
-          <div className="flex items-center space-x-2">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 sm:mb-8">
+          <div className="flex items-center gap-2">
             <span className="text-2xl">⭐</span>
             <p className="text-blue-900">
               <strong>Earn +1 XP</strong> for each article you read (up to 5 articles per day)
@@ -81,7 +81,7 @@ export default function LearnPage() {
         </div>
 
         {/* Articles Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {articles.map((article) => (
             <div
               key={article.id}

@@ -54,8 +54,8 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Profile Header */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
-          <div className="flex items-start space-x-6">
+        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-8 mb-6">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
             {/* Avatar */}
             <div className="flex-shrink-0">
               {profile.avatar_url ? (
@@ -72,13 +72,13 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
             </div>
 
             {/* Profile Info */}
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <div className="flex-1 text-center sm:text-left w-full">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                 {profile.username}
               </h1>
               
               {/* Level and XP */}
-              <div className="flex items-center space-x-4 mb-4">
+              <div className="flex items-center justify-center sm:justify-start gap-3 sm:gap-4 mb-4">
                 <span className="inline-block bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-1 rounded-full text-sm font-medium">
                   Level {profile.level}
                 </span>
@@ -88,7 +88,7 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-4 gap-4 mt-6">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-6">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">
                     {profile.posts}
@@ -119,8 +119,8 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
         </div>
 
         {/* Posts Section */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
             Recent Posts
           </h2>
 

@@ -58,15 +58,15 @@ export default function MyPlantsPage() {
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl shadow-xl p-8 mb-8 text-white">
-          <h1 className="text-4xl font-bold mb-2">🌿 My Plants</h1>
-          <p className="text-xl text-green-100">
+        <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl shadow-xl p-6 sm:p-8 mb-6 sm:mb-8 text-white">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-2">🌿 My Plants</h1>
+          <p className="text-base sm:text-xl text-green-100">
             Your digital garden of claimed pottery
           </p>
         </div>
 
         {/* Stats Dashboard */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
           <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-green-500">
             <div className="text-4xl mb-3">🏺</div>
             <p className="text-3xl font-bold text-gray-900">{stats?.totalPots || 0}</p>
@@ -114,26 +114,26 @@ export default function MyPlantsPage() {
 
         {/* No Pots State */}
         {(!pots || pots.length === 0) && (
-          <div className="bg-white rounded-xl shadow-xl p-12 text-center mb-8">
-            <div className="text-8xl mb-6">🏺</div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-3">
+          <div className="bg-white rounded-xl shadow-xl p-8 sm:p-12 text-center mb-6 sm:mb-8">
+            <div className="text-6xl sm:text-8xl mb-4 sm:mb-6">🏺</div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">
               No Pots Claimed Yet
             </h2>
-            <p className="text-gray-600 mb-8 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-600 mb-6 sm:mb-8 text-base sm:text-lg max-w-2xl mx-auto">
               Purchase pottery from our shop or scan a QR code to claim your first pot and start earning XP!
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <Link
                 href="/shop"
-                className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all text-lg shadow-lg"
+                className="px-8 py-4 min-h-[56px] flex items-center justify-center bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all text-base sm:text-lg shadow-lg"
               >
                 🛍️ Shop Pottery
               </Link>
               
               <Link
                 href="/claim?code=TEST001"
-                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-600 hover:to-indigo-700 transition-all text-lg shadow-lg"
+                className="px-8 py-4 min-h-[56px] flex items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-600 hover:to-indigo-700 transition-all text-base sm:text-lg shadow-lg"
               >
                 📷 Try Claiming (Test)
               </Link>
@@ -143,14 +143,14 @@ export default function MyPlantsPage() {
 
         {/* Pots Collection */}
         {pots && pots.length > 0 && (
-          <section className="mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">
+          <section className="mb-6 sm:mb-8">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
                 Your Collection ({pots.length} {pots.length === 1 ? 'pot' : 'pots'})
               </h2>
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {pots.map((claim: any) => (
                 <div
                   key={claim.id}

@@ -24,18 +24,18 @@ export default async function ShopPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-lg p-8 mb-8 text-white">
-          <h1 className="text-4xl font-bold mb-2">🛍️ Shop</h1>
-          <p className="text-green-100">
+        <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-lg p-6 sm:p-8 mb-6 sm:mb-8 text-white">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-2">🛍️ Shop</h1>
+          <p className="text-sm sm:text-base text-green-100">
             Beautiful pottery and plant accessories for your garden
           </p>
         </div>
 
         {/* Featured Products */}
         {featuredProducts.length > 0 && (
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">✨ Featured Items</h2>
-            <div className="grid md:grid-cols-3 gap-6">
+          <section className="mb-8 sm:mb-12">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">✨ Featured Items</h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {featuredProducts.map((product: any) => (
                 <ProductCard key={product.id} product={product} featured />
               ))}
@@ -45,17 +45,17 @@ export default async function ShopPage() {
 
         {/* All Products */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">All Products</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">All Products</h2>
           
           {!products || products.length === 0 ? (
-            <div className="bg-white rounded-lg shadow p-12 text-center">
+            <div className="bg-white rounded-lg shadow p-8 sm:p-12 text-center">
               <p className="text-gray-600 mb-4">No products available yet.</p>
               <p className="text-sm text-gray-500">
                 Run <code className="bg-gray-100 px-2 py-1 rounded">npm run seed</code> to add sample products.
               </p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {products.map((product: any) => (
                 <ProductCard key={product.id} product={product} />
               ))}

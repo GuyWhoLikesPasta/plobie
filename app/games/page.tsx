@@ -7,16 +7,16 @@ export default async function GamesPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg p-8 mb-8 text-white">
-          <h1 className="text-4xl font-bold mb-2">🎮 Games</h1>
-          <p className="text-indigo-100">
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg p-6 sm:p-8 mb-6 sm:mb-8 text-white">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-2">🎮 Games</h1>
+          <p className="text-sm sm:text-base text-indigo-100">
             Play mini-games, earn XP, and grow your digital garden
           </p>
         </div>
 
         {/* Unity WebGL Integration Notice */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-          <div className="flex items-start space-x-3">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8">
+          <div className="flex items-start gap-3">
             <span className="text-2xl">🎯</span>
             <div>
               <h3 className="font-semibold text-blue-900 mb-1">
@@ -35,11 +35,11 @@ export default async function GamesPage() {
 
         {/* Game Previews */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
             Upcoming Games
           </h2>
           
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
             {/* Plant Puzzle */}
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <div className="aspect-video bg-gradient-to-br from-green-300 to-green-500 flex items-center justify-center">
@@ -109,7 +109,7 @@ export default async function GamesPage() {
           </h2>
           
           <div className="space-y-4 text-gray-700">
-            <div className="flex items-start space-x-3">
+            <div className="flex items-start gap-3">
               <span className="text-2xl">⏱️</span>
               <div>
                 <h3 className="font-semibold mb-1">Play Time Tracking</h3>
@@ -119,7 +119,7 @@ export default async function GamesPage() {
               </div>
             </div>
             
-            <div className="flex items-start space-x-3">
+            <div className="flex items-start gap-3">
               <span className="text-2xl">🚫</span>
               <div>
                 <h3 className="font-semibold mb-1">Daily Limit</h3>
@@ -129,7 +129,7 @@ export default async function GamesPage() {
               </div>
             </div>
             
-            <div className="flex items-start space-x-3">
+            <div className="flex items-start gap-3">
               <span className="text-2xl">🔒</span>
               <div>
                 <h3 className="font-semibold mb-1">Session Recording</h3>

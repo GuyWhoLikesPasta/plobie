@@ -117,13 +117,13 @@ function ClaimContent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
+      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-6 sm:p-8">
         {/* Header */}
         <div className="text-center mb-6">
           <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full mx-auto mb-4 flex items-center justify-center">
             <span className="text-4xl">🌱</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
             Claim Your Pot
           </h1>
           {potCode && (
@@ -150,7 +150,7 @@ function ClaimContent() {
             </p>
             <button
               onClick={handleClaim}
-              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all transform hover:scale-105"
+              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 min-h-[48px] rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all transform hover:scale-105"
             >
               Claim This Pot
             </button>
