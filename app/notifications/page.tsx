@@ -160,15 +160,27 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Notifications</h1>
-              <p className="text-sm sm:text-base text-gray-600 mt-1">
-                {unreadCount > 0 ? `${unreadCount} unread` : 'All caught up! 🎉'}
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center">
+                  <span className="text-2xl">🔔</span>
+                </div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Notifications</h1>
+              </div>
+              <p className="text-sm sm:text-base text-gray-600">
+                {unreadCount > 0 ? (
+                  <span className="inline-flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    {unreadCount} unread notification{unreadCount !== 1 ? 's' : ''}
+                  </span>
+                ) : (
+                  <span>All caught up! 🎉</span>
+                )}
               </p>
             </div>
             
@@ -193,54 +205,77 @@ export default function NotificationsPage() {
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap gap-2">
-            {['all', 'unread', 'comment', 'like', 'level_up', 'xp_cap', 'system'].map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`px-4 py-2 min-h-[44px] rounded-lg text-sm font-medium transition ${
-                  filter === f
-                    ? 'bg-green-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-                }`}
-              >
-                {f === 'all' ? 'All' : f === 'unread' ? 'Unread' : f.replace('_', ' ')}
-                {f === 'unread' && unreadCount > 0 && (
-                  <span className="ml-2 bg-white text-green-600 px-2 py-0.5 rounded-full text-xs font-bold">
-                    {unreadCount}
-                  </span>
-                )}
-              </button>
-            ))}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3">
+            <div className="flex flex-wrap gap-2">
+              {[
+                { key: 'all', label: 'All', icon: '📋' },
+                { key: 'unread', label: 'Unread', icon: '🟢' },
+                { key: 'comment', label: 'Comments', icon: '💬' },
+                { key: 'like', label: 'Likes', icon: '❤️' },
+                { key: 'level_up', label: 'Level Up', icon: '🎉' },
+                { key: 'xp_cap', label: 'XP Cap', icon: '⚠️' },
+                { key: 'system', label: 'System', icon: '🔔' },
+              ].map(({ key, label, icon }) => (
+                <button
+                  key={key}
+                  onClick={() => setFilter(key)}
+                  className={`px-3 sm:px-4 py-2 min-h-[44px] rounded-lg text-xs sm:text-sm font-medium transition flex items-center gap-1.5 ${
+                    filter === key
+                      ? 'bg-green-600 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <span>{icon}</span>
+                  <span>{label}</span>
+                  {key === 'unread' && unreadCount > 0 && (
+                    <span className="ml-1 bg-white text-green-600 px-2 py-0.5 rounded-full text-xs font-bold">
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Notifications List */}
         {filteredNotifications.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-8 sm:p-12 text-center">
-            <div className="text-6xl sm:text-8xl mb-4">🔔</div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-              {filter === 'unread' ? 'No unread notifications' : 'No notifications'}
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 sm:p-12 text-center">
+            <div className="w-24 h-24 bg-gradient-to-br from-green-100 to-emerald-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
+              <span className="text-6xl">🔔</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
+              {filter === 'unread' ? 'No unread notifications' : 'No notifications yet'}
             </h2>
-            <p className="text-sm sm:text-base text-gray-600 mb-6">
+            <p className="text-sm sm:text-base text-gray-600 mb-8 max-w-md mx-auto">
               {filter === 'unread'
-                ? "You're all caught up! 🎉"
-                : 'Notifications will appear here when you receive them.'}
+                ? "You're all caught up! Check back later for updates on your posts and activity."
+                : 'Notifications will appear here when you receive comments, likes, level up, or reach your daily XP cap.'}
             </p>
-            <Link
-              href="/"
-              className="inline-block px-6 py-3 min-h-[48px] bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
-            >
-              Go to Home
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/"
+                className="inline-flex items-center justify-center px-6 py-3 min-h-[48px] bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition shadow-md"
+              >
+                🏠 Go to Home
+              </Link>
+              <Link
+                href="/hobbies"
+                className="inline-flex items-center justify-center px-6 py-3 min-h-[48px] bg-white text-gray-700 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition"
+              >
+                💬 Browse Hobbies
+              </Link>
+            </div>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {filteredNotifications.map((notification) => (
               <div
                 key={notification.id}
-                className={`bg-white rounded-lg shadow hover:shadow-md transition-all overflow-hidden ${
-                  !notification.read ? 'border-l-4 border-green-500' : ''
+                className={`bg-white rounded-xl shadow-md hover:shadow-lg transition-all overflow-hidden border ${
+                  !notification.read 
+                    ? 'border-l-4 border-green-500 bg-green-50/30' 
+                    : 'border-gray-200'
                 }`}
               >
                 <div className="p-4 sm:p-6">
