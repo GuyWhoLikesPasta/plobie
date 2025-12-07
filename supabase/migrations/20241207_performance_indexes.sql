@@ -12,7 +12,9 @@ CREATE INDEX IF NOT EXISTS comments_author_idx ON public.comments(author_id);
 
 -- Profiles table indexes
 CREATE INDEX IF NOT EXISTS profiles_username_idx ON public.profiles(username);
-CREATE INDEX IF NOT EXISTS profiles_total_xp_idx ON public.profiles(total_xp DESC);
+
+-- XP balances indexes (total_xp is in xp_balances, not profiles)
+CREATE INDEX IF NOT EXISTS xp_balances_total_xp_idx ON public.xp_balances(total_xp DESC);
 
 -- XP events indexes
 CREATE INDEX IF NOT EXISTS xp_events_profile_date_idx ON public.xp_events(profile_id, created_at DESC);
@@ -35,6 +37,7 @@ ANALYZE public.posts;
 ANALYZE public.comments;
 ANALYZE public.profiles;
 ANALYZE public.xp_events;
+ANALYZE public.xp_balances;
 ANALYZE public.post_reactions;
 ANALYZE public.orders;
 ANALYZE public.pot_claims;
