@@ -103,8 +103,8 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
         </button>
 
         {/* Post Card */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
-          <div className="flex items-start space-x-4 mb-6">
+        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-8 mb-6">
+          <div className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-6">
             <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
               {post.profiles?.username?.[0]?.toUpperCase() || '?'}
             </div>
@@ -121,11 +121,11 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
             </div>
           </div>
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
             {post.title}
           </h1>
 
-          <p className="text-gray-700 whitespace-pre-wrap mb-6">
+          <p className="text-sm sm:text-base text-gray-700 whitespace-pre-wrap mb-6">
             {post.content}
           </p>
 
@@ -137,7 +137,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
             />
           )}
 
-          <div className="flex items-center space-x-3 pt-6 border-t">
+          <div className="flex items-center gap-3 pt-4 sm:pt-6 border-t">
             <LikeButton postId={post.id} initialCount={0} initialLiked={false} />
             <span className="text-sm text-gray-500">
               💬 {post.comments?.length || 0} comments
@@ -146,8 +146,8 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
         </div>
 
         {/* Comment Form */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <div className="bg-white rounded-lg shadow p-4 sm:p-6 mb-6">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
             Add a Comment
           </h2>
           {isAuthenticated ? (

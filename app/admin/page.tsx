@@ -375,14 +375,14 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="mt-2 text-gray-600">Manage users, content, and system settings</p>
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+          <p className="mt-2 text-sm sm:text-base text-gray-600">Manage users, content, and system settings</p>
         </div>
 
         {/* Tabs */}
-        <div className="border-b border-gray-200 mb-6">
-          <nav className="-mb-px flex space-x-8">
+        <div className="border-b border-gray-200 mb-6 overflow-x-auto">
+          <nav className="-mb-px flex gap-4 sm:gap-8">
             {['analytics', 'users', 'posts', 'flags'].map((tab) => (
               <button
                 key={tab}
@@ -403,8 +403,8 @@ export default function AdminDashboard() {
 
         {/* Analytics Tab */}
         {activeTab === 'analytics' && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
               <div className="bg-white p-6 rounded-lg shadow">
                 <h3 className="text-sm font-medium text-gray-500">Total Users</h3>
                 <p className="mt-2 text-3xl font-bold text-gray-900">{analytics.total_users}</p>

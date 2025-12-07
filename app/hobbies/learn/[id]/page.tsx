@@ -241,15 +241,15 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
         </button>
 
         {/* Article Card */}
-        <article className="bg-white rounded-lg shadow-lg p-8 mb-6">
-          <div className="text-6xl mb-4">{article.icon}</div>
-          <div className="text-sm text-green-600 font-medium mb-2">
+        <article className="bg-white rounded-lg shadow-lg p-4 sm:p-8 mb-6">
+          <div className="text-5xl sm:text-6xl mb-4">{article.icon}</div>
+          <div className="text-xs sm:text-sm text-green-600 font-medium mb-2">
             {article.category}
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-4">
             {article.title}
           </h1>
-          <div className="flex items-center space-x-4 text-sm text-gray-500 mb-8 pb-8 border-b">
+          <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b">
             <span>{article.readTime}</span>
             <span>•</span>
             <span className="text-green-600 font-medium">+1 XP on completion</span>
@@ -278,20 +278,20 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
         </article>
 
         {/* Mark as Read Button */}
-        <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg shadow-lg p-6 text-center">
+        <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg shadow-lg p-4 sm:p-6 text-center">
           {hasRead ? (
             <div>
-              <div className="text-4xl mb-2">✅</div>
-              <h3 className="text-xl font-bold text-white mb-2">
+              <div className="text-3xl sm:text-4xl mb-2">✅</div>
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
                 Article Completed!
               </h3>
-              <p className="text-green-100">
+              <p className="text-sm sm:text-base text-green-100">
                 You have earned XP for reading this article
               </p>
             </div>
           ) : isAuthenticated ? (
             <div>
-              <h3 className="text-xl font-bold text-white mb-4">
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-4">
                 Finished reading?
               </h3>
               <button
