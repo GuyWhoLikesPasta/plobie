@@ -73,10 +73,10 @@ export async function POST(
       );
     }
 
-    // Verify post exists
+    // Verify post exists and get author
     const { data: post } = await supabase
       .from('posts')
-      .select('id')
+      .select('id, title, author_id, profile_id')
       .eq('id', postId)
       .single();
 
@@ -151,6 +151,28 @@ export async function POST(
 
     const xpResult = (xpData as unknown as any[])?.[0];
     const xpAwarded = xpResult?.xp_awarded || 0;
+
+    // Send notification to post author (if not commenting on own post)
+    if (post.author_id && post.author_id !== user.id) {
+      const { data: commenterProfile } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('id', profile.id)
+        .single();
+
+      await adminSupabase.rpc('create_notification', {
+        p_user_id: post.author_id,
+        p_type: 'comment',
+        p_title: 'New comment on your post',
+        p_message: `${commenterProfile?.username || 'Someone'} commented on "${post.title?.substring(0, 50) || 'your post'}"`,
+        p_link: `/hobbies/posts/${postId}`,
+        p_metadata: {
+          post_id: postId,
+          comment_id: comment.id,
+          commenter_id: user.id,
+        },
+      });
+    }
 
     // Track analytics event
     trackEvent('comment_created', postId);

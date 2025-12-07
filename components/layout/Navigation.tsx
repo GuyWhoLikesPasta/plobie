@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import type { User } from '@supabase/supabase-js';
+import NotificationBell from '@/components/notifications/NotificationBell';
 
 export default function Navigation() {
   const [user, setUser] = useState<User | null>(null);
@@ -110,6 +111,8 @@ export default function Navigation() {
               <div className="w-20 h-8 bg-gray-200 rounded animate-pulse"></div>
             ) : user ? (
               <div className="flex items-center gap-3">
+                {/* Notification Bell */}
+                <NotificationBell />
                 <Link
                   href={`/profile/${user.email?.split('@')[0]}`}
                   className="text-sm text-gray-700 hover:text-green-600 font-medium hidden sm:inline transition"
