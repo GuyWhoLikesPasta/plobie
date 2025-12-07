@@ -160,10 +160,10 @@ export async function POST(
         .eq('id', profile.id)
         .single();
 
-      await adminSupabase.rpc('create_notification', {
+      const { error: notificationError } = await adminSupabase.rpc('create_notification', {
         p_user_id: post.author_id,
         p_type: 'comment',
-        p_title: 'New comment on your post',
+        p_title: '💬 New comment on your post',
         p_message: `${commenterProfile?.username || 'Someone'} commented on "${post.title?.substring(0, 50) || 'your post'}"`,
         p_link: `/hobbies/posts/${postId}`,
         p_metadata: {
@@ -172,6 +172,11 @@ export async function POST(
           commenter_id: user.id,
         },
       });
+
+      // Log notification errors but don't fail the comment operation
+      if (notificationError) {
+        console.error('Failed to create comment notification:', notificationError);
+      }
     }
 
     // Track analytics event

@@ -118,7 +118,7 @@ export async function POST(
         .eq('id', profile.id)
         .single();
 
-      await adminSupabase.rpc('create_notification', {
+      const { error: notificationError } = await adminSupabase.rpc('create_notification', {
         p_user_id: post.author_id,
         p_type: 'like',
         p_title: '❤️ New like on your post',
@@ -129,6 +129,11 @@ export async function POST(
           liker_id: user.id,
         },
       });
+
+      // Log notification errors but don't fail the like operation
+      if (notificationError) {
+        console.error('Failed to create like notification:', notificationError);
+      }
     }
 
     // Get updated reaction count
