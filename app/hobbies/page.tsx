@@ -164,25 +164,25 @@ export default function HobbiesPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-12">
+      <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-4xl font-bold mb-2">🌿 Hobbies</h1>
-              <p className="text-xl text-green-100">
+              <h1 className="text-3xl sm:text-4xl font-bold mb-2">🌿 Hobbies</h1>
+              <p className="text-base sm:text-xl text-green-100">
                 Connect with fellow plant enthusiasts
               </p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 w-full sm:w-auto">
               <button
                 onClick={() => router.push('/hobbies/learn')}
-                className="bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition-all"
+                className="flex-1 sm:flex-none bg-blue-500 text-white px-4 sm:px-6 py-3 min-h-[48px] rounded-lg font-medium text-sm sm:text-base hover:bg-blue-600 transition-all"
               >
                 📚 Learn (+1 XP)
               </button>
               <button
                 onClick={handleCreatePost}
-                className="bg-white text-green-600 px-6 py-3 rounded-lg font-medium hover:bg-green-50 transition-all"
+                className="flex-1 sm:flex-none bg-white text-green-600 px-4 sm:px-6 py-3 min-h-[48px] rounded-lg font-medium text-sm sm:text-base hover:bg-green-50 transition-all"
               >
                 ✏️ New Post
               </button>
@@ -193,21 +193,21 @@ export default function HobbiesPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search Bar */}
-        <div className="mb-6 flex gap-3">
+        <div className="mb-6 flex flex-col sm:flex-row gap-3">
           <div className="flex-1 relative">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search posts..."
-              className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
+              className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base"
             />
             <span className="absolute left-4 top-3.5 text-gray-400 text-xl">🔍</span>
           </div>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'recent' | 'trending')}
-            className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 bg-white"
+            className="px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 bg-white text-base"
           >
             <option value="recent">Recent</option>
             <option value="trending">Trending</option>
@@ -218,7 +218,7 @@ export default function HobbiesPage() {
         <div className="mb-8 flex flex-wrap gap-2">
           <button
             onClick={() => setSelectedGroup('')}
-            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            className={`px-4 py-2 min-h-[44px] rounded-lg font-medium text-sm sm:text-base transition-all ${
               selectedGroup === ''
                 ? 'bg-green-600 text-white'
                 : 'bg-white text-gray-700 hover:bg-gray-100'
@@ -230,7 +230,7 @@ export default function HobbiesPage() {
             <button
               key={group.slug}
               onClick={() => setSelectedGroup(group.name)}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+              className={`px-4 py-2 min-h-[44px] rounded-lg font-medium text-sm sm:text-base transition-all ${
                 selectedGroup === group.name
                   ? 'bg-green-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-100'
