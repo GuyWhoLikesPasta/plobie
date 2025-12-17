@@ -49,6 +49,12 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - ✅ Error boundaries (loading, error, 404 pages)
 - ✅ SEO optimized (metadata, Open Graph, Twitter Cards)
 
+**Unity Integration:**
+- 🎮 Game Session API - Track playtime, award XP
+- 💾 Game Progress API - Save/load game state
+- ⚡ Action XP API - Reward in-game achievements
+- 🛠️ Dev Tools - Testing helpers (dev mode only)
+
 **Production:** https://plobie.vercel.app
 
 ## Overview
@@ -132,9 +138,10 @@ SENTRY_DSN=https://...
    20241207_notifications_system.sql
    20241207_level_up_notifications.sql
    20241207_performance_indexes.sql
+   20241217_unity_game_tables.sql
    ```
 
-**See**: `.local-docs/week5/NOTIFICATIONS_SETUP.md` and `.local-docs/week5/PERFORMANCE_SETUP.md` for detailed migration guides.
+**See**: `.local-docs/week5/NOTIFICATIONS_SETUP.md`, `.local-docs/week5/PERFORMANCE_SETUP.md`, and `.local-docs/unity/` for detailed setup guides.
 
 ### Seed Development Data
 
@@ -254,6 +261,15 @@ Control features dynamically:
 - `POST /api/xp/award` - Award XP (admin)
 - `POST /api/pots/claim` - Claim pot (+50 XP)
 - `POST /api/learn/mark-read` - Mark article read (+1 XP)
+
+**Unity/Games:**
+- `POST /api/games/session` - Start/end game session
+- `GET /api/games/session` - Get active session
+- `GET /api/games/progress` - Load game state
+- `POST /api/games/progress` - Save game state (1MB max)
+- `POST /api/games/xp` - Award action-based XP
+- `POST /api/dev/reset-xp` - Reset XP caps (dev only)
+- `GET /api/dev/xp-status` - Inspect XP status (dev only)
 
 **My Plants:**
 - `GET /api/my-plants` - Get user's garden
