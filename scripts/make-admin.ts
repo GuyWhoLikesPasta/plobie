@@ -1,8 +1,8 @@
 /**
  * Make Admin Script
- * 
+ *
  * Grants admin role to a user by email
- * 
+ *
  * Usage: npm run user:admin <email>
  * Example: npm run user:admin test@plobie.com
  */
@@ -63,7 +63,6 @@ async function makeAdmin(email: string) {
     console.log('✅ Admin role granted successfully!\n');
     console.log(`${profile.username} is now an admin.`);
     console.log('They can access the admin dashboard at: /admin\n');
-
   } catch (error: any) {
     console.error('❌ Error granting admin role:', error.message || error);
     process.exit(1);
@@ -82,4 +81,3 @@ if (!email) {
 
 // Run the script
 makeAdmin(email);
-

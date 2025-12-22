@@ -14,12 +14,7 @@ Sentry.init({
   environment: process.env.NODE_ENV,
 
   // Ignore common errors
-  ignoreErrors: [
-    'ECONNREFUSED',
-    'ENOTFOUND',
-    'ETIMEDOUT',
-    'ECONNRESET',
-  ],
+  ignoreErrors: ['ECONNREFUSED', 'ENOTFOUND', 'ETIMEDOUT', 'ECONNRESET'],
 
   beforeSend(event, hint) {
     // Filter out development errors
@@ -41,4 +36,3 @@ Sentry.init({
     return event;
   },
 });
-

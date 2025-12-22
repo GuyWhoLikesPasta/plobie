@@ -19,7 +19,8 @@
     "seed:pots": "tsx scripts/seed-pots.ts",
     "db:reset": "tsx scripts/reset-db.ts",
     "user:create": "tsx scripts/create-test-user.ts",
-    "user:admin": "tsx scripts/make-admin.ts"
+    "user:admin": "tsx scripts/make-admin.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@sentry/nextjs": "^10.25.0",
@@ -51,8 +52,20 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
     "happy-dom": "^20.0.10",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4",
     "tailwindcss": "^4",
     "typescript": "^5.9.3",
     "vitest": "^4.0.9"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   }
 }

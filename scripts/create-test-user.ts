@@ -1,8 +1,8 @@
 /**
  * Create Test User Script
- * 
+ *
  * Creates a test user with known credentials for development/testing
- * 
+ *
  * Usage: npm run user:create
  */
 
@@ -87,15 +87,13 @@ async function createTestUser() {
 
     if (profileError) {
       console.warn('⚠️  Profile not found, creating manually...');
-      
-      const { error: insertError } = await supabase
-        .from('profiles')
-        .insert({
-          id: authData.user.id,
-          username: TEST_USER.username,
-          full_name: TEST_USER.full_name,
-          email: TEST_USER.email,
-        });
+
+      const { error: insertError } = await supabase.from('profiles').insert({
+        id: authData.user.id,
+        username: TEST_USER.username,
+        full_name: TEST_USER.full_name,
+        email: TEST_USER.email,
+      });
 
       if (insertError) throw insertError;
       console.log('✅ Profile created manually');
@@ -104,15 +102,14 @@ async function createTestUser() {
     }
 
     // Create XP balance
-    const { error: xpError } = await supabase
-      .from('xp_balances')
-      .insert({
-        profile_id: authData.user.id,
-        total_xp: 0,
-        current_level: 0,
-      });
+    const { error: xpError } = await supabase.from('xp_balances').insert({
+      profile_id: authData.user.id,
+      total_xp: 0,
+      current_level: 0,
+    });
 
-    if (xpError && xpError.code !== '23505') { // Ignore duplicate key error
+    if (xpError && xpError.code !== '23505') {
+      // Ignore duplicate key error
       console.warn('⚠️  XP balance creation warning:', xpError.message);
     } else {
       console.log('✅ XP balance initialized');
@@ -124,7 +121,6 @@ async function createTestUser() {
     console.log(`   Password: ${TEST_USER.password}`);
     console.log(`   Username: ${TEST_USER.username}\n`);
     console.log('🔗 Login at: http://localhost:3000/login\n');
-
   } catch (error: any) {
     console.error('❌ Error creating test user:', error.message || error);
     process.exit(1);
@@ -133,4 +129,3 @@ async function createTestUser() {
 
 // Run the script
 createTestUser();
-

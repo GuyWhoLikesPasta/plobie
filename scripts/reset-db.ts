@@ -1,12 +1,12 @@
 /**
  * Reset Database Script
- * 
+ *
  * Clears all user-generated data from the database while preserving:
  * - Products
  * - Pots
  * - Learn articles
  * - Feature flags
- * 
+ *
  * Usage: npm run db:reset
  */
 
@@ -32,7 +32,7 @@ async function resetDatabase() {
 
   try {
     // Delete in order to respect foreign key constraints
-    
+
     console.log('Deleting notifications...');
     const { error: notificationsError } = await supabase
       .from('notifications')
@@ -66,7 +66,7 @@ async function resetDatabase() {
     console.log('✅ Posts deleted\n');
 
     console.log('Deleting orders...');
-    const { error: ordersError} = await supabase
+    const { error: ordersError } = await supabase
       .from('orders')
       .delete()
       .neq('id', '00000000-0000-0000-0000-000000000000');
@@ -128,7 +128,6 @@ async function resetDatabase() {
     console.log('  - Learn articles');
     console.log('  - Feature flags');
     console.log('\n✅ Ready for fresh data!');
-
   } catch (error) {
     console.error('❌ Error resetting database:', error);
     process.exit(1);
@@ -137,4 +136,3 @@ async function resetDatabase() {
 
 // Run the script
 resetDatabase();
-

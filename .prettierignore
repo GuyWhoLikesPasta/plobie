@@ -1,0 +1,35 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build output
+.next
+out
+dist
+build
+
+# Cache
+.turbo
+.eslintcache
+
+# Misc
+.DS_Store
+*.pem
+
+# Local env files
+.env*.local
+
+# Test results
+coverage
+playwright-report
+test-results
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# README (preserve formatting)
+README.md
+
