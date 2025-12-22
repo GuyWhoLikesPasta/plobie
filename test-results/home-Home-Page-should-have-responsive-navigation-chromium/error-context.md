@@ -1,0 +1,94 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "🌱 Plobie" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: 🌱
+        - generic [ref=e7]: Plobie
+      - generic [ref=e8]:
+        - link "🏠 Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e10]: 🏠
+          - text: Home
+        - link "💬 Hobbies" [ref=e11] [cursor=pointer]:
+          - /url: /hobbies
+          - generic [ref=e12]: 💬
+          - text: Hobbies
+        - link "🌿 My Plants" [ref=e13] [cursor=pointer]:
+          - /url: /my-plants
+          - generic [ref=e14]: 🌿
+          - text: My Plants
+        - link "🎮 Games" [ref=e15] [cursor=pointer]:
+          - /url: /games
+          - generic [ref=e16]: 🎮
+          - text: Games
+        - link "🛍️ Shop" [ref=e17] [cursor=pointer]:
+          - /url: /shop
+          - generic [ref=e18]: 🛍️
+          - text: Shop
+      - generic [ref=e20]:
+        - link "Login" [ref=e21] [cursor=pointer]:
+          - /url: /login
+        - link "Sign Up" [ref=e22] [cursor=pointer]:
+          - /url: /signup
+  - generic [ref=e23]:
+    - generic [ref=e25]:
+      - heading "🌱 Welcome to Plobie" [level=1] [ref=e26]
+      - paragraph [ref=e27]: Plant-Centered Social Commerce
+      - paragraph [ref=e28]: Connect with plant lovers, grow your digital garden, and shop for beautiful pottery
+      - generic [ref=e29]:
+        - link "Get Started" [ref=e30] [cursor=pointer]:
+          - /url: /signup
+        - link "Browse Shop" [ref=e31] [cursor=pointer]:
+          - /url: /shop
+    - generic [ref=e32]:
+      - heading "Everything You Need" [level=2] [ref=e33]
+      - generic [ref=e34]:
+        - link "🛍️ Shop Browse beautiful handcrafted pottery and plant accessories" [ref=e35] [cursor=pointer]:
+          - /url: /shop
+          - generic [ref=e36]: 🛍️
+          - heading "Shop" [level=3] [ref=e37]
+          - paragraph [ref=e38]: Browse beautiful handcrafted pottery and plant accessories
+        - link "💬 Hobbies Join interest groups and share your plant journey" [ref=e39] [cursor=pointer]:
+          - /url: /hobbies
+          - generic [ref=e40]: 💬
+          - heading "Hobbies" [level=3] [ref=e41]
+          - paragraph [ref=e42]: Join interest groups and share your plant journey
+        - link "🌿 My Plants Track your pottery collection and digital garden" [ref=e43] [cursor=pointer]:
+          - /url: /my-plants
+          - generic [ref=e44]: 🌿
+          - heading "My Plants" [level=3] [ref=e45]
+          - paragraph [ref=e46]: Track your pottery collection and digital garden
+        - link "🎮 Games Play mini-games and earn XP for your garden" [ref=e47] [cursor=pointer]:
+          - /url: /games
+          - generic [ref=e48]: 🎮
+          - heading "Games" [level=3] [ref=e49]
+          - paragraph [ref=e50]: Play mini-games and earn XP for your garden
+    - generic [ref=e52]:
+      - heading "🎯 Earn XP & Grow" [level=2] [ref=e53]
+      - paragraph [ref=e54]: Engage with the community, claim pots, play games, and level up your digital garden
+      - generic [ref=e55]:
+        - generic [ref=e56]:
+          - paragraph [ref=e57]: +50 XP
+          - paragraph [ref=e58]: Claim a Pot
+        - generic [ref=e59]:
+          - paragraph [ref=e60]: +3 XP
+          - paragraph [ref=e61]: Create a Post
+        - generic [ref=e62]:
+          - paragraph [ref=e63]: +2 XP
+          - paragraph [ref=e64]: Play Games
+        - generic [ref=e65]:
+          - paragraph [ref=e66]: +1 XP
+          - paragraph [ref=e67]: Read Articles
+    - generic [ref=e68]:
+      - heading "Ready to Start Your Plant Journey?" [level=2] [ref=e69]
+      - paragraph [ref=e70]: Join our community of plant lovers today
+      - link "Sign Up Free" [ref=e71] [cursor=pointer]:
+        - /url: /signup
+  - button "Open Next.js Dev Tools" [ref=e77] [cursor=pointer]:
+    - img [ref=e78]
+  - alert [ref=e81]
+```

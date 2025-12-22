@@ -1,0 +1,59 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "🌱 Plobie" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: 🌱
+        - generic [ref=e7]: Plobie
+      - generic [ref=e8]:
+        - link "🏠 Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e10]: 🏠
+          - text: Home
+        - link "💬 Hobbies" [ref=e11] [cursor=pointer]:
+          - /url: /hobbies
+          - generic [ref=e12]: 💬
+          - text: Hobbies
+        - link "🌿 My Plants" [ref=e13] [cursor=pointer]:
+          - /url: /my-plants
+          - generic [ref=e14]: 🌿
+          - text: My Plants
+        - link "🎮 Games" [ref=e15] [cursor=pointer]:
+          - /url: /games
+          - generic [ref=e16]: 🎮
+          - text: Games
+        - link "🛍️ Shop" [ref=e17] [cursor=pointer]:
+          - /url: /shop
+          - generic [ref=e18]: 🛍️
+          - text: Shop
+  - generic [ref=e21]:
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - heading "🌿 Hobbies" [level=1] [ref=e26]
+        - paragraph [ref=e27]: Connect with fellow plant enthusiasts
+      - generic [ref=e28]:
+        - button "📚 Learn (+1 XP)" [ref=e29]
+        - button "✏️ New Post" [ref=e30]
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - textbox "Search posts..." [ref=e34]
+          - generic [ref=e35]: 🔍
+        - combobox [ref=e36]:
+          - option "Recent" [selected]
+          - option "Trending"
+      - generic [ref=e37]:
+        - button "All Groups" [ref=e38]
+        - button "🪴 Indoor Plants" [ref=e39]
+        - button "🌵 Succulents & Cacti" [ref=e40]
+        - button "🌿 Herbs & Edibles" [ref=e41]
+        - button "🌸 Orchids" [ref=e42]
+        - button "🌳 Bonsai" [ref=e43]
+        - button "🌱 Propagation Tips" [ref=e44]
+  - button "Open Next.js Dev Tools" [ref=e90] [cursor=pointer]:
+    - img [ref=e91]
+  - alert [ref=e94]
+```
