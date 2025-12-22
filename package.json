@@ -16,7 +16,10 @@
     "test:e2e:headed": "playwright test --headed",
     "seed": "tsx scripts/seed-dev.ts",
     "seed:products": "tsx scripts/seed-products.ts",
-    "seed:pots": "tsx scripts/seed-pots.ts"
+    "seed:pots": "tsx scripts/seed-pots.ts",
+    "db:reset": "tsx scripts/reset-db.ts",
+    "user:create": "tsx scripts/create-test-user.ts",
+    "user:admin": "tsx scripts/make-admin.ts"
   },
   "dependencies": {
     "@sentry/nextjs": "^10.25.0",
