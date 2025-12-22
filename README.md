@@ -41,13 +41,28 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - ✅ Core Web Vitals - Optimized LCP, FID, CLS
 
 **Quality:**
-- ✅ 128 total tests (84 E2E + 44 unit) passing
+- ✅ 50+ total tests (6 E2E + 44 unit) passing
 - ✅ TypeScript strict mode
 - ✅ 100% mobile responsive (16 pages)
 - ✅ Toast notifications
 - ✅ Skeleton loading states
 - ✅ Error boundaries (loading, error, 404 pages)
 - ✅ SEO optimized (metadata, Open Graph, Twitter Cards)
+- ✅ WCAG 2.1 AA compliant (accessibility)
+- ✅ Pre-commit hooks (ESLint, Prettier, TypeScript)
+
+**Monitoring:**
+- ✅ Sentry Error Tracking - Client, server, and edge
+- ✅ Vercel Analytics - Page views and user metrics
+- ✅ Speed Insights - Core Web Vitals (LCP, FID, CLS)
+- ✅ Session Replay - Debug user issues (10% sampling)
+- ✅ Performance Monitoring - Real user metrics
+
+**Developer Tools:**
+- ✅ Database Reset Script - Clean dev environment
+- ✅ Test User Creation - test@plobie.com
+- ✅ Admin Role Management - Grant/revoke admin
+- ✅ Data Seeding - Products, pots, sample data
 
 **Unity Integration:**
 - 🎮 Game Session API - Track playtime, award XP
@@ -71,8 +86,9 @@ Plobie combines four core experiences:
 - **Backend:** Supabase (Postgres, Auth, Storage)
 - **Payments:** Stripe
 - **Hosting:** Vercel
-- **Analytics:** Google Analytics 4
-- **Error Tracking:** Sentry
+- **Analytics:** Vercel Analytics, Speed Insights, Google Analytics 4
+- **Error Tracking:** Sentry (client, server, edge)
+- **Code Quality:** Husky, lint-staged, Prettier, ESLint
 
 ## Getting Started
 
@@ -146,7 +162,20 @@ SENTRY_DSN=https://...
 ### Seed Development Data
 
 ```bash
+# Seed products
+npm run seed:products
+
+# Seed pots
+npm run seed:pots
+
+# Seed sample data (posts, comments, users)
 npm run seed
+
+# Create test user
+npm run user:create
+
+# Make test user admin
+npm run user:admin test@plobie.com
 ```
 
 This creates:
