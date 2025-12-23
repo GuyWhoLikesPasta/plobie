@@ -117,6 +117,7 @@ export default function SignupPage() {
               </label>
               <input
                 id="username"
+                name="username"
                 type="text"
                 value={username}
                 onChange={e => setUsername(e.target.value)}
@@ -134,6 +135,7 @@ export default function SignupPage() {
               </label>
               <input
                 id="email"
+                name="email"
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
@@ -151,6 +153,7 @@ export default function SignupPage() {
               </label>
               <input
                 id="password"
+                name="password"
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
@@ -165,8 +168,10 @@ export default function SignupPage() {
             </div>
 
             <div className="space-y-3 pt-2">
-              <label className="flex items-start cursor-pointer">
+              <label htmlFor="age-confirmation" className="flex items-start cursor-pointer">
                 <input
+                  id="age-confirmation"
+                  name="age-confirmation"
                   type="checkbox"
                   checked={ageConfirmed}
                   onChange={e => setAgeConfirmed(e.target.checked)}
@@ -178,8 +183,10 @@ export default function SignupPage() {
                 </span>
               </label>
 
-              <label className="flex items-start cursor-pointer">
+              <label htmlFor="conduct-confirmation" className="flex items-start cursor-pointer">
                 <input
+                  id="conduct-confirmation"
+                  name="conduct-confirmation"
                   type="checkbox"
                   checked={conductConfirmed}
                   onChange={e => setConductConfirmed(e.target.checked)}
