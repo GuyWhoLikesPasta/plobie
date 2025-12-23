@@ -3,6 +3,11 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   async headers() {
+    // Disable strict CSP in development for Next.js hot reload
+    if (process.env.NODE_ENV === 'development') {
+      return [];
+    }
+
     return [
       {
         source: '/:path*',
