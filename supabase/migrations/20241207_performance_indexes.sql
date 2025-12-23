@@ -24,9 +24,9 @@ CREATE INDEX IF NOT EXISTS xp_events_action_date_idx ON public.xp_events(action_
 CREATE INDEX IF NOT EXISTS post_reactions_post_idx ON public.post_reactions(post_id);
 CREATE INDEX IF NOT EXISTS post_reactions_user_post_idx ON public.post_reactions(user_id, post_id);
 
--- Orders table indexes
-CREATE INDEX IF NOT EXISTS orders_user_created_idx ON public.orders(user_id, created_at DESC);
-CREATE INDEX IF NOT EXISTS orders_status_idx ON public.orders(status);
+-- Orders table indexes (commented out: orders table doesn't exist yet)
+-- CREATE INDEX IF NOT EXISTS orders_user_created_idx ON public.orders(user_id, created_at DESC);
+-- CREATE INDEX IF NOT EXISTS orders_status_idx ON public.orders(status);
 
 -- Pot claims indexes
 CREATE INDEX IF NOT EXISTS pot_claims_user_idx ON public.pot_claims(user_id);
@@ -39,7 +39,7 @@ ANALYZE public.profiles;
 ANALYZE public.xp_events;
 ANALYZE public.xp_balances;
 ANALYZE public.post_reactions;
-ANALYZE public.orders;
+-- ANALYZE public.orders; -- Commented out: orders table doesn't exist yet
 ANALYZE public.pot_claims;
 ANALYZE public.notifications;
 
