@@ -1,0 +1,81 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "🌱 Plobie" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: 🌱
+        - generic [ref=e7]: Plobie
+      - generic [ref=e8]:
+        - link "🏠 Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e10]: 🏠
+          - text: Home
+        - link "💬 Hobbies" [ref=e11] [cursor=pointer]:
+          - /url: /hobbies
+          - generic [ref=e12]: 💬
+          - text: Hobbies
+        - link "🌿 My Plants" [ref=e13] [cursor=pointer]:
+          - /url: /my-plants
+          - generic [ref=e14]: 🌿
+          - text: My Plants
+        - link "🎮 Games" [ref=e15] [cursor=pointer]:
+          - /url: /games
+          - generic [ref=e16]: 🎮
+          - text: Games
+        - link "🛍️ Shop" [ref=e17] [cursor=pointer]:
+          - /url: /shop
+          - generic [ref=e18]: 🛍️
+          - text: Shop
+      - generic [ref=e20]:
+        - link "Login" [ref=e21] [cursor=pointer]:
+          - /url: /login
+        - link "Sign Up" [ref=e22] [cursor=pointer]:
+          - /url: /signup
+  - generic [ref=e24]:
+    - generic [ref=e25]:
+      - heading "🌱 Plobie" [level=1] [ref=e26]
+      - heading "Join Our Community" [level=2] [ref=e27]
+      - paragraph [ref=e28]: Start your plant journey today
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - generic [ref=e32]: Username
+          - textbox "Username" [ref=e33]:
+            - /placeholder: plantlover123
+        - generic [ref=e34]:
+          - generic [ref=e35]: Email
+          - textbox "Email" [ref=e36]:
+            - /placeholder: you@example.com
+        - generic [ref=e37]:
+          - generic [ref=e38]: Password
+          - textbox "Password" [ref=e39]:
+            - /placeholder: ••••••••
+          - paragraph [ref=e40]: At least 6 characters
+        - generic [ref=e41]:
+          - generic [ref=e42] [cursor=pointer]:
+            - checkbox "I confirm that I am at least 13 years old" [ref=e43]
+            - generic [ref=e44]: I confirm that I am at least 13 years old
+          - generic [ref=e45] [cursor=pointer]:
+            - checkbox "I agree to communicate respectfully and follow Plobie's community guidelines" [ref=e46]
+            - generic [ref=e47]: I agree to communicate respectfully and follow Plobie's community guidelines
+        - button "Sign Up" [disabled] [ref=e48]
+      - generic [ref=e49]:
+        - generic [ref=e54]: Or continue with
+        - generic [ref=e55]:
+          - button "Google" [disabled] [ref=e56]:
+            - img [ref=e57]
+            - generic [ref=e62]: Google
+          - button "Apple" [disabled] [ref=e63]:
+            - img [ref=e64]
+            - generic [ref=e66]: Apple
+      - paragraph [ref=e67]:
+        - text: Already have an account?
+        - link "Sign in" [ref=e68] [cursor=pointer]:
+          - /url: /login
+  - button "Open Next.js Dev Tools" [ref=e74] [cursor=pointer]:
+    - img [ref=e75]
+  - alert [ref=e78]
+```
