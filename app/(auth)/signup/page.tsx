@@ -117,12 +117,10 @@ export default function SignupPage() {
               </label>
               <input
                 id="username"
-                name="username"
                 type="text"
                 value={username}
                 onChange={e => setUsername(e.target.value)}
                 required
-                autoComplete="username"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 bg-white text-base"
                 placeholder="plantlover123"
                 disabled={loading}
@@ -135,12 +133,10 @@ export default function SignupPage() {
               </label>
               <input
                 id="email"
-                name="email"
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
-                autoComplete="email"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 bg-white text-base"
                 placeholder="you@example.com"
                 disabled={loading}
@@ -153,13 +149,11 @@ export default function SignupPage() {
               </label>
               <input
                 id="password"
-                name="password"
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
                 minLength={6}
-                autoComplete="new-password"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 bg-white text-base"
                 placeholder="••••••••"
                 disabled={loading}
@@ -168,10 +162,8 @@ export default function SignupPage() {
             </div>
 
             <div className="space-y-3 pt-2">
-              <label htmlFor="age-confirmation" className="flex items-start cursor-pointer">
+              <label className="flex items-start cursor-pointer">
                 <input
-                  id="age-confirmation"
-                  name="age-confirmation"
                   type="checkbox"
                   checked={ageConfirmed}
                   onChange={e => setAgeConfirmed(e.target.checked)}
@@ -183,10 +175,8 @@ export default function SignupPage() {
                 </span>
               </label>
 
-              <label htmlFor="conduct-confirmation" className="flex items-start cursor-pointer">
+              <label className="flex items-start cursor-pointer">
                 <input
-                  id="conduct-confirmation"
-                  name="conduct-confirmation"
                   type="checkbox"
                   checked={conductConfirmed}
                   onChange={e => setConductConfirmed(e.target.checked)}

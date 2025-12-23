@@ -91,12 +91,10 @@ export default function LoginPage() {
               </label>
               <input
                 id="email"
-                name="email"
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
-                autoComplete="email"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 bg-white text-base"
                 placeholder="you@example.com"
                 disabled={loading}
@@ -109,12 +107,10 @@ export default function LoginPage() {
               </label>
               <input
                 id="password"
-                name="password"
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                autoComplete="current-password"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 bg-white text-base"
                 placeholder="••••••••"
                 disabled={loading}

@@ -3,8 +3,6 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   async headers() {
-    // Temporarily disable CSP to debug production issues
-    // TODO: Re-enable with proper nonces after debugging
     return [
       {
         source: '/:path*',
@@ -24,6 +22,18 @@ const nextConfig: NextConfig = {
           {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=()',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://*.sentry.io https://va.vercel-scripts.com",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: https: blob:",
+              "font-src 'self' data:",
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://vercel.live https://*.sentry.io https://va.vercel-scripts.com https://vitals.vercel-insights.com",
+              "frame-src 'self' https://vercel.live",
+            ].join('; '),
           },
         ],
       },
