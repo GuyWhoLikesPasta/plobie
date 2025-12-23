@@ -1,5 +1,5 @@
 import { withSentryConfig } from '@sentry/nextjs';
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   async headers() {
@@ -27,11 +27,11 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://*.sentry.io",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://*.sentry.io https://va.vercel-scripts.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
-              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://vercel.live https://*.sentry.io",
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://vercel.live https://*.sentry.io https://va.vercel-scripts.com https://vitals.vercel-insights.com",
               "frame-src 'self' https://vercel.live",
             ].join('; '),
           },
@@ -73,7 +73,7 @@ export default withSentryConfig(nextConfig, {
   widenClientFileUpload: true,
 
   // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
-  tunnelRoute: "/monitoring",
+  tunnelRoute: '/monitoring',
 
   // Enables automatic instrumentation of Vercel Cron Monitors.
   automaticVercelMonitors: true,
