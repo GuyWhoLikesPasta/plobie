@@ -28,34 +28,48 @@ async function makeAdmin(email: string) {
   console.log(`👑 Granting admin role to: ${email}\n`);
 
   try {
-    // Find user by email
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('id, username, email, role')
+    // Find user by email (join with auth.users)
+    const { data: authUser, error: authError } = await supabase
+      .from('users')
+      .select('id, email')
       .eq('email', email)
       .single();
 
-    if (profileError || !profile) {
+    if (authError || !authUser) {
       console.error(`❌ User not found: ${email}`);
       console.error('Make sure the user exists and the email is correct.');
+      console.error('The user must sign up first before granting admin privileges.');
+      process.exit(1);
+    }
+
+    // Get profile
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('id, username, is_admin, user_id')
+      .eq('user_id', authUser.id)
+      .single();
+
+    if (profileError || !profile) {
+      console.error(`❌ Profile not found for: ${email}`);
+      console.error('The user exists but has no profile. This is unusual.');
       process.exit(1);
     }
 
     console.log('Found user:');
     console.log(`  ID: ${profile.id}`);
     console.log(`  Username: ${profile.username}`);
-    console.log(`  Email: ${profile.email}`);
-    console.log(`  Current Role: ${profile.role || 'user'}\n`);
+    console.log(`  Email: ${authUser.email}`);
+    console.log(`  Current Admin: ${profile.is_admin ? 'Yes' : 'No'}\n`);
 
-    if (profile.role === 'admin') {
+    if (profile.is_admin) {
       console.log('✅ User is already an admin!');
       return;
     }
 
-    // Update role to admin
+    // Update is_admin to true
     const { error: updateError } = await supabase
       .from('profiles')
-      .update({ role: 'admin' })
+      .update({ is_admin: true })
       .eq('id', profile.id);
 
     if (updateError) throw updateError;

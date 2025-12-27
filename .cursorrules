@@ -1,0 +1,231 @@
+# SeaFoundry Cursor Rules
+
+## Core Principles
+
+- Write clean, maintainable code following Dart/Flutter best practices
+- Prioritize functional and declarative patterns over imperative code
+- Use early returns and guard clauses for error handling
+- Maintain consistent naming conventions across the codebase
+- Never apologize for errors—just fix them with clear explanations
+
+## Language & Framework
+
+### Dart/Flutter Standards
+- Follow official Dart style guide and effective Dart practices
+- Use `lowerCamelCase` for variables, methods, and parameters
+- Use `UpperCamelCase` for classes, enums, typedefs, and extensions
+- Use `lowercase_with_underscores` for file names
+- Prefer `final` over `var` when values won't change
+- Use `const` constructors where possible for performance
+
+### Type Safety
+- Always specify types explicitly—avoid `dynamic` unless absolutely necessary
+- Leverage Dart's null safety features (`?`, `!`, `??`, `?.`)
+- Use sealed classes for discriminated unions and state representations
+- Prefer immutable data structures with copyWith methods
+
+## Code Organization
+
+### File Structure
+- One public class per file
+- Group related functionality in feature folders
+- Keep files focused and under 500 lines when possible
+- Organize imports: Dart SDK → Flutter → Package → Relative
+
+### Naming Patterns
+- Use descriptive variable names with auxiliary verbs (e.g., `isLoading`, `hasError`, `canSubmit`)
+- Prefix private members with underscore (`_privateMethod`)
+- Name files after their primary class in snake_case
+- Use suffixes for type clarity: `_service.dart`, `_repository.dart`, `_cubit.dart`, `_dialog.dart`
+
+## Architecture Patterns
+
+### State Management
+- Use BLoC/Cubit pattern consistently
+- Keep business logic in cubits/services, not widgets
+- Emit new state objects; never mutate existing state
+- Handle errors gracefully with dedicated error states
+
+### Repository Pattern
+- Repositories handle data operations (Firestore, local storage)
+- Services contain business logic and orchestration
+- Keep repositories focused on single entities
+- Use factory pattern for creating repository instances with proper context
+
+### Widget Composition
+- Build small, reusable widgets
+- Extract complex widget trees into named widgets
+- Use composition over inheritance
+- Keep build methods clean and readable
+
+## Error Handling
+
+### Best Practices
+- Use guard clauses at function start for validation
+- Return early for error conditions to avoid deep nesting
+- Place happy path logic last for readability
+- Use try-catch for async operations with proper error logging
+- Provide meaningful error messages to users
+- Log errors with sufficient context for debugging
+
+### Example Pattern
+```dart
+Future<Result<T>> operation() async {
+  if (!isValid) return Result.error('Invalid input');
+  if (!hasPermission) return Result.error('Permission denied');
+  
+  try {
+    final data = await fetchData();
+    return Result.success(data);
+  } catch (e, stackTrace) {
+    logger.error('Operation failed', error: e, stackTrace: stackTrace);
+    return Result.error('Operation failed: ${e.toString()}');
+  }
+}
+```
+
+## Firebase Integration
+
+### Firestore Patterns
+- Use typed models with `fromJson`/`toJson` serialization
+- Implement proper timestamp handling (server timestamps)
+- Use batch operations for multi-document updates
+- Implement offline persistence strategies
+- Handle snapshot listeners lifecycle properly
+
+### Security & Validation
+- Validate all user inputs before Firestore writes
+- Respect Firestore security rules—don't bypass with admin operations in app
+- Use server timestamps for audit fields
+- Implement proper organization/user scoping in queries
+
+### Performance
+- Use pagination for large collections
+- Limit query results appropriately
+- Cache frequently accessed data
+- Use `get()` for one-time reads, `snapshots()` for live updates
+
+## Testing
+
+### Requirements
+- Write unit tests for business logic (cubits, services, repositories)
+- Test edge cases and error conditions
+- Mock external dependencies (Firebase, repositories)
+- Aim for meaningful coverage, not just high percentages
+- Use descriptive test names that explain what's being tested
+
+### Test Organization
+```dart
+group('FeatureName', () {
+  group('methodName', () {
+    test('should handle expected case', () { /* ... */ });
+    test('should handle error case', () { /* ... */ });
+    test('should validate input', () { /* ... */ });
+  });
+});
+```
+
+## Git Practices
+
+### Commits
+- Use Conventional Commits format:
+  - `feat:` new features
+  - `fix:` bug fixes
+  - `refactor:` code refactoring
+  - `test:` test additions/changes
+  - `docs:` documentation only
+  - `chore:` maintenance tasks
+- Keep commit messages under 60 characters
+- Add detailed body for complex changes
+- Reference issue numbers where applicable
+
+### Pull Requests
+- Keep PRs focused on single features or fixes
+- Include clear description of changes and rationale
+- Ensure all tests pass before requesting review
+- Use feature flags for incomplete features
+- Deploy to staging before production
+
+## Performance
+
+### Optimization
+- Use `const` widgets wherever possible
+- Implement proper list view builders for long lists
+- Avoid rebuilds with proper widget keys
+- Profile performance before optimizing
+- Use lazy loading for heavy operations
+
+### Memory Management
+- Dispose controllers, streams, and listeners properly
+- Cancel subscriptions in dispose methods
+- Be mindful of large image assets
+- Use cached network images appropriately
+
+## Security
+
+### Data Protection
+- Never commit credentials, API keys, or secrets
+- Use environment variables for configuration
+- Validate and sanitize all user inputs
+- Implement proper authentication checks
+- Follow principle of least privilege
+
+### Firebase Security
+- Respect Firestore security rules
+- Use proper authentication flows
+- Implement session management correctly
+- Handle token refresh appropriately
+- Log security-relevant events
+
+## Code Quality
+
+### Linting
+- Fix all analyzer errors before committing
+- Address warnings when feasible
+- Use `// ignore:` sparingly with justification
+- Run `dart analyze` before pushing
+- Keep `analysis_options.yaml` updated
+
+### Documentation
+- Document complex business logic with clear comments
+- Use dartdoc comments (`///`) for public APIs
+- Keep inline comments focused on "why" not "what"
+- Maintain README files for significant features
+- Update architecture docs for major decisions
+
+## Platform-Specific Notes
+
+### Multi-Platform Support
+- Use platform checks when necessary (`Platform.isIOS`, `kIsWeb`)
+- Abstract platform-specific code into separate implementations
+- Test on target platforms before releasing
+- Handle platform capabilities gracefully (camera, location, etc.)
+
+### Web Considerations
+- Be mindful of bundle size
+- Use lazy loading for routes
+- Handle responsive layouts properly
+- Test on multiple browsers
+
+## Tiered Platform Context
+
+### Feature Access
+- Use `FeatureAccessService` for tier-based gating
+- Respect Community/Pro/Scale distinctions
+- Implement graceful feature degradation
+- Provide clear upgrade paths in UI
+
+### Taxonomy & Organism Context
+- Flow `OrganismContext` through repositories and services
+- Use five-axis data model (taxonomy, provenance, location/permit, life stage, measurement)
+- Maintain consistency with CSV v2 schema
+- Use taxonomy registries for species/provenance lookups
+
+## AI Coding Assistant Behavior
+
+- Focus on fixing issues, not apologizing
+- If code is incomplete, add TODO comments
+- Provide working code examples, not pseudocode
+- Explain complex logic concisely
+- Reference existing patterns in the codebase when applicable
+
