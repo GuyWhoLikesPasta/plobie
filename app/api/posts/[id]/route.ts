@@ -1,6 +1,6 @@
 /**
  * GET /api/posts/[id]
- * 
+ *
  * Get a single post with comments
  */
 
@@ -18,11 +18,7 @@ export async function GET(
     const supabase = await createServerSupabaseClient();
 
     // Fetch post (no joins to avoid FK issues)
-    const { data: post, error } = await supabase
-      .from('posts')
-      .select('*')
-      .eq('id', id)
-      .single();
+    const { data: post, error } = await supabase.from('posts').select('*').eq('id', id).single();
 
     if (error || !post) {
       return NextResponse.json(
@@ -57,16 +53,16 @@ export async function GET(
       const commentAuthorIds = [...new Set(comments.map((c: any) => c.author_id))];
       const { data: profiles } = await supabase
         .from('profiles')
-        .select('id, user_id, username, avatar_url')
-        .in('user_id', commentAuthorIds);
-      
+        .select('id, username, avatar_url')
+        .in('id', commentAuthorIds);
+
       commentProfiles = profiles || [];
     }
 
     // Attach profiles to comments
     const commentsWithProfiles = (comments || []).map((comment: any) => ({
       ...comment,
-      profiles: commentProfiles.find((p: any) => p.user_id === comment.author_id) || null,
+      profiles: commentProfiles.find((p: any) => p.id === comment.author_id) || null,
     }));
 
     // Attach to post
@@ -97,4 +93,3 @@ export async function GET(
     );
   }
 }
-

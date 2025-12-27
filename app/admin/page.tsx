@@ -42,11 +42,13 @@ interface Analytics {
 export default function AdminDashboard() {
   const router = useRouter();
   const supabase = createClient();
-  
+
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [activeTab, setActiveTab] = useState<'users' | 'posts' | 'flags' | 'analytics'>('analytics');
-  
+  const [activeTab, setActiveTab] = useState<'users' | 'posts' | 'flags' | 'analytics'>(
+    'analytics'
+  );
+
   // Data states
   const [users, setUsers] = useState<User[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
@@ -70,8 +72,10 @@ export default function AdminDashboard() {
 
   const checkAdmin = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (!user) {
         router.push('/login');
         return;
@@ -80,7 +84,7 @@ export default function AdminDashboard() {
       const { data: profile } = await supabase
         .from('profiles')
         .select('is_admin')
-        .eq('user_id', user.id)
+        .eq('id', user.id)
         .single();
 
       if (!profile?.is_admin) {
@@ -91,7 +95,7 @@ export default function AdminDashboard() {
 
       setIsAdmin(true);
       setLoading(false);
-      
+
       // Load initial data
       fetchAnalytics();
       fetchUsers();
@@ -160,14 +164,16 @@ export default function AdminDashboard() {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select(`
+        .select(
+          `
           id,
           username,
           is_admin,
           xp_total,
           created_at,
           user_id
-        `)
+        `
+        )
         .order('created_at', { ascending: false })
         .limit(50);
 
@@ -175,7 +181,7 @@ export default function AdminDashboard() {
 
       // Get post and comment counts for each user
       const usersWithCounts = await Promise.all(
-        (data || []).map(async (profile) => {
+        (data || []).map(async profile => {
           const { count: postCount } = await supabase
             .from('posts')
             .select('*', { count: 'exact', head: true })
@@ -211,14 +217,16 @@ export default function AdminDashboard() {
     try {
       const { data, error } = await supabase
         .from('posts')
-        .select(`
+        .select(
+          `
           id,
           title,
           content,
           created_at,
           hidden,
           profile_id
-        `)
+        `
+        )
         .order('created_at', { ascending: false })
         .limit(50);
 
@@ -226,7 +234,7 @@ export default function AdminDashboard() {
 
       // Fetch profile data separately for each post
       const postsWithProfiles = await Promise.all(
-        (data || []).map(async (post) => {
+        (data || []).map(async post => {
           const { data: profile } = await supabase
             .from('profiles')
             .select('username')
@@ -252,7 +260,7 @@ export default function AdminDashboard() {
     try {
       const response = await fetch('/api/flags');
       const data = await response.json();
-      
+
       if (data.success) {
         setFlags(data.data.flags);
       }
@@ -290,10 +298,7 @@ export default function AdminDashboard() {
     if (!confirm('Are you sure you want to delete this post?')) return;
 
     try {
-      const { error } = await supabase
-        .from('posts')
-        .delete()
-        .eq('id', postId);
+      const { error } = await supabase.from('posts').delete().eq('id', postId);
 
       if (error) throw error;
 
@@ -360,15 +365,17 @@ export default function AdminDashboard() {
     return null;
   }
 
-  const filteredUsers = users.filter(u => 
-    u.email.toLowerCase().includes(userSearch.toLowerCase()) ||
-    u.profiles.username.toLowerCase().includes(userSearch.toLowerCase())
+  const filteredUsers = users.filter(
+    u =>
+      u.email.toLowerCase().includes(userSearch.toLowerCase()) ||
+      u.profiles.username.toLowerCase().includes(userSearch.toLowerCase())
   );
 
-  const filteredPosts = posts.filter(p =>
-    p.title?.toLowerCase().includes(postSearch.toLowerCase()) ||
-    p.content.toLowerCase().includes(postSearch.toLowerCase()) ||
-    p.profiles?.username.toLowerCase().includes(postSearch.toLowerCase())
+  const filteredPosts = posts.filter(
+    p =>
+      p.title?.toLowerCase().includes(postSearch.toLowerCase()) ||
+      p.content.toLowerCase().includes(postSearch.toLowerCase()) ||
+      p.profiles?.username.toLowerCase().includes(postSearch.toLowerCase())
   );
 
   return (
@@ -377,21 +384,24 @@ export default function AdminDashboard() {
         {/* Header */}
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="mt-2 text-sm sm:text-base text-gray-600">Manage users, content, and system settings</p>
+          <p className="mt-2 text-sm sm:text-base text-gray-600">
+            Manage users, content, and system settings
+          </p>
         </div>
 
         {/* Tabs */}
         <div className="border-b border-gray-200 mb-6 overflow-x-auto">
           <nav className="-mb-px flex gap-4 sm:gap-8">
-            {['analytics', 'users', 'posts', 'flags'].map((tab) => (
+            {['analytics', 'users', 'posts', 'flags'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as any)}
                 className={`
                   py-4 px-1 border-b-2 font-medium text-sm capitalize
-                  ${activeTab === tab
-                    ? 'border-green-600 text-green-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ${
+                    activeTab === tab
+                      ? 'border-green-600 text-green-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }
                 `}
               >
@@ -419,7 +429,9 @@ export default function AdminDashboard() {
               </div>
               <div className="bg-white p-6 rounded-lg shadow">
                 <h3 className="text-sm font-medium text-gray-500">XP Awarded Today</h3>
-                <p className="mt-2 text-3xl font-bold text-green-600">{analytics.xp_awarded_today}</p>
+                <p className="mt-2 text-3xl font-bold text-green-600">
+                  {analytics.xp_awarded_today}
+                </p>
               </div>
               <div className="bg-white p-6 rounded-lg shadow">
                 <h3 className="text-sm font-medium text-gray-500">Posts Today</h3>
@@ -441,26 +453,36 @@ export default function AdminDashboard() {
                 type="text"
                 placeholder="Search users by email or username..."
                 value={userSearch}
-                onChange={(e) => setUserSearch(e.target.value)}
+                onChange={e => setUserSearch(e.target.value)}
                 className="w-full px-4 py-2 border rounded-lg"
               />
             </div>
-            
+
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stats</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Joined</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      User
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Stats
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Joined
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredUsers.map((user) => (
+                  {filteredUsers.map(user => (
                     <tr key={user.id}>
                       <td className="px-6 py-4">
-                        <div className="text-sm font-medium text-gray-900">{user.profiles.username}</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {user.profiles.username}
+                        </div>
                         <div className="text-sm text-gray-500">{user.email}</div>
                         {user.profiles.is_admin && (
                           <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
@@ -500,19 +522,22 @@ export default function AdminDashboard() {
                 type="text"
                 placeholder="Search posts by title, content, or author..."
                 value={postSearch}
-                onChange={(e) => setPostSearch(e.target.value)}
+                onChange={e => setPostSearch(e.target.value)}
                 className="w-full px-4 py-2 border rounded-lg"
               />
             </div>
 
             <div className="space-y-4">
-              {filteredPosts.map((post) => (
+              {filteredPosts.map(post => (
                 <div key={post.id} className="bg-white p-6 rounded-lg shadow">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900">{post.title || 'Untitled'}</h3>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {post.title || 'Untitled'}
+                      </h3>
                       <p className="mt-1 text-sm text-gray-600">
-                        By {post.profiles?.username} • {new Date(post.created_at).toLocaleDateString()}
+                        By {post.profiles?.username} •{' '}
+                        {new Date(post.created_at).toLocaleDateString()}
                       </p>
                       <p className="mt-2 text-gray-700 line-clamp-2">{post.content}</p>
                       {post.hidden && (
@@ -550,13 +575,11 @@ export default function AdminDashboard() {
               <p className="mt-1 text-sm text-gray-500">Toggle features on and off</p>
             </div>
             <div className="divide-y divide-gray-200">
-              {flags.map((flag) => (
+              {flags.map(flag => (
                 <div key={flag.key} className="px-6 py-4 flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-900">{flag.key}</p>
-                    <p className="text-sm text-gray-500">
-                      {flag.enabled ? 'Enabled' : 'Disabled'}
-                    </p>
+                    <p className="text-sm text-gray-500">{flag.enabled ? 'Enabled' : 'Disabled'}</p>
                   </div>
                   <button
                     onClick={() => toggleFlag(flag.key, flag.enabled)}

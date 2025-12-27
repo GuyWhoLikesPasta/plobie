@@ -44,19 +44,6 @@ DROP FUNCTION IF EXISTS public.notify_level_up();
 -- PART 1: Missing Tables
 -- ==============================================
 
--- Users table (mirrors auth.users)
-CREATE TABLE IF NOT EXISTS public.users (
-  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  email TEXT UNIQUE NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS idx_users_email ON public.users(email);
-
-ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "users_select_all" ON public.users FOR SELECT USING (true);
-
 -- Feature flags table
 CREATE TABLE IF NOT EXISTS public.feature_flags (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

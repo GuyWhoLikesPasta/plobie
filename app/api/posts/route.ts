@@ -1,6 +1,6 @@
 /**
  * Posts API
- * 
+ *
  * GET  /api/posts - List posts with pagination and filtering
  * POST /api/posts - Create a new post
  */
@@ -27,10 +27,12 @@ const ListPostsSchema = z.object({
   offset: z.coerce.number().int().min(0).default(0),
 });
 
-export async function GET(request: NextRequest): Promise<NextResponse<ApiResponse<{ posts: any[]; total: number }>>> {
+export async function GET(
+  request: NextRequest
+): Promise<NextResponse<ApiResponse<{ posts: any[]; total: number }>>> {
   try {
     const searchParams = request.nextUrl.searchParams;
-    
+
     const rawParams = {
       hobby_group: searchParams.get('hobby_group') || undefined,
       search: searchParams.get('search') || undefined,
@@ -38,7 +40,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
       limit: searchParams.get('limit') || undefined,
       offset: searchParams.get('offset') || undefined,
     };
-    
+
     const validation = ListPostsSchema.safeParse(rawParams);
 
     if (!validation.success) {
@@ -85,11 +87,11 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
 
     const { data: posts, error, count } = await query;
 
-    console.log('Posts query result:', { 
-      postsCount: posts?.length, 
-      totalCount: count, 
+    console.log('Posts query result:', {
+      postsCount: posts?.length,
+      totalCount: count,
       hasError: !!error,
-      error: error ? JSON.stringify(error) : null 
+      error: error ? JSON.stringify(error) : null,
     });
 
     if (error) {
@@ -113,24 +115,30 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
     // Fetch profiles and counts separately
     if (posts && posts.length > 0) {
       const authorIds = [...new Set(posts.map((p: any) => p.author_id))];
-      
+
       // Get profiles
       const { data: profiles } = await supabase
         .from('profiles')
-        .select('id, user_id, username, avatar_url')
-        .in('user_id', authorIds);
+        .select('id, username, avatar_url')
+        .in('id', authorIds);
 
       // Get comment counts
       const { data: commentCounts } = await supabase
         .from('comments')
         .select('post_id')
-        .in('post_id', posts.map((p: any) => p.id));
+        .in(
+          'post_id',
+          posts.map((p: any) => p.id)
+        );
 
       // Get reaction counts
       const { data: reactionCounts } = await supabase
         .from('post_reactions')
         .select('post_id')
-        .in('post_id', posts.map((p: any) => p.id));
+        .in(
+          'post_id',
+          posts.map((p: any) => p.id)
+        );
 
       // Map counts
       const commentCountMap = (commentCounts || []).reduce((acc: any, c: any) => {
@@ -145,7 +153,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
 
       // Attach profiles and counts to posts
       posts.forEach((post: any) => {
-        post.profiles = profiles?.find((p: any) => p.user_id === post.author_id) || null;
+        post.profiles = profiles?.find((p: any) => p.id === post.author_id) || null;
         post.comments = [{ count: commentCountMap[post.id] || 0 }];
         post.reactions = [{ count: reactionCountMap[post.id] || 0 }];
       });
@@ -176,11 +184,16 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
   }
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse<ApiResponse<{ post_id: string; xp_awarded: number }>>> {
+export async function POST(
+  request: NextRequest
+): Promise<NextResponse<ApiResponse<{ post_id: string; xp_awarded: number }>>> {
   try {
     // Check authentication
     const supabase = await createServerSupabaseClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -320,4 +333,3 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     );
   }
 }
-
