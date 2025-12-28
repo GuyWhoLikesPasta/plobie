@@ -1,6 +1,6 @@
 /**
  * GET /api/profiles/[username]
- * 
+ *
  * Get a user's profile data including posts, stats, and XP
  */
 
@@ -40,18 +40,24 @@ export async function GET(
     // Get XP balance
     const { data: xpBalance } = await supabase
       .from('xp_balances')
-      .select('total_xp, level')
+      .select('total_xp')
       .eq('profile_id', profile.id)
       .single();
+
+    // Calculate level from total XP (100 XP per level)
+    const totalXp = xpBalance?.total_xp || 0;
+    const level = Math.floor(totalXp / 100) + 1;
 
     // Get user's posts
     const { data: posts } = await supabase
       .from('posts')
-      .select(`
+      .select(
+        `
         *,
         comments(count)
-      `)
-      .eq('profile_id', profile.id)
+      `
+      )
+      .eq('author_id', profile.id)
       .order('created_at', { ascending: false })
       .limit(20);
 
@@ -59,35 +65,34 @@ export async function GET(
     const { count: postCount } = await supabase
       .from('posts')
       .select('*', { count: 'exact', head: true })
-      .eq('profile_id', profile.id);
+      .eq('author_id', profile.id);
 
     const { count: commentCount } = await supabase
       .from('comments')
       .select('*', { count: 'exact', head: true })
-      .eq('profile_id', profile.id);
+      .eq('author_id', profile.id);
 
     const { count: potCount } = await supabase
       .from('pot_claims')
       .select('*', { count: 'exact', head: true })
-      .eq('profile_id', profile.id);
+      .eq('user_id', profile.id);
 
     const stats = {
       posts: postCount || 0,
       comments: commentCount || 0,
       pots: potCount || 0,
-      xp: xpBalance?.total_xp || 0,
-      level: xpBalance?.level || 1,
+      xp: totalXp,
+      level: level,
     };
 
-    // Remove sensitive data
-    const { user_id, ...safeProfile } = profile;
+    // Profile doesn't have sensitive fields to remove (id is public)
 
     return NextResponse.json(
       {
         success: true,
         data: {
           profile: {
-            ...safeProfile,
+            ...profile,
             ...stats,
           },
           posts: posts || [],
@@ -110,4 +115,3 @@ export async function GET(
     );
   }
 }
-
