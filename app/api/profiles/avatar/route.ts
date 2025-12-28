@@ -1,6 +1,6 @@
 /**
  * POST /api/profiles/avatar
- * 
+ *
  * Upload/update user avatar
  */
 
@@ -11,11 +11,16 @@ import { ApiResponse, ErrorCodes } from '@/lib/types';
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
-export async function POST(request: NextRequest): Promise<NextResponse<ApiResponse<{ avatar_url: string }>>> {
+export async function POST(
+  request: NextRequest
+): Promise<NextResponse<ApiResponse<{ avatar_url: string }>>> {
   try {
     // Check authentication
     const supabase = await createServerSupabaseClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -84,13 +89,11 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     const buffer = Buffer.from(arrayBuffer);
 
     // Upload to Supabase Storage
-    const { data, error } = await supabase.storage
-      .from('post-images')
-      .upload(fileName, buffer, {
-        contentType: file.type,
-        cacheControl: '3600',
-        upsert: true, // Overwrite existing avatar
-      });
+    const { data, error } = await supabase.storage.from('post-images').upload(fileName, buffer, {
+      contentType: file.type,
+      cacheControl: '3600',
+      upsert: true, // Overwrite existing avatar
+    });
 
     if (error) {
       console.error('Avatar upload error:', error);
@@ -107,16 +110,16 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     }
 
     // Get public URL
-    const { data: { publicUrl } } = supabase.storage
-      .from('post-images')
-      .getPublicUrl(data.path);
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from('post-images').getPublicUrl(data.path);
 
     // Update profile with new avatar URL
     const adminSupabase = createAdminClient();
     const { error: updateError } = await adminSupabase
       .from('profiles')
       .update({ avatar_url: publicUrl })
-      .eq('user_id', user.id);
+      .eq('id', user.id);
 
     if (updateError) {
       console.error('Profile update error:', updateError);
@@ -155,4 +158,3 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     );
   }
 }
-

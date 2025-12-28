@@ -274,7 +274,7 @@ export default function AdminDashboard() {
       const { data: profile } = await supabase
         .from('profiles')
         .select('id')
-        .eq('user_id', userId)
+        .eq('id', userId)
         .single();
 
       if (!profile) return;

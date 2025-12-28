@@ -1,6 +1,6 @@
 /**
  * POST /api/learn/mark-read
- * 
+ *
  * Mark a learn article as read and award +1 XP (first read only, cap 5/day)
  */
 
@@ -13,11 +13,16 @@ const RequestSchema = z.object({
   article_id: z.string().uuid(),
 });
 
-export async function POST(request: NextRequest): Promise<NextResponse<ApiResponse<{ xp_awarded: number }>>> {
+export async function POST(
+  request: NextRequest
+): Promise<NextResponse<ApiResponse<{ xp_awarded: number }>>> {
   try {
     // Check authentication
     const supabase = await createServerSupabaseClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -36,7 +41,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     const { data: profile } = await supabase
       .from('profiles')
       .select('id')
-      .eq('user_id', user.id)
+      .eq('id', user.id)
       .single();
 
     if (!profile) {
@@ -123,4 +128,3 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     );
   }
 }
-

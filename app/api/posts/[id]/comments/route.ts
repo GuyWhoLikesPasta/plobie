@@ -1,6 +1,6 @@
 /**
  * POST /api/posts/[id]/comments
- * 
+ *
  * Create a comment on a post
  */
 
@@ -24,7 +24,10 @@ export async function POST(
 
     // Check authentication
     const supabase = await createServerSupabaseClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -57,7 +60,7 @@ export async function POST(
     const { data: profile } = await supabase
       .from('profiles')
       .select('id')
-      .eq('user_id', user.id)
+      .eq('id', user.id)
       .single();
 
     if (!profile) {
@@ -206,4 +209,3 @@ export async function POST(
     );
   }
 }
-

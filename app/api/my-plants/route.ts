@@ -1,6 +1,6 @@
 /**
  * GET /api/my-plants
- * 
+ *
  * Get current user's claimed pots and stats
  */
 
@@ -8,11 +8,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase';
 import { ApiResponse, ErrorCodes } from '@/lib/types';
 
-export async function GET(request: NextRequest): Promise<NextResponse<ApiResponse<{ pots: any[]; stats: any }>>> {
+export async function GET(
+  request: NextRequest
+): Promise<NextResponse<ApiResponse<{ pots: any[]; stats: any }>>> {
   try {
     // Check authentication
     const supabase = await createServerSupabaseClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -31,7 +36,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
     const { data: profile } = await supabase
       .from('profiles')
       .select('id, username')
-      .eq('user_id', user.id)
+      .eq('id', user.id)
       .single();
 
     if (!profile) {
@@ -50,7 +55,8 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
     // Get claimed pots
     const { data: claims } = await supabase
       .from('pot_claims')
-      .select(`
+      .select(
+        `
         *,
         pots:pot_id (
           id,
@@ -58,7 +64,8 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
           design,
           size
         )
-      `)
+      `
+      )
       .eq('profile_id', profile.id)
       .order('claimed_at', { ascending: false });
 
@@ -110,4 +117,3 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
     );
   }
 }
-

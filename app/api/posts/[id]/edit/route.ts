@@ -23,7 +23,10 @@ export async function PATCH(
 
     // Check authentication
     const supabase = await createServerSupabaseClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -42,7 +45,7 @@ export async function PATCH(
     const { data: profile } = await supabase
       .from('profiles')
       .select('id')
-      .eq('user_id', user.id)
+      .eq('id', user.id)
       .single();
 
     if (!profile) {
@@ -166,7 +169,10 @@ export async function DELETE(
 
     // Check authentication
     const supabase = await createServerSupabaseClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -185,7 +191,7 @@ export async function DELETE(
     const { data: profile } = await supabase
       .from('profiles')
       .select('id, is_admin')
-      .eq('user_id', user.id)
+      .eq('id', user.id)
       .single();
 
     if (!profile) {
@@ -236,10 +242,7 @@ export async function DELETE(
 
     // Delete post (cascades to comments and reactions)
     const adminSupabase = createAdminClient();
-    const { error: deleteError } = await adminSupabase
-      .from('posts')
-      .delete()
-      .eq('id', postId);
+    const { error: deleteError } = await adminSupabase.from('posts').delete().eq('id', postId);
 
     if (deleteError) {
       console.error('Post deletion error:', deleteError);
@@ -278,4 +281,3 @@ export async function DELETE(
     );
   }
 }
-

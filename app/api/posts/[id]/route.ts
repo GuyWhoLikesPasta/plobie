@@ -37,7 +37,7 @@ export async function GET(
     const { data: authorProfile } = await supabase
       .from('profiles')
       .select('id, username, avatar_url')
-      .eq('user_id', post.author_id)
+      .eq('id', post.author_id)
       .single();
 
     // Get comments with author profiles

@@ -1,6 +1,6 @@
 /**
  * POST /api/pots/claim
- * 
+ *
  * Claim a pot using a valid JWT token.
  * Binds pot to user profile and awards +50 XP.
  * Rate limited: 3 claims per hour per user.
@@ -18,7 +18,9 @@ const RequestSchema = z.object({
   token: z.string().min(1),
 });
 
-export async function POST(request: NextRequest): Promise<NextResponse<ApiResponse<{ pot_id: string; xp_awarded: number }>>> {
+export async function POST(
+  request: NextRequest
+): Promise<NextResponse<ApiResponse<{ pot_id: string; xp_awarded: number }>>> {
   try {
     // Parse request body
     const body = await request.json();
@@ -57,7 +59,10 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
 
     // Check authentication
     const supabase = await createServerSupabaseClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json(
@@ -90,7 +95,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     const { data: profile } = await supabase
       .from('profiles')
       .select('id')
-      .eq('user_id', user.id)
+      .eq('id', user.id)
       .single();
 
     if (!profile) {
@@ -140,7 +145,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
           success: false,
           error: {
             code: ErrorCodes.ALREADY_EXISTS,
-            message: isOwnClaim 
+            message: isOwnClaim
               ? 'You have already claimed this pot'
               : 'This pot has already been claimed by another user',
           },
@@ -179,17 +184,15 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
 
     // Award +50 XP for pot linking (using the original apply_xp function)
     const xpAmount = 50;
-    const { error: xpError } = await adminSupabase
-      .from('xp_events')
-      .insert({
-        user_id: user.id,
-        action_type: 'pot_link',
-        amount: xpAmount,
-        metadata: {
-          pot_id: pot.id,
-          pot_code: payload.pot_code
-        }
-      });
+    const { error: xpError } = await adminSupabase.from('xp_events').insert({
+      user_id: user.id,
+      action_type: 'pot_link',
+      amount: xpAmount,
+      metadata: {
+        pot_id: pot.id,
+        pot_code: payload.pot_code,
+      },
+    });
 
     if (xpError) {
       console.error('XP award error:', xpError);
@@ -204,13 +207,11 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
       .single();
 
     const newTotal = (currentBalance?.balance || 0) + xpAmount;
-    await adminSupabase
-      .from('xp_balances')
-      .upsert({
-        user_id: user.id,
-        balance: newTotal,
-        updated_at: new Date().toISOString(),
-      });
+    await adminSupabase.from('xp_balances').upsert({
+      user_id: user.id,
+      balance: newTotal,
+      updated_at: new Date().toISOString(),
+    });
 
     // Track analytics event
     trackEvent('pot_claim_succeeded', pot.id, xpAmount);
@@ -239,4 +240,3 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     );
   }
 }
-
