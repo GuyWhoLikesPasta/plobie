@@ -142,10 +142,10 @@ export default function AdminDashboard() {
       // XP awarded today
       const { data: xpData } = await supabase
         .from('xp_events')
-        .select('amount')
+        .select('xp_amount')
         .gte('created_at', today);
 
-      const xpToday = xpData?.reduce((sum, event) => sum + event.amount, 0) || 0;
+      const xpToday = xpData?.reduce((sum, event) => sum + event.xp_amount, 0) || 0;
 
       setAnalytics({
         total_users: userCount || 0,
@@ -169,9 +169,7 @@ export default function AdminDashboard() {
           id,
           username,
           is_admin,
-          xp_total,
-          created_at,
-          user_id
+          created_at
         `
         )
         .order('created_at', { ascending: false })
@@ -179,27 +177,34 @@ export default function AdminDashboard() {
 
       if (error) throw error;
 
-      // Get post and comment counts for each user
+      // Get post, comment counts, and XP for each user
       const usersWithCounts = await Promise.all(
         (data || []).map(async profile => {
           const { count: postCount } = await supabase
             .from('posts')
             .select('*', { count: 'exact', head: true })
-            .eq('profile_id', profile.id);
+            .eq('author_id', profile.id);
 
           const { count: commentCount } = await supabase
             .from('comments')
             .select('*', { count: 'exact', head: true })
-            .eq('profile_id', profile.id);
+            .eq('author_id', profile.id);
+
+          // Get XP from xp_balances table
+          const { data: xpData } = await supabase
+            .from('xp_balances')
+            .select('total_xp')
+            .eq('profile_id', profile.id)
+            .single();
 
           return {
-            id: profile.user_id,
+            id: profile.id,
             email: profile.username + '@plobie', // Show username instead of email for privacy
             created_at: profile.created_at,
             profiles: {
               username: profile.username,
               is_admin: profile.is_admin || false,
-              xp_total: profile.xp_total || 0,
+              xp_total: xpData?.total_xp || 0,
             },
             post_count: postCount || 0,
             comment_count: commentCount || 0,
@@ -224,7 +229,7 @@ export default function AdminDashboard() {
           content,
           created_at,
           hidden,
-          profile_id
+          author_id
         `
         )
         .order('created_at', { ascending: false })
@@ -238,7 +243,7 @@ export default function AdminDashboard() {
           const { data: profile } = await supabase
             .from('profiles')
             .select('username')
-            .eq('id', post.profile_id)
+            .eq('id', post.author_id)
             .single();
 
           return {
