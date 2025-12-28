@@ -79,7 +79,7 @@ export async function POST(
     // Verify post exists and get author
     const { data: post } = await supabase
       .from('posts')
-      .select('id, title, author_id, profile_id')
+      .select('id, title, author_id')
       .eq('id', postId)
       .single();
 
@@ -123,7 +123,6 @@ export async function POST(
       .insert({
         post_id: postId,
         author_id: user.id,
-        profile_id: profile.id,
         content,
       })
       .select('id')

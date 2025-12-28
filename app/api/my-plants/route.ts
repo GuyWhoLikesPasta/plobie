@@ -66,15 +66,18 @@ export async function GET(
         )
       `
       )
-      .eq('profile_id', profile.id)
+      .eq('user_id', profile.id)
       .order('claimed_at', { ascending: false });
 
-    // Get XP balance
+    // Get XP balance (calculate level from total_xp)
     const { data: xpBalance } = await supabase
       .from('xp_balances')
-      .select('total_xp, level')
+      .select('total_xp')
       .eq('profile_id', profile.id)
       .single();
+
+    const totalXp = xpBalance?.total_xp || 0;
+    const level = Math.floor(totalXp / 100) + 1;
 
     // Get game sessions count
     const { count: sessionCount } = await supabase
@@ -87,8 +90,8 @@ export async function GET(
 
     const stats = {
       totalPots: claims?.length || 0,
-      totalXP: xpBalance?.total_xp || 0,
-      level: xpBalance?.level || 1,
+      totalXP: totalXp,
+      level: level,
       gameSessions: sessionCount || 0,
       potXP,
     };

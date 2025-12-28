@@ -57,7 +57,7 @@ export async function POST(
     // Verify post exists and get author info
     const { data: post } = await supabase
       .from('posts')
-      .select('id, title, author_id, profile_id')
+      .select('id, title, author_id')
       .eq('id', postId)
       .single();
 
@@ -76,9 +76,8 @@ export async function POST(
 
     // Add reaction
     const adminSupabase = createAdminClient();
-    const { error: reactionError } = await adminSupabase.from('reactions').insert({
+    const { error: reactionError } = await adminSupabase.from('post_reactions').insert({
       user_id: user.id,
-      profile_id: profile.id,
       post_id: postId,
       reaction_type: 'like',
     });

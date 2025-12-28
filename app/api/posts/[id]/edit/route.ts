@@ -64,7 +64,7 @@ export async function PATCH(
     // Verify post exists and belongs to user
     const { data: post } = await supabase
       .from('posts')
-      .select('id, profile_id')
+      .select('id, author_id')
       .eq('id', postId)
       .single();
 
@@ -81,7 +81,7 @@ export async function PATCH(
       );
     }
 
-    if (post.profile_id !== profile.id) {
+    if (post.author_id !== profile.id) {
       return NextResponse.json(
         {
           success: false,
@@ -210,7 +210,7 @@ export async function DELETE(
     // Verify post exists and belongs to user (or user is admin)
     const { data: post } = await supabase
       .from('posts')
-      .select('id, profile_id')
+      .select('id, author_id')
       .eq('id', postId)
       .single();
 
@@ -227,7 +227,7 @@ export async function DELETE(
       );
     }
 
-    if (post.profile_id !== profile.id && !profile.is_admin) {
+    if (post.author_id !== profile.id && !profile.is_admin) {
       return NextResponse.json(
         {
           success: false,
