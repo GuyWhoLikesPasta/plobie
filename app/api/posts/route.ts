@@ -268,8 +268,6 @@ export async function POST(
       .from('posts')
       .insert({
         author_id: user.id,
-        profile_id: profile.id,
-        group_slug: hobby_group.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-'),
         hobby_group,
         title,
         content,
