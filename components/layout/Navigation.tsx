@@ -20,13 +20,13 @@ export default function Navigation() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
       setLoading(false);
-      
+
       // Check if user is admin
       if (user) {
         supabase
           .from('profiles')
           .select('is_admin')
-          .eq('user_id', user.id)
+          .eq('id', user.id)
           .single()
           .then(({ data }) => {
             setIsAdmin(data?.is_admin || false);
@@ -37,7 +37,9 @@ export default function Navigation() {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       if (!session?.user) {
         setIsAdmin(false);
@@ -73,16 +75,14 @@ export default function Navigation() {
 
           {/* Main Navigation */}
           <div className="hidden md:flex items-center gap-2">
-            {navItems.map((item) => {
+            {navItems.map(item => {
               const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={`px-4 py-2 min-h-[44px] flex items-center rounded-lg text-sm font-medium transition ${
-                    isActive
-                      ? 'bg-green-100 text-green-800'
-                      : 'text-gray-700 hover:bg-gray-100'
+                    isActive ? 'bg-green-100 text-green-800' : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
                   <span className="mr-1">{item.icon}</span>
@@ -147,16 +147,14 @@ export default function Navigation() {
 
         {/* Mobile Navigation */}
         <div className="md:hidden pb-3 flex gap-2 overflow-x-auto">
-          {navItems.map((item) => {
+          {navItems.map(item => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={`px-3 py-2 min-h-[44px] flex items-center rounded-lg text-xs font-medium whitespace-nowrap transition ${
-                  isActive
-                    ? 'bg-green-100 text-green-800'
-                    : 'text-gray-700 hover:bg-gray-100'
+                  isActive ? 'bg-green-100 text-green-800' : 'text-gray-700 hover:bg-gray-100'
                 }`}
               >
                 <span className="mr-1">{item.icon}</span>
@@ -164,9 +162,21 @@ export default function Navigation() {
               </Link>
             );
           })}
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className={`px-3 py-2 min-h-[44px] flex items-center rounded-lg text-xs font-medium whitespace-nowrap transition ${
+                pathname === '/admin'
+                  ? 'bg-red-100 text-red-800'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <span className="mr-1">⚙️</span>
+              Admin
+            </Link>
+          )}
         </div>
       </div>
     </nav>
   );
 }
-
