@@ -1,9 +1,9 @@
 /**
  * POST /api/xp/award
- * 
+ *
  * Award XP to a user for completing an action.
  * Enforces daily caps, per-action caps, and cooldowns via stored procedure.
- * 
+ *
  * This endpoint should be called from server-side code only (not exposed to clients).
  */
 
@@ -24,7 +24,7 @@ const RequestSchema = z.object({
     'admin_adjust',
   ]),
   amount: z.number().int().optional(), // Only used for admin_adjust
-  reference_type: z.string().optional(),
+  description: z.string().optional(),
   reference_id: z.string().uuid().optional(),
 });
 
@@ -34,7 +34,9 @@ type XPAwardResult = {
   reason: string;
 };
 
-export async function POST(request: NextRequest): Promise<NextResponse<ApiResponse<{ xp_awarded: number; new_total: number }>>> {
+export async function POST(
+  request: NextRequest
+): Promise<NextResponse<ApiResponse<{ xp_awarded: number; new_total: number }>>> {
   try {
     // Parse request body
     const body = await request.json();
@@ -54,7 +56,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
       );
     }
 
-    const { profile_id, action_type, amount, reference_type, reference_id } = validation.data;
+    const { profile_id, action_type, amount, description, reference_id } = validation.data;
 
     // Validate amount for admin_adjust
     if (action_type === 'admin_adjust' && amount === undefined) {
@@ -72,12 +74,12 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
 
     // Call stored procedure using admin client (service role)
     const adminSupabase = createAdminClient();
-    
+
     const { data, error } = await adminSupabase.rpc('apply_xp', {
       p_profile_id: profile_id,
       p_action_type: action_type,
-      p_amount: amount || 0,
-      p_reference_type: reference_type || null,
+      p_xp_amount: amount || 0,
+      p_description: description || null,
       p_reference_id: reference_id || null,
     });
 
@@ -106,8 +108,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
         {
           success: false,
           error: {
-            code: xpResult.reason.includes('cap') 
-              ? ErrorCodes.XP_DAILY_CAP_REACHED 
+            code: xpResult.reason.includes('cap')
+              ? ErrorCodes.XP_DAILY_CAP_REACHED
               : ErrorCodes.VALIDATION_ERROR,
             message: xpResult.reason,
           },
@@ -150,4 +152,3 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     );
   }
 }
-

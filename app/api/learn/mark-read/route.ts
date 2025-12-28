@@ -77,19 +77,23 @@ export async function POST(
 
     const { article_id } = validation.data;
 
-    // Award XP for reading article (+1 XP, cap 5/day, no repeats)
+    // Award XP for reading article (+1 XP, cap 100/day)
     const adminSupabase = createAdminClient();
-    const { data: xpData } = await adminSupabase.rpc('apply_xp', {
+    const { data: xpData, error: xpError } = await adminSupabase.rpc('apply_xp', {
       p_profile_id: profile.id,
       p_action_type: 'learn_read',
-      p_amount: 1,
-      p_reference_type: 'article',
+      p_xp_amount: 1,
+      p_description: 'Read an article',
       p_reference_id: article_id,
     });
 
+    if (xpError) {
+      console.error('XP award error:', xpError);
+    }
+
     const xpResult = (xpData as unknown as any[])?.[0];
 
-    if (!xpResult.success) {
+    if (!xpResult?.success) {
       // Already read or cap reached
       return NextResponse.json(
         {

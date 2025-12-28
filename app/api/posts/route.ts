@@ -292,17 +292,21 @@ export async function POST(
       );
     }
 
-    // Award XP for post creation (+3 XP, cap 5/day)
-    const { data: xpData } = await adminSupabase.rpc('apply_xp', {
+    // Award XP for post creation (+3 XP, cap 100/day)
+    const { data: xpData, error: xpError } = await adminSupabase.rpc('apply_xp', {
       p_profile_id: profile.id,
       p_action_type: 'post_create',
-      p_amount: 3,
-      p_reference_type: 'post',
+      p_xp_amount: 3,
+      p_description: 'Created a post',
       p_reference_id: post.id,
     });
 
+    if (xpError) {
+      console.error('XP award error:', xpError);
+    }
+
     const xpResult = (xpData as unknown as any[])?.[0];
-    const xpAwarded = xpResult?.xp_awarded || 0;
+    const xpAwarded = xpResult?.new_total_xp || 0;
 
     // Track analytics event
     trackEvent('post_created', hobby_group, !!image_url);

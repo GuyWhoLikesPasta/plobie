@@ -143,17 +143,21 @@ export async function POST(
       );
     }
 
-    // Award XP for comment creation (+1 XP, cap 10/day)
-    const { data: xpData } = await adminSupabase.rpc('apply_xp', {
+    // Award XP for comment creation (+1 XP, cap 100/day)
+    const { data: xpData, error: xpError } = await adminSupabase.rpc('apply_xp', {
       p_profile_id: profile.id,
       p_action_type: 'comment_create',
-      p_amount: 1,
-      p_reference_type: 'comment',
+      p_xp_amount: 1,
+      p_description: 'Created a comment',
       p_reference_id: comment.id,
     });
 
+    if (xpError) {
+      console.error('XP award error:', xpError);
+    }
+
     const xpResult = (xpData as unknown as any[])?.[0];
-    const xpAwarded = xpResult?.xp_awarded || 0;
+    const xpAwarded = xpResult?.new_total_xp || 0;
 
     // Send notification to post author (if not commenting on own post)
     if (post.author_id && post.author_id !== user.id) {
