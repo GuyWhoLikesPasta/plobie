@@ -333,6 +333,7 @@ CREATE OR REPLACE FUNCTION public.apply_xp(
 )
 RETURNS TABLE (
   success BOOLEAN,
+  xp_awarded INT,
   new_total_xp INT,
   new_daily_xp INT,
   level_before INT,
@@ -405,6 +406,7 @@ BEGIN
   -- Return results
   RETURN QUERY SELECT 
     true::BOOLEAN,
+    v_xp_to_add,
     v_current_total_xp,
     v_current_daily_xp,
     v_level_before,

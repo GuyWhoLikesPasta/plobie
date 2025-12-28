@@ -94,15 +94,27 @@ export async function POST(
     const xpResult = (xpData as unknown as any[])?.[0];
 
     if (!xpResult?.success) {
-      // Already read or cap reached
+      // XP function failed (shouldn't happen, but handle it)
       return NextResponse.json(
         {
           success: false,
           error: {
-            code: xpResult.reason.includes('cap')
-              ? ErrorCodes.XP_DAILY_CAP_REACHED
-              : ErrorCodes.ALREADY_EXISTS,
-            message: xpResult.reason,
+            code: ErrorCodes.DATABASE_ERROR,
+            message: 'Failed to award XP',
+          },
+        },
+        { status: 500 }
+      );
+    }
+
+    // Check if XP was capped
+    if (xpResult.capped && xpResult.xp_awarded === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: ErrorCodes.XP_DAILY_CAP_REACHED,
+            message: 'Daily XP cap reached. Come back tomorrow!',
           },
         },
         { status: 400 }

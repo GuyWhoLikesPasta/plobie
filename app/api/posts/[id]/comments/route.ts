@@ -157,7 +157,7 @@ export async function POST(
     }
 
     const xpResult = (xpData as unknown as any[])?.[0];
-    const xpAwarded = xpResult?.new_total_xp || 0;
+    const xpAwarded = xpResult?.xp_awarded || 0;
 
     // Send notification to post author (if not commenting on own post)
     if (post.author_id && post.author_id !== user.id) {

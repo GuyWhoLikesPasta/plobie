@@ -306,7 +306,7 @@ export async function POST(
     }
 
     const xpResult = (xpData as unknown as any[])?.[0];
-    const xpAwarded = xpResult?.new_total_xp || 0;
+    const xpAwarded = xpResult?.xp_awarded || 0;
 
     // Track analytics event
     trackEvent('post_created', hobby_group, !!image_url);
