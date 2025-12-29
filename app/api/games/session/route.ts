@@ -35,10 +35,7 @@ export async function GET() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get active session
@@ -66,10 +63,7 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Error in GET /api/games/session:', error);
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -87,10 +81,7 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse request body
@@ -201,34 +192,30 @@ export async function POST(request: Request) {
 
         if (profile) {
           // Use apply_xp stored procedure
-          const { data: xpData, error: xpError } = await adminSupabase.rpc(
-            'apply_xp',
-            {
-              p_profile_id: profile.id,
-              p_action_type: 'game_session',
-              p_base_amount: baseXP,
-              p_metadata_json: JSON.stringify({
-                session_id: data.session_id,
-                duration_minutes: durationMinutes,
-                xp_blocks: xpBlocks,
-              }),
-              p_reference_id: data.session_id,
-            }
-          );
+          const { data: xpData, error: xpError } = await adminSupabase.rpc('apply_xp', {
+            p_profile_id: profile.id,
+            p_action_type: 'game_session',
+            p_xp_amount: baseXP, // Fixed: was p_base_amount
+            p_description: `Game session (${durationMinutes} min, ${xpBlocks} blocks)`, // Fixed: was p_metadata_json
+            p_reference_id: data.session_id,
+          });
 
           if (xpError) {
             console.error('Error applying XP:', xpError);
             // Continue anyway, session should still close
-          } else if (xpData && xpData.length > 0) {
-            xpAwarded = xpData[0].awarded_xp;
-            xpResult = {
-              awarded: xpData[0].awarded_xp,
-              capped: xpData[0].capped,
-              new_total_xp: xpData[0].new_total_xp,
-              new_level: xpData[0].new_level,
-              level_up: xpData[0].level_up,
-              remaining_today: xpData[0].remaining_today,
-            };
+          } else {
+            const xpRaw = (xpData as unknown as any[])?.[0];
+            if (xpRaw) {
+              xpAwarded = xpRaw.xp_awarded || 0; // Fixed: was awarded_xp
+              xpResult = {
+                awarded: xpRaw.xp_awarded || 0, // Fixed: was awarded_xp
+                capped: xpRaw.capped || false,
+                new_total_xp: xpRaw.new_total_xp || 0,
+                new_level: Math.floor((xpRaw.new_total_xp || 0) / 100) + 1, // Calculate level
+                level_up: (xpRaw.level_after || 0) > (xpRaw.level_before || 0),
+                remaining_today: 100 - (xpRaw.new_daily_xp || 0), // Calculate remaining
+              };
+            }
           }
         }
       }
@@ -271,16 +258,9 @@ export async function POST(request: Request) {
     }
 
     // Should never reach here due to schema validation
-    return NextResponse.json(
-      { success: false, error: 'Invalid action' },
-      { status: 400 }
-    );
+    return NextResponse.json({ success: false, error: 'Invalid action' }, { status: 400 });
   } catch (error) {
     console.error('Error in POST /api/games/session:', error);
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
-

@@ -124,6 +124,115 @@ CREATE INDEX IF NOT EXISTS idx_stripe_events_processed ON public.stripe_events(p
 -- No RLS needed (service role only)
 
 -- ==============================================
+-- PART 1.5: Unity Game Integration Tables
+-- ==============================================
+
+-- Game Sessions Table (track Unity play sessions)
+CREATE TABLE IF NOT EXISTS public.game_sessions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  ended_at TIMESTAMPTZ,
+  duration_minutes INT CHECK (duration_minutes >= 0),
+  xp_earned INT DEFAULT 0 CHECK (xp_earned >= 0),
+  status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'completed', 'abandoned')),
+  metadata JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_game_sessions_user_id ON public.game_sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_game_sessions_started_at ON public.game_sessions(started_at DESC);
+CREATE INDEX IF NOT EXISTS idx_game_sessions_status ON public.game_sessions(status) WHERE status = 'active';
+
+-- Game Progress Table (store Unity game state)
+CREATE TABLE IF NOT EXISTS public.game_progress (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL UNIQUE REFERENCES auth.users(id) ON DELETE CASCADE,
+  game_state JSONB NOT NULL DEFAULT '{}'::jsonb,
+  version INT NOT NULL DEFAULT 1,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_game_progress_user_id ON public.game_progress(user_id);
+CREATE INDEX IF NOT EXISTS idx_game_progress_updated_at ON public.game_progress(updated_at DESC);
+
+-- Enable RLS on game tables
+ALTER TABLE public.game_sessions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.game_progress ENABLE ROW LEVEL SECURITY;
+
+-- Game Sessions Policies
+DROP POLICY IF EXISTS "game_sessions_select_own" ON public.game_sessions;
+CREATE POLICY "game_sessions_select_own" ON public.game_sessions FOR SELECT USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "game_sessions_insert_own" ON public.game_sessions;
+CREATE POLICY "game_sessions_insert_own" ON public.game_sessions FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "game_sessions_update_own" ON public.game_sessions;
+CREATE POLICY "game_sessions_update_own" ON public.game_sessions FOR UPDATE USING (auth.uid() = user_id);
+
+-- Game Progress Policies
+DROP POLICY IF EXISTS "game_progress_select_own" ON public.game_progress;
+CREATE POLICY "game_progress_select_own" ON public.game_progress FOR SELECT USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "game_progress_insert_own" ON public.game_progress;
+CREATE POLICY "game_progress_insert_own" ON public.game_progress FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "game_progress_update_own" ON public.game_progress;
+CREATE POLICY "game_progress_update_own" ON public.game_progress FOR UPDATE USING (auth.uid() = user_id);
+
+-- Game utility functions
+CREATE OR REPLACE FUNCTION get_active_game_session(p_user_id UUID)
+RETURNS TABLE (
+  id UUID,
+  user_id UUID,
+  started_at TIMESTAMPTZ,
+  status TEXT,
+  metadata JSONB
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT 
+    gs.id,
+    gs.user_id,
+    gs.started_at,
+    gs.status,
+    gs.metadata
+  FROM public.game_sessions gs
+  WHERE gs.user_id = p_user_id
+    AND gs.status = 'active'
+  ORDER BY gs.started_at DESC
+  LIMIT 1;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION cleanup_abandoned_sessions()
+RETURNS INT AS $$
+DECLARE
+  updated_count INT;
+BEGIN
+  UPDATE public.game_sessions
+  SET 
+    status = 'abandoned',
+    ended_at = started_at + INTERVAL '4 hours',
+    duration_minutes = 240
+  WHERE 
+    status = 'active'
+    AND started_at < NOW() - INTERVAL '4 hours';
+    
+  GET DIAGNOSTICS updated_count = ROW_COUNT;
+  RETURN updated_count;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Grant permissions
+GRANT SELECT, INSERT, UPDATE ON public.game_sessions TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON public.game_progress TO authenticated;
+GRANT EXECUTE ON FUNCTION get_active_game_session(UUID) TO authenticated;
+GRANT EXECUTE ON FUNCTION cleanup_abandoned_sessions() TO authenticated;
+
+-- ==============================================
 -- PART 2: Admin Features
 -- ==============================================
 
