@@ -1,0 +1,42 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "🌱 Plobie" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: 🌱
+        - generic [ref=e7]: Plobie
+      - generic [ref=e8]:
+        - link "🏠 Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e10]: 🏠
+          - text: Home
+        - link "💬 Hobbies" [ref=e11] [cursor=pointer]:
+          - /url: /hobbies
+          - generic [ref=e12]: 💬
+          - text: Hobbies
+        - link "🌿 My Plants" [ref=e13] [cursor=pointer]:
+          - /url: /my-plants
+          - generic [ref=e14]: 🌿
+          - text: My Plants
+        - link "🎮 Games" [ref=e15] [cursor=pointer]:
+          - /url: /games
+          - generic [ref=e16]: 🎮
+          - text: Games
+        - link "🛍️ Shop" [ref=e17] [cursor=pointer]:
+          - /url: /shop
+          - generic [ref=e18]: 🛍️
+          - text: Shop
+  - generic [ref=e22]:
+    - generic [ref=e23]: 🌱
+    - heading "404" [level=1] [ref=e24]
+    - heading "Page Not Found" [level=2] [ref=e25]
+    - paragraph [ref=e26]: The page you're looking for doesn't exist or has been moved.
+    - link "Back to Home" [ref=e27] [cursor=pointer]:
+      - /url: /
+  - button "Open Next.js Dev Tools" [ref=e33] [cursor=pointer]:
+    - img [ref=e34]
+  - alert [ref=e37]
+```

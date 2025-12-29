@@ -1,131 +1,174 @@
 /**
- * Create Test User Script
- *
- * Creates a test user with known credentials for development/testing
- *
- * Usage: npm run user:create
+ * Create Test User for Unity Testing
+ * Creates a user with seed data for James to test with
  */
 
 import { createClient } from '@supabase/supabase-js';
-import * as dotenv from 'dotenv';
+import { config } from 'dotenv';
 
 // Load environment variables
-dotenv.config({ path: '.env.local' });
+config({ path: '.env.local' });
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
-if (!supabaseUrl || !supabaseServiceKey) {
-  console.error('❌ Missing required environment variables');
-  console.error('Required: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY');
-  process.exit(1);
-}
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+const adminSupabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: false,
   },
 });
 
-// Test user credentials
 const TEST_USER = {
-  email: 'test@plobie.com',
-  password: 'TestPassword123!',
-  username: 'testuser',
-  full_name: 'Test User',
+  email: 'unity_test@plobie.com',
+  username: 'unity_tester',
+  password: 'UnityTest123!',
+  fullName: 'Unity Test User',
 };
 
 async function createTestUser() {
-  console.log('👤 Creating test user...\n');
-  console.log(`Email: ${TEST_USER.email}`);
-  console.log(`Password: ${TEST_USER.password}`);
-  console.log(`Username: ${TEST_USER.username}\n`);
+  console.log('🔐 Creating Unity test user...');
+  console.log('================================');
+  console.log('');
 
-  try {
-    // Check if user already exists
-    const { data: existingProfile } = await supabase
-      .from('profiles')
-      .select('id, username, email')
-      .eq('email', TEST_USER.email)
-      .single();
+  // Check if user already exists
+  const { data: existingProfile } = await adminSupabase
+    .from('profiles')
+    .select('id, username')
+    .eq('username', TEST_USER.username)
+    .single();
 
-    if (existingProfile) {
-      console.log('⚠️  Test user already exists!');
-      console.log(`ID: ${existingProfile.id}`);
-      console.log(`Username: ${existingProfile.username}`);
-      console.log(`Email: ${existingProfile.email}\n`);
-      console.log('✅ You can use the existing credentials to log in.');
-      return;
-    }
+  if (existingProfile) {
+    console.log('✅ Test user already exists!');
+    console.log('   Username:', TEST_USER.username);
+    console.log('   Email:', TEST_USER.email);
+    console.log('   Password:', TEST_USER.password);
+    console.log('');
+    console.log('📊 Current stats:');
+    await printUserStats(existingProfile.id);
+    return;
+  }
 
-    // Create user in Supabase Auth
-    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-      email: TEST_USER.email,
-      password: TEST_USER.password,
-      email_confirm: true, // Auto-confirm email
-      user_metadata: {
-        username: TEST_USER.username,
-        full_name: TEST_USER.full_name,
-      },
-    });
+  // Create user via admin API
+  const { data: authData, error: authError } = await adminSupabase.auth.admin.createUser({
+    email: TEST_USER.email,
+    password: TEST_USER.password,
+    email_confirm: true, // Auto-confirm email
+    user_metadata: {
+      username: TEST_USER.username,
+    },
+  });
 
-    if (authError) throw authError;
-    if (!authData.user) throw new Error('User creation failed');
-
-    console.log('✅ Auth user created');
-    console.log(`User ID: ${authData.user.id}\n`);
-
-    // Profile should be created automatically by trigger, but let's verify
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for trigger
-
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', authData.user.id)
-      .single();
-
-    if (profileError) {
-      console.warn('⚠️  Profile not found, creating manually...');
-
-      const { error: insertError } = await supabase.from('profiles').insert({
-        id: authData.user.id,
-        username: TEST_USER.username,
-        full_name: TEST_USER.full_name,
-        email: TEST_USER.email,
-      });
-
-      if (insertError) throw insertError;
-      console.log('✅ Profile created manually');
-    } else {
-      console.log('✅ Profile exists');
-    }
-
-    // Create XP balance
-    const { error: xpError } = await supabase.from('xp_balances').insert({
-      profile_id: authData.user.id,
-      total_xp: 0,
-      current_level: 0,
-    });
-
-    if (xpError && xpError.code !== '23505') {
-      // Ignore duplicate key error
-      console.warn('⚠️  XP balance creation warning:', xpError.message);
-    } else {
-      console.log('✅ XP balance initialized');
-    }
-
-    console.log('\n🎉 Test user created successfully!\n');
-    console.log('📝 Login Credentials:');
-    console.log(`   Email: ${TEST_USER.email}`);
-    console.log(`   Password: ${TEST_USER.password}`);
-    console.log(`   Username: ${TEST_USER.username}\n`);
-    console.log('🔗 Login at: http://localhost:3000/login\n');
-  } catch (error: any) {
-    console.error('❌ Error creating test user:', error.message || error);
+  if (authError || !authData.user) {
+    console.error('❌ Failed to create user:', authError);
     process.exit(1);
   }
+
+  console.log('✅ User created in auth.users');
+
+  // Update profile
+  const { error: profileError } = await adminSupabase
+    .from('profiles')
+    .update({
+      username: TEST_USER.username,
+      full_name: TEST_USER.fullName,
+      bio: 'Test user for Unity integration testing',
+    })
+    .eq('id', authData.user.id);
+
+  if (profileError) {
+    console.error('❌ Failed to update profile:', profileError);
+    process.exit(1);
+  }
+
+  console.log('✅ Profile updated');
+
+  // Add some XP (simulate activity)
+  console.log('');
+  console.log('📈 Adding seed XP...');
+
+  const { error: xpError } = await adminSupabase.rpc('apply_xp', {
+    p_profile_id: authData.user.id,
+    p_action_type: 'seed_data',
+    p_xp_amount: 50, // Level 1 with 50 XP
+    p_description: 'Seed data for testing',
+  });
+
+  if (xpError) {
+    console.warn('⚠️  Failed to add XP:', xpError);
+  } else {
+    console.log('✅ Added 50 XP');
+  }
+
+  // Create a sample post
+  console.log('');
+  console.log('📝 Creating sample post...');
+
+  const { error: postError } = await adminSupabase.from('posts').insert({
+    author_id: authData.user.id,
+    hobby_group: 'Gardening',
+    title: 'Test Post from Unity Tester',
+    content: 'This is a test post created for Unity integration testing.',
+  });
+
+  if (postError) {
+    console.warn('⚠️  Failed to create post:', postError);
+  } else {
+    console.log('✅ Created sample post');
+  }
+
+  console.log('');
+  console.log('🎉 Test user created successfully!');
+  console.log('');
+  console.log('📋 Login Credentials:');
+  console.log('   Email:', TEST_USER.email);
+  console.log('   Password:', TEST_USER.password);
+  console.log('   Username:', TEST_USER.username);
+  console.log('');
+  console.log('📊 Current stats:');
+  await printUserStats(authData.user.id);
+  console.log('');
+  console.log('💡 James can use these credentials to test Unity integration!');
 }
 
-// Run the script
-createTestUser();
+async function printUserStats(userId: string) {
+  // Get XP balance
+  const { data: xpBalance } = await adminSupabase
+    .from('xp_balances')
+    .select('total_xp, daily_xp')
+    .eq('profile_id', userId)
+    .single();
+
+  const totalXp = xpBalance?.total_xp || 0;
+  const level = Math.floor(totalXp / 100) + 1;
+
+  // Get post count
+  const { count: postCount } = await adminSupabase
+    .from('posts')
+    .select('*', { count: 'exact', head: true })
+    .eq('author_id', userId);
+
+  // Get comment count
+  const { count: commentCount } = await adminSupabase
+    .from('comments')
+    .select('*', { count: 'exact', head: true })
+    .eq('author_id', userId);
+
+  // Get pot count
+  const { count: potCount } = await adminSupabase
+    .from('pot_claims')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', userId);
+
+  console.log('   Level:', level);
+  console.log('   Total XP:', totalXp);
+  console.log('   Daily XP:', xpBalance?.daily_xp || 0);
+  console.log('   Posts:', postCount || 0);
+  console.log('   Comments:', commentCount || 0);
+  console.log('   Pots:', potCount || 0);
+}
+
+createTestUser().catch(error => {
+  console.error('❌ Error:', error);
+  process.exit(1);
+});
