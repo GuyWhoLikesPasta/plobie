@@ -32,8 +32,8 @@
       - generic [ref=e20]:
         - button "Notifications" [ref=e22]:
           - img [ref=e23]
-        - link "xp-test-1767038036604" [ref=e25] [cursor=pointer]:
-          - /url: /profile/xp-test-1767038036604
+        - link "xp-test-1767038382929" [ref=e25] [cursor=pointer]:
+          - /url: /profile/xp-test-1767038382929
         - button "Sign Out" [ref=e26]
   - generic [ref=e27]:
     - generic [ref=e30]:

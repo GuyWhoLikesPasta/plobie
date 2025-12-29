@@ -30,56 +30,85 @@
           - generic [ref=e18]: 🛍️
           - text: Shop
       - generic [ref=e20]:
-        - link "Login" [ref=e21] [cursor=pointer]:
-          - /url: /login
-        - link "Sign Up" [ref=e22] [cursor=pointer]:
-          - /url: /signup
-  - generic [ref=e24]:
-    - generic [ref=e25]:
-      - heading "🌱 Plobie" [level=1] [ref=e26]
-      - heading "Join Our Community" [level=2] [ref=e27]
-      - paragraph [ref=e28]: Start your plant journey today
-    - generic [ref=e29]:
-      - generic [ref=e30]: Database error saving new user
+        - button "Notifications" [ref=e22]:
+          - img [ref=e23]
+        - link "xp-test-1767038382911" [ref=e25] [cursor=pointer]:
+          - /url: /profile/xp-test-1767038382911
+        - button "Sign Out" [ref=e26]
+  - generic [ref=e27]:
+    - generic [ref=e30]:
       - generic [ref=e31]:
-        - generic [ref=e32]:
-          - generic [ref=e33]: Username
-          - textbox "Username" [ref=e34]:
-            - /placeholder: plantlover123
-            - text: xptest1767038036603
-        - generic [ref=e35]:
-          - generic [ref=e36]: Email
-          - textbox "Email" [ref=e37]:
-            - /placeholder: you@example.com
-            - text: xp-test-1767038036603@plobie.test
-        - generic [ref=e38]:
-          - generic [ref=e39]: Password
-          - textbox "Password" [ref=e40]:
-            - /placeholder: ••••••••
-            - text: TestPass123!
-          - paragraph [ref=e41]: At least 6 characters
-        - generic [ref=e42]:
-          - generic [ref=e43] [cursor=pointer]:
-            - checkbox "I confirm that I am at least 13 years old" [checked] [ref=e44]
-            - generic [ref=e45]: I confirm that I am at least 13 years old
-          - generic [ref=e46] [cursor=pointer]:
-            - checkbox "I agree to communicate respectfully and follow Plobie's community guidelines" [checked] [ref=e47]
-            - generic [ref=e48]: I agree to communicate respectfully and follow Plobie's community guidelines
-        - button "Sign Up" [ref=e49]
-      - generic [ref=e50]:
-        - generic [ref=e55]: Or continue with
-        - generic [ref=e56]:
-          - button "Google" [ref=e57]:
-            - img [ref=e58]
-            - generic [ref=e63]: Google
-          - button "Apple" [ref=e64]:
-            - img [ref=e65]
-            - generic [ref=e67]: Apple
-      - paragraph [ref=e68]:
-        - text: Already have an account?
-        - link "Sign in" [ref=e69] [cursor=pointer]:
-          - /url: /login
-  - button "Open Next.js Dev Tools" [ref=e75] [cursor=pointer]:
-    - img [ref=e76]
-  - alert [ref=e79]
+        - heading "🌿 Hobbies" [level=1] [ref=e32]
+        - paragraph [ref=e33]: Connect with fellow plant enthusiasts
+      - generic [ref=e34]:
+        - button "📚 Learn (+1 XP)" [ref=e35]
+        - button "✏️ New Post" [ref=e36]
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - textbox "Search posts..." [ref=e40]
+          - generic [ref=e41]: 🔍
+        - combobox [ref=e42]:
+          - option "Recent" [selected]
+          - option "Trending"
+      - generic [ref=e43]:
+        - button "All Groups" [ref=e44]
+        - button "🪴 Indoor Plants" [ref=e45]
+        - button "🌵 Succulents & Cacti" [ref=e46]
+        - button "🌿 Herbs & Edibles" [ref=e47]
+        - button "🌸 Orchids" [ref=e48]
+        - button "🌳 Bonsai" [ref=e49]
+        - button "🌱 Propagation Tips" [ref=e50]
+      - generic [ref=e51]:
+        - generic [ref=e53] [cursor=pointer]:
+          - generic [ref=e54]: U
+          - generic [ref=e55]:
+            - generic [ref=e56]:
+              - button "unity_tester" [ref=e57]
+              - generic [ref=e58]: ·
+              - generic [ref=e59]: Gardening
+              - generic [ref=e60]: ·
+              - generic [ref=e61]: 12/29/2025
+            - heading "Test Post from Unity Tester" [level=3] [ref=e62]
+            - paragraph [ref=e63]: This is a test post created for Unity integration testing.
+            - generic [ref=e64]:
+              - button "🤍 0" [ref=e65]:
+                - generic [ref=e66]: 🤍
+                - generic [ref=e67]: "0"
+              - generic [ref=e68]: 💬 0
+        - generic [ref=e70] [cursor=pointer]:
+          - generic [ref=e71]: T
+          - generic [ref=e72]:
+            - generic [ref=e73]:
+              - button "test2" [ref=e74]
+              - generic [ref=e75]: ·
+              - generic [ref=e76]: Indoor Plants
+              - generic [ref=e77]: ·
+              - generic [ref=e78]: 12/28/2025
+            - heading "test3" [level=3] [ref=e79]
+            - paragraph [ref=e80]: test3
+            - generic [ref=e81]:
+              - button "🤍 0" [ref=e82]:
+                - generic [ref=e83]: 🤍
+                - generic [ref=e84]: "0"
+              - generic [ref=e85]: 💬 1
+        - generic [ref=e87] [cursor=pointer]:
+          - generic [ref=e88]: T
+          - generic [ref=e89]:
+            - generic [ref=e90]:
+              - button "test2" [ref=e91]
+              - generic [ref=e92]: ·
+              - generic [ref=e93]: Indoor Plants
+              - generic [ref=e94]: ·
+              - generic [ref=e95]: 12/28/2025
+            - heading "test" [level=3] [ref=e96]
+            - paragraph [ref=e97]: test
+            - generic [ref=e98]:
+              - button "🤍 0" [ref=e99]:
+                - generic [ref=e100]: 🤍
+                - generic [ref=e101]: "0"
+              - generic [ref=e102]: 💬 0
+  - button "Open Next.js Dev Tools" [ref=e108] [cursor=pointer]:
+    - img [ref=e109]
+  - alert [ref=e112]
 ```
