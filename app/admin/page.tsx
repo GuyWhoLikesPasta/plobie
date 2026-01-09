@@ -372,6 +372,54 @@ export default function AdminDashboard() {
     }
   };
 
+  const resetUserXP = async (userId: string, username: string) => {
+    if (!confirm(`Are you sure you want to reset XP for ${username} to 0? This cannot be undone.`))
+      return;
+
+    try {
+      // Reset XP balance
+      const { error } = await supabase
+        .from('xp_balances')
+        .update({ total_xp: 0, daily_xp: 0 })
+        .eq('profile_id', userId);
+
+      if (error) throw error;
+
+      toast.success(`XP reset for ${username}`);
+      fetchUsers();
+      fetchAnalytics();
+    } catch (error) {
+      console.error('Reset XP error:', error);
+      toast.error('Failed to reset XP');
+    }
+  };
+
+  const deleteUser = async (userId: string, username: string) => {
+    if (
+      !confirm(
+        `⚠️ DANGER: Are you sure you want to delete ${username}? This will delete ALL their data (posts, comments, XP, etc.) and CANNOT be undone.`
+      )
+    )
+      return;
+
+    try {
+      // Delete profile (cascades to related data due to foreign keys)
+      const { error: profileError } = await supabase.from('profiles').delete().eq('id', userId);
+
+      if (profileError) throw profileError;
+
+      // Also delete from auth (requires service role, so we'll use an API)
+      // For now, just remove the profile - auth cleanup can be done separately
+
+      toast.success(`User ${username} deleted`);
+      fetchUsers();
+      fetchAnalytics();
+    } catch (error) {
+      console.error('Delete user error:', error);
+      toast.error('Failed to delete user');
+    }
+  };
+
   const deletePost = async (postId: string) => {
     if (!confirm('Are you sure you want to delete this post?')) return;
 
@@ -755,12 +803,34 @@ export default function AdminDashboard() {
                           {new Date(user.created_at).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 text-sm">
-                          <button
-                            onClick={() => toggleAdmin(user.id, user.profiles.is_admin)}
-                            className="text-green-600 hover:text-green-900"
-                          >
-                            {user.profiles.is_admin ? 'Remove Admin' : 'Make Admin'}
-                          </button>
+                          <div className="flex flex-col gap-1">
+                            <a
+                              href={`/profile/${user.profiles.username}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:text-blue-900 text-xs"
+                            >
+                              👤 View Profile
+                            </a>
+                            <button
+                              onClick={() => toggleAdmin(user.id, user.profiles.is_admin)}
+                              className="text-green-600 hover:text-green-900 text-xs text-left"
+                            >
+                              {user.profiles.is_admin ? '⬇️ Remove Admin' : '⬆️ Make Admin'}
+                            </button>
+                            <button
+                              onClick={() => resetUserXP(user.id, user.profiles.username)}
+                              className="text-yellow-600 hover:text-yellow-900 text-xs text-left"
+                            >
+                              🔄 Reset XP
+                            </button>
+                            <button
+                              onClick={() => deleteUser(user.id, user.profiles.username)}
+                              className="text-red-600 hover:text-red-900 text-xs text-left"
+                            >
+                              🗑️ Delete User
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
