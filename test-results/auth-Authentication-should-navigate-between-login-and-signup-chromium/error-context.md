@@ -1,0 +1,73 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "🌱 Plobie" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: 🌱
+        - generic [ref=e7]: Plobie
+      - generic [ref=e8]:
+        - link "🏠 Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e10]: 🏠
+          - text: Home
+        - link "💬 Hobbies" [ref=e11] [cursor=pointer]:
+          - /url: /hobbies
+          - generic [ref=e12]: 💬
+          - text: Hobbies
+        - link "🌿 My Plants" [ref=e13] [cursor=pointer]:
+          - /url: /my-plants
+          - generic [ref=e14]: 🌿
+          - text: My Plants
+        - link "🏆 Achievements" [ref=e15] [cursor=pointer]:
+          - /url: /achievements
+          - generic [ref=e16]: 🏆
+          - text: Achievements
+        - link "🎮 Games" [ref=e17] [cursor=pointer]:
+          - /url: /games
+          - generic [ref=e18]: 🎮
+          - text: Games
+        - link "🛍️ Shop" [ref=e19] [cursor=pointer]:
+          - /url: /shop
+          - generic [ref=e20]: 🛍️
+          - text: Shop
+      - generic [ref=e22]:
+        - link "Login" [ref=e23] [cursor=pointer]:
+          - /url: /login
+        - link "Sign Up" [ref=e24] [cursor=pointer]:
+          - /url: /signup
+  - generic [ref=e26]:
+    - generic [ref=e27]:
+      - heading "🌱 Plobie" [level=1] [ref=e28]
+      - heading "Welcome Back" [level=2] [ref=e29]
+      - paragraph [ref=e30]: Sign in to continue to your garden
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - generic [ref=e34]: Email
+          - textbox "Email" [ref=e35]:
+            - /placeholder: you@example.com
+        - generic [ref=e36]:
+          - generic [ref=e37]: Password
+          - textbox "Password" [ref=e38]:
+            - /placeholder: ••••••••
+        - button "Sign In" [ref=e39]
+      - generic [ref=e40]:
+        - generic [ref=e45]: Or continue with
+        - generic [ref=e46]:
+          - button "Google" [ref=e47]:
+            - img [ref=e48]
+            - generic [ref=e53]: Google
+          - button "Apple" [ref=e54]:
+            - img [ref=e55]
+            - generic [ref=e57]: Apple
+      - paragraph [ref=e58]:
+        - text: Don't have an account?
+        - link "Sign up" [ref=e59] [cursor=pointer]:
+          - /url: /signup
+  - button "Open Next.js Dev Tools" [ref=e65] [cursor=pointer]:
+    - img [ref=e66]
+  - alert [ref=e69]
+```

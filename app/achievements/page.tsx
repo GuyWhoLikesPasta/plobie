@@ -51,6 +51,7 @@ export default function AchievementsPage() {
 
   useEffect(() => {
     checkAuthAndFetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const checkAuthAndFetch = async () => {
@@ -78,7 +79,7 @@ export default function AchievementsPage() {
       } else {
         toast.error('Failed to load achievements');
       }
-    } catch (error) {
+    } catch {
       toast.error('Network error');
     } finally {
       setLoading(false);
@@ -108,7 +109,7 @@ export default function AchievementsPage() {
           toast.success('No new achievements yet. Keep going!');
         }
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to check achievements');
     } finally {
       setChecking(false);
