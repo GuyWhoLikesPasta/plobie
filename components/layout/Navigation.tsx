@@ -28,7 +28,11 @@ export default function Navigation() {
           .select('is_admin')
           .eq('id', user.id)
           .single()
-          .then(({ data }) => {
+          .then(({ data, error }) => {
+            if (error) {
+              console.error('Admin check error:', error);
+            }
+            console.log('Admin check result:', { userId: user.id, data, isAdmin: data?.is_admin });
             setIsAdmin(data?.is_admin || false);
           });
       } else {
