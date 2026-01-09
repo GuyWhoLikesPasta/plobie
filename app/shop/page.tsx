@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Shop',
+  title: 'Shop | Plobie',
   description:
     'Browse beautiful handcrafted pottery and plant accessories. Find the perfect pot for your plants with QR-enabled tracking.',
   openGraph: {
@@ -44,23 +44,44 @@ const categoryIcons: Record<string, string> = {
   default: '🪴',
 };
 
-export default async function ShopPage() {
-  const supabase = await createServerSupabaseClient();
+interface SearchParams {
+  category?: string;
+}
 
-  // Fetch all products with their variants
-  const { data: products } = await supabase
+export default async function ShopPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  const supabase = await createServerSupabaseClient();
+  const params = await searchParams;
+  const selectedCategory = params.category || 'all';
+
+  // Build query
+  let query = supabase
     .from('products')
     .select('*, variants:product_variants(*)')
     .order('featured', { ascending: false })
     .order('created_at', { ascending: false });
 
+  // Filter by category if selected
+  if (selectedCategory !== 'all') {
+    query = query.eq('category', selectedCategory);
+  }
+
+  const { data: products } = await query;
   const typedProducts = (products || []) as Product[];
 
-  // Get featured products
-  const featuredProducts = typedProducts.filter(p => p.featured).slice(0, 3);
+  // Get all products for category counts (unfiltered)
+  const { data: allProducts } = await supabase.from('products').select('category');
 
-  // Get unique categories
-  const categories = [...new Set(typedProducts.map(p => p.category).filter(Boolean))] as string[];
+  // Get unique categories with counts
+  const categoryCounts: Record<string, number> = {};
+  (allProducts || []).forEach(p => {
+    if (p.category) {
+      categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1;
+    }
+  });
+  const categories = Object.keys(categoryCounts);
+
+  // Get featured products (only from current selection)
+  const featuredProducts = typedProducts.filter(p => p.featured).slice(0, 3);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
@@ -72,7 +93,7 @@ export default async function ShopPage() {
             <p className="text-green-100 text-lg">
               Beautiful pottery and plant accessories for your garden
             </p>
-            <div className="flex gap-4 mt-6 text-sm">
+            <div className="flex flex-wrap gap-4 mt-6 text-sm">
               <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2">
                 <span>✓</span>
                 <span>Free shipping over $50</span>
@@ -85,24 +106,29 @@ export default async function ShopPage() {
           </div>
         </div>
 
-        {/* Categories */}
-        {categories.length > 0 && (
-          <section className="mb-8">
-            <div className="flex gap-3 overflow-x-auto pb-2">
-              <CategoryPill category="all" label="All Products" active />
-              {categories.map(category => (
-                <CategoryPill
-                  key={category}
-                  category={category}
-                  label={category.charAt(0).toUpperCase() + category.slice(1)}
-                />
-              ))}
-            </div>
-          </section>
-        )}
+        {/* Categories Filter */}
+        <section className="mb-8">
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+            <CategoryPill
+              category="all"
+              label="All Products"
+              count={allProducts?.length || 0}
+              active={selectedCategory === 'all'}
+            />
+            {categories.map(category => (
+              <CategoryPill
+                key={category}
+                category={category}
+                label={category.charAt(0).toUpperCase() + category.slice(1)}
+                count={categoryCounts[category]}
+                active={selectedCategory === category}
+              />
+            ))}
+          </div>
+        </section>
 
-        {/* Featured Products */}
-        {featuredProducts.length > 0 && (
+        {/* Featured Products (show only if not filtering by specific category) */}
+        {featuredProducts.length > 0 && selectedCategory === 'all' && (
           <section className="mb-10">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
@@ -123,21 +149,39 @@ export default async function ShopPage() {
         {/* All Products */}
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">All Products</h2>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+              {selectedCategory === 'all'
+                ? 'All Products'
+                : `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}`}
+            </h2>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              {typedProducts.length} items
+              {typedProducts.length} {typedProducts.length === 1 ? 'item' : 'items'}
             </span>
           </div>
 
           {typedProducts.length === 0 ? (
             <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-12 text-center">
-              <div className="text-6xl mb-4">🏺</div>
+              <div className="text-6xl mb-4">
+                {selectedCategory !== 'all'
+                  ? categoryIcons[selectedCategory.toLowerCase()] || '🔍'
+                  : '🏺'}
+              </div>
               <p className="text-gray-600 dark:text-gray-400 mb-4 text-lg">
-                No products available yet.
+                {selectedCategory !== 'all'
+                  ? `No ${selectedCategory} products available yet.`
+                  : 'No products available yet.'}
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-500">
-                Check back soon for beautiful handcrafted pottery!
+              <p className="text-sm text-gray-500 dark:text-gray-500 mb-6">
+                Check back soon for beautiful handcrafted items!
               </p>
+              {selectedCategory !== 'all' && (
+                <Link
+                  href="/shop"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                >
+                  ← View all products
+                </Link>
+              )}
             </div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -181,25 +225,38 @@ export default async function ShopPage() {
 function CategoryPill({
   category,
   label,
+  count,
   active,
 }: {
   category: string;
   label: string;
+  count: number;
   active?: boolean;
 }) {
   const icon = categoryIcons[category.toLowerCase()] || categoryIcons.default;
+  const href = category === 'all' ? '/shop' : `/shop?category=${category}`;
 
   return (
-    <button
-      className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+    <Link
+      href={href}
+      className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
         active
-          ? 'bg-green-600 text-white'
-          : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
+          ? 'bg-green-600 text-white shadow-md'
+          : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600'
       }`}
     >
       <span>{icon}</span>
       <span>{label}</span>
-    </button>
+      <span
+        className={`text-xs px-2 py-0.5 rounded-full ${
+          active
+            ? 'bg-white/20 text-white'
+            : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+        }`}
+      >
+        {count}
+      </span>
+    </Link>
   );
 }
 
@@ -212,6 +269,7 @@ function ProductCard({ product, featured }: { product: Product; featured?: boole
     0
   );
   const isLowStock = totalStock > 0 && totalStock < 5;
+  const isOutOfStock = totalStock === 0 && variants.length > 0;
   const categoryIcon =
     categoryIcons[product.category?.toLowerCase() || ''] || categoryIcons.default;
 
@@ -220,7 +278,7 @@ function ProductCard({ product, featured }: { product: Product; featured?: boole
       href={`/shop/${product.id}`}
       className={`group bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-xl dark:shadow-gray-900/50 transition-all duration-300 overflow-hidden ${
         featured ? 'ring-2 ring-green-500 dark:ring-green-400' : ''
-      }`}
+      } ${isOutOfStock ? 'opacity-75' : ''}`}
     >
       {/* Image Container */}
       <div className="relative">
@@ -237,7 +295,12 @@ function ProductCard({ product, featured }: { product: Product; featured?: boole
               ✨ Featured
             </span>
           )}
-          {isLowStock && (
+          {isOutOfStock && (
+            <span className="bg-gray-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
+              Out of Stock
+            </span>
+          )}
+          {isLowStock && !isOutOfStock && (
             <span className="bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
               Low Stock
             </span>
