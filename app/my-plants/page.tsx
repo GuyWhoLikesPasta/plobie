@@ -7,15 +7,21 @@ import Link from 'next/link';
 import WelcomeModal from '@/components/onboarding/WelcomeModal';
 import { useOnboarding } from '@/hooks/useOnboarding';
 
+interface PotDetails {
+  pot_code?: string;
+  design?: string;
+  size?: string;
+  name?: string;
+  image_url?: string;
+  artist_name?: string;
+}
+
 interface Pot {
   id: string;
   pot_id: string;
   claimed_at: string;
-  pot?: {
-    name: string;
-    image_url: string;
-    artist_name: string;
-  };
+  pot?: PotDetails;
+  pots?: PotDetails;
 }
 
 interface Stats {
@@ -84,14 +90,14 @@ export default function MyPlantsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950 flex items-center justify-center transition-colors">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950 transition-colors">
       {/* Onboarding Modal */}
       {showOnboarding && !onboardingLoading && isAuthenticated && (
         <WelcomeModal username={username} onComplete={completeOnboarding} />
@@ -108,39 +114,49 @@ export default function MyPlantsPage() {
 
         {/* Stats Dashboard */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
-          <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-green-500">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border-t-4 border-green-500">
             <div className="text-4xl mb-3">🏺</div>
-            <p className="text-3xl font-bold text-gray-900">{stats?.totalPots || 0}</p>
-            <p className="text-sm text-gray-600">Pots Claimed</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">
+              {stats?.totalPots || 0}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Pots Claimed</p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-purple-500">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border-t-4 border-purple-500">
             <div className="text-4xl mb-3">⭐</div>
-            <p className="text-3xl font-bold text-gray-900">{stats?.level || 1}</p>
-            <p className="text-sm text-gray-600">Level</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">{stats?.level || 1}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Level</p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-yellow-500">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border-t-4 border-yellow-500">
             <div className="text-4xl mb-3">🎯</div>
-            <p className="text-3xl font-bold text-gray-900">{stats?.totalXP || 0}</p>
-            <p className="text-sm text-gray-600">Total XP</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">
+              {stats?.totalXP || 0}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Total XP</p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-blue-500">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border-t-4 border-blue-500">
             <div className="text-4xl mb-3">🎮</div>
-            <p className="text-3xl font-bold text-gray-900">{stats?.gameSessions || 0}</p>
-            <p className="text-sm text-gray-600">Game Sessions</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">
+              {stats?.gameSessions || 0}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Game Sessions</p>
           </div>
         </div>
 
         {/* XP Progress Bar */}
         {stats && (
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-lg font-semibold text-gray-900">Level {stats.level} Progress</h3>
-              <span className="text-sm text-gray-600">{stats.totalXP % 100} / 100 XP</span>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Level {stats.level} Progress
+              </h3>
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                {stats.totalXP % 100} / 100 XP
+              </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-4">
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
               <div
                 className="bg-gradient-to-r from-green-500 to-emerald-600 h-4 rounded-full transition-all duration-500"
                 style={{ width: `${stats.totalXP % 100}%` }}
@@ -151,12 +167,12 @@ export default function MyPlantsPage() {
 
         {/* No Pots State */}
         {(!pots || pots.length === 0) && (
-          <div className="bg-white rounded-xl shadow-xl p-8 sm:p-12 text-center mb-6 sm:mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 sm:p-12 text-center mb-6 sm:mb-8">
             <div className="text-6xl sm:text-8xl mb-4 sm:mb-6">🏺</div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-3">
               No Pots Claimed Yet
             </h2>
-            <p className="text-gray-600 mb-6 sm:mb-8 text-base sm:text-lg max-w-2xl mx-auto">
+            <p className="text-gray-600 dark:text-gray-400 mb-6 sm:mb-8 text-base sm:text-lg max-w-2xl mx-auto">
               Purchase pottery from our shop or scan a QR code to claim your first pot and start
               earning XP!
             </p>
@@ -183,18 +199,18 @@ export default function MyPlantsPage() {
         {pots && pots.length > 0 && (
           <section className="mb-6 sm:mb-8">
             <div className="flex items-center justify-between mb-4 sm:mb-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">
                 Your Collection ({pots.length} {pots.length === 1 ? 'pot' : 'pots'})
               </h2>
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {pots.map((claim: any) => (
+              {pots.map((claim: Pot) => (
                 <div
                   key={claim.id}
-                  className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all overflow-hidden group"
+                  className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl dark:hover:shadow-gray-900/50 transition-all overflow-hidden group"
                 >
-                  <div className="aspect-square bg-gradient-to-br from-green-100 via-emerald-100 to-teal-100 flex items-center justify-center relative">
+                  <div className="aspect-square bg-gradient-to-br from-green-100 via-emerald-100 to-teal-100 dark:from-green-900/30 dark:via-emerald-900/30 dark:to-teal-900/30 flex items-center justify-center relative">
                     <span className="text-8xl group-hover:scale-110 transition-transform">🏺</span>
                     <div className="absolute top-3 right-3 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">
                       +50 XP
@@ -203,29 +219,32 @@ export default function MyPlantsPage() {
 
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xl font-bold text-gray-800">
+                      <h3 className="text-xl font-bold text-gray-800 dark:text-white">
                         {claim.pots?.pot_code || 'Unknown'}
                       </h3>
-                      <span className="text-xs bg-green-100 text-green-800 px-3 py-1 rounded-full font-medium">
+                      <span className="text-xs bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 px-3 py-1 rounded-full font-medium">
                         Claimed
                       </span>
                     </div>
 
-                    <div className="space-y-2 text-sm text-gray-600 mb-4">
+                    <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
                       <p>
-                        <strong>Design:</strong> {claim.pots?.design || 'Classic'}
+                        <strong className="text-gray-800 dark:text-gray-200">Design:</strong>{' '}
+                        {claim.pots?.design || 'Classic'}
                       </p>
                       <p>
-                        <strong>Size:</strong> {claim.pots?.size || 'Medium'}
+                        <strong className="text-gray-800 dark:text-gray-200">Size:</strong>{' '}
+                        {claim.pots?.size || 'Medium'}
                       </p>
                       <p>
-                        <strong>Claimed:</strong> {new Date(claim.claimed_at).toLocaleDateString()}
+                        <strong className="text-gray-800 dark:text-gray-200">Claimed:</strong>{' '}
+                        {new Date(claim.claimed_at).toLocaleDateString()}
                       </p>
                     </div>
 
                     <button
                       disabled
-                      className="w-full py-3 bg-gray-100 text-gray-500 rounded-lg text-sm font-medium cursor-not-allowed"
+                      className="w-full py-3 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-lg text-sm font-medium cursor-not-allowed"
                     >
                       🎮 View in Unity Garden (Coming Soon)
                     </button>
@@ -237,7 +256,7 @@ export default function MyPlantsPage() {
         )}
 
         {/* Earn XP Guide */}
-        <section className="bg-gradient-to-r from-yellow-400 to-orange-400 rounded-xl shadow-xl p-8 text-white">
+        <section className="bg-gradient-to-r from-yellow-400 to-orange-400 dark:from-yellow-600 dark:to-orange-600 rounded-xl shadow-xl p-8 text-white">
           <h2 className="text-3xl font-bold mb-6">🎯 Earn XP & Level Up</h2>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">

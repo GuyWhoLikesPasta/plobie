@@ -75,8 +75,8 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center transition-colors">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 dark:border-green-400"></div>
       </div>
     );
   }
@@ -86,10 +86,10 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Profile Header */}
-        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-8 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-8 mb-6">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
             {/* Avatar */}
             <div className="flex-shrink-0">
@@ -113,7 +113,7 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
 
             {/* Profile Info */}
             <div className="flex-1 text-center sm:text-left w-full">
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">
                 {profile.username}
               </h1>
 
@@ -122,32 +122,40 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
                 <span className="inline-block bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-1 rounded-full text-sm font-medium">
                   Level {profile.level}
                 </span>
-                <span className="text-gray-600">{profile.xp} XP</span>
+                <span className="text-gray-600 dark:text-gray-400">{profile.xp} XP</span>
               </div>
 
               {/* Stats */}
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4 mt-6">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{profile.posts}</div>
-                  <div className="text-sm text-gray-500">Posts</div>
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {profile.posts}
+                  </div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Posts</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{profile.comments}</div>
-                  <div className="text-sm text-gray-500">Comments</div>
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {profile.comments}
+                  </div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Comments</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{profile.pots}</div>
-                  <div className="text-sm text-gray-500">Pots</div>
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {profile.pots}
+                  </div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Pots</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white">
                     {profile.achievements || 0}
                   </div>
-                  <div className="text-sm text-gray-500">Achievements</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Achievements</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{profile.xp}</div>
-                  <div className="text-sm text-gray-500">Total XP</div>
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {profile.xp}
+                  </div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Total XP</div>
                 </div>
               </div>
             </div>
@@ -155,14 +163,14 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
         </div>
 
         {/* Tab Navigation */}
-        <div className="bg-white rounded-lg shadow mb-6">
-          <div className="flex border-b">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow mb-6">
+          <div className="flex border-b dark:border-gray-700">
             <button
               onClick={() => setActiveTab('posts')}
               className={`flex-1 py-3 px-4 text-center font-medium transition-colors ${
                 activeTab === 'posts'
-                  ? 'text-green-600 border-b-2 border-green-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'text-green-600 dark:text-green-400 border-b-2 border-green-600 dark:border-green-400'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
             >
               📝 Posts ({posts.length})
@@ -171,8 +179,8 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
               onClick={() => setActiveTab('activity')}
               className={`flex-1 py-3 px-4 text-center font-medium transition-colors ${
                 activeTab === 'activity'
-                  ? 'text-green-600 border-b-2 border-green-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'text-green-600 dark:text-green-400 border-b-2 border-green-600 dark:border-green-400'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
             >
               ⚡ Activity ({activity.length})
@@ -182,28 +190,30 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
 
         {/* Posts Section */}
         {activeTab === 'posts' && (
-          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">
               Recent Posts
             </h2>
 
             {posts.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">No posts yet</div>
+              <div className="text-center py-12 text-gray-500 dark:text-gray-400">No posts yet</div>
             ) : (
               <div className="space-y-4">
                 {posts.map(post => (
                   <div
                     key={post.id}
                     onClick={() => router.push(`/hobbies/posts/${post.id}`)}
-                    className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                    className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md dark:hover:shadow-gray-900/50 transition-shadow cursor-pointer"
                   >
-                    <div className="flex items-center space-x-2 mb-2 text-sm text-gray-500">
+                    <div className="flex items-center space-x-2 mb-2 text-sm text-gray-500 dark:text-gray-400">
                       <span>{post.hobby_group}</span>
                       <span>·</span>
                       <span>{new Date(post.created_at).toLocaleDateString()}</span>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{post.title}</h3>
-                    <p className="text-gray-700 line-clamp-2">{post.content}</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                      {post.title}
+                    </h3>
+                    <p className="text-gray-700 dark:text-gray-300 line-clamp-2">{post.content}</p>
                     {post.image_url && (
                       <img
                         src={post.image_url}
@@ -211,7 +221,7 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
                         className="mt-3 w-full max-h-48 object-cover rounded"
                       />
                     )}
-                    <div className="mt-3 text-sm text-gray-500">
+                    <div className="mt-3 text-sm text-gray-500 dark:text-gray-400">
                       💬 {post.comments?.[0]?.count || 0} comments
                     </div>
                   </div>
@@ -223,13 +233,13 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
 
         {/* Activity Feed Section */}
         {activeTab === 'activity' && (
-          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">
               Recent Activity
             </h2>
 
             {activity.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                 <span className="text-4xl mb-4 block">🌱</span>
                 <p>No activity yet. Start earning XP!</p>
               </div>
@@ -238,17 +248,19 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
                 {activity.map(item => (
                   <div
                     key={item.id}
-                    className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="flex items-center gap-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   >
                     <span className="text-2xl">{item.icon}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                         {item.description || item.action_type.replace(/_/g, ' ')}
                       </p>
-                      <p className="text-xs text-gray-500">{formatTimeAgo(item.created_at)}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {formatTimeAgo(item.created_at)}
+                      </p>
                     </div>
                     <span
-                      className={`text-sm font-bold ${item.xp_amount > 0 ? 'text-green-600' : 'text-gray-500'}`}
+                      className={`text-sm font-bold ${item.xp_amount > 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`}
                     >
                       {item.xp_amount > 0 ? '+' : ''}
                       {item.xp_amount} XP

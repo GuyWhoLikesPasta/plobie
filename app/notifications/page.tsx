@@ -29,8 +29,10 @@ export default function NotificationsPage() {
 
   const checkAuth = async () => {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
     if (!user) {
       router.push('/login?redirect=/notifications');
       return;
@@ -64,9 +66,7 @@ export default function NotificationsPage() {
         body: JSON.stringify({ notification_ids: [notificationId] }),
       });
 
-      setNotifications(prev =>
-        prev.map(n => (n.id === notificationId ? { ...n, read: true } : n))
-      );
+      setNotifications(prev => prev.map(n => (n.id === notificationId ? { ...n, read: true } : n)));
     } catch (error) {
       console.error('Failed to mark as read:', error);
     }
@@ -153,14 +153,14 @@ export default function NotificationsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center transition-colors">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 dark:border-green-400"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
@@ -170,9 +170,11 @@ export default function NotificationsPage() {
                 <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center">
                   <span className="text-2xl">🔔</span>
                 </div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Notifications</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                  Notifications
+                </h1>
               </div>
-              <p className="text-sm sm:text-base text-gray-600">
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
                 {unreadCount > 0 ? (
                   <span className="inline-flex items-center gap-2">
                     <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
@@ -183,12 +185,12 @@ export default function NotificationsPage() {
                 )}
               </p>
             </div>
-            
+
             <div className="flex gap-2 sm:gap-3">
               {unreadCount > 0 && (
                 <button
                   onClick={markAllAsRead}
-                  className="px-4 py-2 min-h-[44px] text-sm font-medium text-green-600 hover:text-green-700 border border-green-600 rounded-lg hover:bg-green-50 transition"
+                  className="px-4 py-2 min-h-[44px] text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 border border-green-600 dark:border-green-500 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/30 transition"
                 >
                   Mark all read
                 </button>
@@ -196,7 +198,7 @@ export default function NotificationsPage() {
               {notifications.some(n => n.read) && (
                 <button
                   onClick={deleteAllRead}
-                  className="px-4 py-2 min-h-[44px] text-sm font-medium text-red-600 hover:text-red-700 border border-red-600 rounded-lg hover:bg-red-50 transition"
+                  className="px-4 py-2 min-h-[44px] text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 border border-red-600 dark:border-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 transition"
                 >
                   Delete read
                 </button>
@@ -205,7 +207,7 @@ export default function NotificationsPage() {
           </div>
 
           {/* Filters */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3">
             <div className="flex flex-wrap gap-2">
               {[
                 { key: 'all', label: 'All', icon: '📋' },
@@ -221,8 +223,8 @@ export default function NotificationsPage() {
                   onClick={() => setFilter(key)}
                   className={`px-3 sm:px-4 py-2 min-h-[44px] rounded-lg text-xs sm:text-sm font-medium transition flex items-center gap-1.5 ${
                     filter === key
-                      ? 'bg-green-600 text-white shadow-md'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-green-600 dark:bg-green-700 text-white shadow-md'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 >
                   <span>{icon}</span>
@@ -240,14 +242,14 @@ export default function NotificationsPage() {
 
         {/* Notifications List */}
         {filteredNotifications.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 sm:p-12 text-center">
-            <div className="w-24 h-24 bg-gradient-to-br from-green-100 to-emerald-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 sm:p-12 text-center">
+            <div className="w-24 h-24 bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-3xl flex items-center justify-center mx-auto mb-6">
               <span className="text-6xl">🔔</span>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3">
               {filter === 'unread' ? 'No unread notifications' : 'No notifications yet'}
             </h2>
-            <p className="text-sm sm:text-base text-gray-600 mb-8 max-w-md mx-auto">
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
               {filter === 'unread'
                 ? "You're all caught up! Check back later for updates on your posts and activity."
                 : 'Notifications will appear here when you receive comments, likes, level up, or reach your daily XP cap.'}
@@ -261,7 +263,7 @@ export default function NotificationsPage() {
               </Link>
               <Link
                 href="/hobbies"
-                className="inline-flex items-center justify-center px-6 py-3 min-h-[48px] bg-white text-gray-700 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition"
+                className="inline-flex items-center justify-center px-6 py-3 min-h-[48px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition"
               >
                 💬 Browse Hobbies
               </Link>
@@ -269,13 +271,13 @@ export default function NotificationsPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredNotifications.map((notification) => (
+            {filteredNotifications.map(notification => (
               <div
                 key={notification.id}
-                className={`bg-white rounded-xl shadow-md hover:shadow-lg transition-all overflow-hidden border ${
-                  !notification.read 
-                    ? 'border-l-4 border-green-500 bg-green-50/30' 
-                    : 'border-gray-200'
+                className={`bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg dark:hover:shadow-gray-900/50 transition-all overflow-hidden border ${
+                  !notification.read
+                    ? 'border-l-4 border-green-500 bg-green-50/30 dark:bg-green-900/20'
+                    : 'border-gray-200 dark:border-gray-700'
                 }`}
               >
                 <div className="p-4 sm:p-6">
@@ -293,25 +295,25 @@ export default function NotificationsPage() {
                           onClick={() => markAsRead(notification.id)}
                           className="block group"
                         >
-                          <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1 group-hover:text-green-600 transition">
+                          <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition">
                             {notification.title}
                           </h3>
-                          <p className="text-sm sm:text-base text-gray-600 mb-2 line-clamp-2">
+                          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
                             {notification.message}
                           </p>
-                          <p className="text-xs sm:text-sm text-gray-400">
+                          <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500">
                             {formatTimeAgo(notification.created_at)}
                           </p>
                         </Link>
                       ) : (
                         <>
-                          <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">
+                          <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1">
                             {notification.title}
                           </h3>
-                          <p className="text-sm sm:text-base text-gray-600 mb-2">
+                          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-2">
                             {notification.message}
                           </p>
-                          <p className="text-xs sm:text-sm text-gray-400">
+                          <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500">
                             {formatTimeAgo(notification.created_at)}
                           </p>
                         </>
@@ -323,21 +325,41 @@ export default function NotificationsPage() {
                       {!notification.read && (
                         <button
                           onClick={() => markAsRead(notification.id)}
-                          className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
+                          className="p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg transition"
                           title="Mark as read"
                         >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 13l4 4L19 7"
+                            />
                           </svg>
                         </button>
                       )}
                       <button
                         onClick={() => deleteNotification(notification.id)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                        className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition"
                         title="Delete"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
                         </svg>
                       </button>
                     </div>
@@ -350,7 +372,7 @@ export default function NotificationsPage() {
 
         {/* Showing count */}
         {filteredNotifications.length > 0 && (
-          <div className="mt-6 text-center text-sm text-gray-500">
+          <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
             Showing {filteredNotifications.length} of {notifications.length} notifications
           </div>
         )}
@@ -358,4 +380,3 @@ export default function NotificationsPage() {
     </div>
   );
 }
-

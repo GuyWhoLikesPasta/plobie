@@ -59,6 +59,7 @@ export default function Navigation() {
   const navItems = [
     { name: 'Home', href: '/', icon: '🏠' },
     { name: 'Hobbies', href: '/hobbies', icon: '💬' },
+    { name: 'Learn', href: '/hobbies/learn', icon: '📚' },
     { name: 'My Plants', href: '/my-plants', icon: '🌿' },
     { name: 'Achievements', href: '/achievements', icon: '🏆' },
     { name: 'Games', href: '/games', icon: '🎮' },

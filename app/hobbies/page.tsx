@@ -169,9 +169,9 @@ export default function HobbiesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950 transition-colors">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-8 sm:py-12">
+      <div className="bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-700 dark:to-emerald-700 text-white py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
@@ -207,14 +207,14 @@ export default function HobbiesPage() {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Search posts..."
-              className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base"
+              className="w-full px-4 py-3 pl-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 dark:text-white dark:bg-gray-800 text-base"
             />
             <span className="absolute left-4 top-3.5 text-gray-400 text-xl">🔍</span>
           </div>
           <select
             value={sortBy}
             onChange={e => setSortBy(e.target.value as 'recent' | 'trending')}
-            className="px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 bg-white text-base"
+            className="px-4 py-3 min-h-[48px] border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 dark:text-white bg-white dark:bg-gray-800 text-base"
           >
             <option value="recent">Recent</option>
             <option value="trending">Trending</option>
@@ -228,7 +228,7 @@ export default function HobbiesPage() {
             className={`px-4 py-2 min-h-[44px] rounded-lg font-medium text-sm sm:text-base transition-all ${
               selectedGroup === ''
                 ? 'bg-green-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-100'
+                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             All Groups
@@ -240,7 +240,7 @@ export default function HobbiesPage() {
               className={`px-4 py-2 min-h-[44px] rounded-lg font-medium text-sm sm:text-base transition-all ${
                 selectedGroup === group.name
                   ? 'bg-green-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               {group.icon} {group.name}
@@ -251,15 +251,19 @@ export default function HobbiesPage() {
         {/* Create Post Form Modal */}
         {showCreateForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Create a Post</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                Create a Post
+              </h2>
               <form onSubmit={handleSubmitPost}>
                 <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">Hobby Group</label>
+                  <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+                    Hobby Group
+                  </label>
                   <select
                     value={formData.hobby_group}
                     onChange={e => setFormData({ ...formData, hobby_group: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   >
                     {hobbyGroups.map(group => (
                       <option key={group.slug} value={group.name}>
@@ -269,31 +273,37 @@ export default function HobbiesPage() {
                   </select>
                 </div>
                 <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">Title</label>
+                  <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+                    Title
+                  </label>
                   <input
                     type="text"
                     value={formData.title}
                     onChange={e => setFormData({ ...formData, title: e.target.value })}
                     required
                     maxLength={200}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 dark:text-white bg-white dark:bg-gray-700"
                     placeholder="Give your post a title..."
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">Content</label>
+                  <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+                    Content
+                  </label>
                   <textarea
                     value={formData.content}
                     onChange={e => setFormData({ ...formData, content: e.target.value })}
                     required
                     maxLength={10000}
                     rows={6}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 dark:text-white bg-white dark:bg-gray-700"
                     placeholder="Share your thoughts..."
                   />
                 </div>
                 <div className="mb-6">
-                  <label className="block text-gray-700 font-medium mb-2">Image (Optional)</label>
+                  <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+                    Image (Optional)
+                  </label>
                   {imagePreview ? (
                     <div className="relative">
                       <img
@@ -310,7 +320,7 @@ export default function HobbiesPage() {
                       </button>
                     </div>
                   ) : (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-500 transition-all">
+                    <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-green-500 transition-all">
                       <input
                         type="file"
                         accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
@@ -323,8 +333,10 @@ export default function HobbiesPage() {
                         className="cursor-pointer flex flex-col items-center"
                       >
                         <span className="text-4xl mb-2">📸</span>
-                        <span className="text-gray-600 font-medium">Click to upload an image</span>
-                        <span className="text-gray-400 text-sm mt-1">
+                        <span className="text-gray-600 dark:text-gray-400 font-medium">
+                          Click to upload an image
+                        </span>
+                        <span className="text-gray-400 dark:text-gray-500 text-sm mt-1">
                           JPG, PNG, WebP, or GIF (max 5MB)
                         </span>
                       </label>
@@ -342,7 +354,7 @@ export default function HobbiesPage() {
                   <button
                     type="button"
                     onClick={() => setShowCreateForm(false)}
-                    className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-all"
+                    className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
                   >
                     Cancel
                   </button>
@@ -360,10 +372,12 @@ export default function HobbiesPage() {
             <PostCardSkeleton />
           </div>
         ) : posts.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow">
+          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg shadow">
             <div className="text-6xl mb-4">🌱</div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">No posts yet</h3>
-            <p className="text-gray-600 mb-6">
+            <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
+              No posts yet
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
               Be the first to share something with the community!
             </p>
             <button
@@ -378,7 +392,7 @@ export default function HobbiesPage() {
             {posts.map(post => (
               <div
                 key={post.id}
-                className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 cursor-pointer"
+                className="bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg dark:shadow-gray-900/50 transition-shadow p-6 cursor-pointer"
                 onClick={() => router.push(`/hobbies/posts/${post.id}`)}
               >
                 <div className="flex items-start space-x-4">
@@ -392,19 +406,23 @@ export default function HobbiesPage() {
                           e.stopPropagation();
                           router.push(`/profile/${post.profiles?.username}`);
                         }}
-                        className="font-semibold text-gray-900 hover:text-green-600 transition-colors"
+                        className="font-semibold text-gray-900 dark:text-white hover:text-green-600 dark:hover:text-green-400 transition-colors"
                       >
                         {post.profiles?.username || 'Anonymous'}
                       </button>
-                      <span className="text-gray-400">·</span>
-                      <span className="text-sm text-gray-500">{post.hobby_group}</span>
-                      <span className="text-gray-400">·</span>
-                      <span className="text-sm text-gray-500">
+                      <span className="text-gray-400 dark:text-gray-500">·</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        {post.hobby_group}
+                      </span>
+                      <span className="text-gray-400 dark:text-gray-500">·</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
                         {new Date(post.created_at).toLocaleDateString()}
                       </span>
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{post.title}</h3>
-                    <p className="text-gray-700 line-clamp-3">{post.content}</p>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                      {post.title}
+                    </h3>
+                    <p className="text-gray-700 dark:text-gray-300 line-clamp-3">{post.content}</p>
                     {post.image_url && (
                       <div className="relative w-full h-64 mt-4">
                         <Image
@@ -419,7 +437,7 @@ export default function HobbiesPage() {
                     )}
                     <div className="mt-4 flex items-center space-x-3">
                       <LikeButton postId={post.id} initialCount={0} initialLiked={false} />
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
                         💬 {post.comments?.[0]?.count || 0}
                       </span>
                     </div>

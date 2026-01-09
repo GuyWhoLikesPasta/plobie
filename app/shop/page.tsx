@@ -1,7 +1,19 @@
 import { createServerSupabaseClient } from '@/lib/supabase';
 import Link from 'next/link';
+import { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Shop',
+  description:
+    'Browse beautiful handcrafted pottery and plant accessories. Find the perfect pot for your plants with QR-enabled tracking.',
+  openGraph: {
+    title: 'Shop | Plobie',
+    description: 'Beautiful handcrafted pottery and plant accessories.',
+    type: 'website',
+  },
+};
 
 // Type definitions
 interface ProductVariant {

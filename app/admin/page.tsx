@@ -534,10 +534,10 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center transition-colors">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Verifying admin access...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 dark:border-green-400 mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Verifying admin access...</p>
         </div>
       </div>
     );
@@ -571,18 +571,20 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">🌱 Admin Dashboard</h1>
-          <p className="mt-2 text-sm sm:text-base text-gray-600">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+            🌱 Admin Dashboard
+          </h1>
+          <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-400">
             Manage users, content, XP, and system settings
           </p>
         </div>
 
         {/* Tabs */}
-        <div className="border-b border-gray-200 mb-6 overflow-x-auto">
+        <div className="border-b border-gray-200 dark:border-gray-700 mb-6 overflow-x-auto">
           <nav className="-mb-px flex gap-2 sm:gap-4">
             {tabs.map(tab => (
               <button
@@ -592,14 +594,14 @@ export default function AdminDashboard() {
                   py-3 px-3 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex items-center gap-1
                   ${
                     activeTab === tab.key
-                      ? 'border-green-600 text-green-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      ? 'border-green-600 dark:border-green-400 text-green-600 dark:text-green-400'
+                      : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
                   }
                 `}
               >
                 {tab.label}
                 {tab.badge !== undefined && (
-                  <span className="ml-1 bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full text-xs">
+                  <span className="ml-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-full text-xs">
                     {tab.badge}
                   </span>
                 )}
@@ -626,32 +628,38 @@ export default function AdminDashboard() {
         {activeTab === 'quick-actions' && (
           <div className="grid md:grid-cols-2 gap-6">
             {/* Award XP */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">✨ Award XP</h3>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                ✨ Award XP
+              </h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Username
+                  </label>
                   <input
                     type="text"
                     value={awardUsername}
                     onChange={e => setAwardUsername(e.target.value)}
                     placeholder="Enter username"
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">XP Amount</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    XP Amount
+                  </label>
                   <input
                     type="number"
                     value={awardAmount}
                     onChange={e => setAwardAmount(parseInt(e.target.value) || 0)}
                     min={1}
                     max={1000}
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Reason (optional)
                   </label>
                   <input
@@ -659,7 +667,7 @@ export default function AdminDashboard() {
                     value={awardReason}
                     onChange={e => setAwardReason(e.target.value)}
                     placeholder="e.g., Bug report reward"
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 </div>
                 <button
@@ -673,24 +681,34 @@ export default function AdminDashboard() {
             </div>
 
             {/* Quick Stats */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">📊 Today's Summary</h3>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                📊 Today's Summary
+              </h3>
               <div className="space-y-3">
-                <div className="flex justify-between items-center py-2 border-b">
-                  <span className="text-gray-600">New Posts</span>
-                  <span className="font-semibold text-gray-900">{analytics.posts_today}</span>
+                <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
+                  <span className="text-gray-600 dark:text-gray-400">New Posts</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {analytics.posts_today}
+                  </span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b">
-                  <span className="text-gray-600">XP Awarded</span>
-                  <span className="font-semibold text-green-600">{analytics.xp_awarded_today}</span>
+                <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
+                  <span className="text-gray-600 dark:text-gray-400">XP Awarded</span>
+                  <span className="font-semibold text-green-600 dark:text-green-400">
+                    {analytics.xp_awarded_today}
+                  </span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b">
-                  <span className="text-gray-600">Total Users</span>
-                  <span className="font-semibold text-gray-900">{analytics.total_users}</span>
+                <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
+                  <span className="text-gray-600 dark:text-gray-400">Total Users</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {analytics.total_users}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Posts This Week</span>
-                  <span className="font-semibold text-gray-900">{analytics.posts_this_week}</span>
+                  <span className="text-gray-600 dark:text-gray-400">Posts This Week</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {analytics.posts_this_week}
+                  </span>
                 </div>
               </div>
             </div>
@@ -1034,13 +1052,13 @@ function StatCard({
   highlight?: boolean;
 }) {
   return (
-    <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
+    <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow">
       <div className="flex items-center gap-2">
         <span className="text-xl">{icon}</span>
-        <h3 className="text-sm font-medium text-gray-500">{title}</h3>
+        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</h3>
       </div>
       <p
-        className={`mt-2 text-2xl sm:text-3xl font-bold ${highlight ? 'text-green-600' : 'text-gray-900'}`}
+        className={`mt-2 text-2xl sm:text-3xl font-bold ${highlight ? 'text-green-600 dark:text-green-400' : 'text-gray-900 dark:text-white'}`}
       >
         {value.toLocaleString()}
       </p>
@@ -1050,18 +1068,33 @@ function StatCard({
 
 function HealthRow({ label, status }: { label: string; status: string }) {
   const statusConfig: Record<string, { color: string; text: string }> = {
-    ok: { color: 'bg-green-100 text-green-800', text: '✓ Healthy' },
-    ready: { color: 'bg-green-100 text-green-800', text: '✓ Ready' },
-    error: { color: 'bg-red-100 text-red-800', text: '✗ Error' },
-    missing: { color: 'bg-yellow-100 text-yellow-800', text: '⚠ Not Loaded' },
-    checking: { color: 'bg-gray-100 text-gray-800', text: '⋯ Checking' },
+    ok: {
+      color: 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300',
+      text: '✓ Healthy',
+    },
+    ready: {
+      color: 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300',
+      text: '✓ Ready',
+    },
+    error: {
+      color: 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300',
+      text: '✗ Error',
+    },
+    missing: {
+      color: 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300',
+      text: '⚠ Not Loaded',
+    },
+    checking: {
+      color: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300',
+      text: '⋯ Checking',
+    },
   };
 
   const config = statusConfig[status] || statusConfig.checking;
 
   return (
     <div className="px-6 py-4 flex items-center justify-between">
-      <span className="text-sm font-medium text-gray-900">{label}</span>
+      <span className="text-sm font-medium text-gray-900 dark:text-white">{label}</span>
       <span className={`px-3 py-1 rounded-full text-xs font-medium ${config.color}`}>
         {config.text}
       </span>
