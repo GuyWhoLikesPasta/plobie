@@ -89,8 +89,8 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 dark:border-green-400"></div>
       </div>
     );
   }
@@ -100,17 +100,17 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <button
           onClick={() => router.push('/hobbies')}
-          className="mb-6 text-green-600 hover:text-green-700 font-medium flex items-center"
+          className="mb-6 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium flex items-center"
         >
           ← Back to Hobbies
         </button>
 
         {/* Post Card */}
-        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-8 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-gray-900 p-4 sm:p-8 mb-6">
           <div className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-6">
             <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
               {post.profiles?.username?.[0]?.toUpperCase() || '?'}
@@ -118,19 +118,21 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
             <div>
               <button
                 onClick={() => router.push(`/profile/${post.profiles?.username}`)}
-                className="font-semibold text-gray-900 hover:text-green-600 transition-colors"
+                className="font-semibold text-gray-900 dark:text-white hover:text-green-600 dark:hover:text-green-400 transition-colors"
               >
                 {post.profiles?.username || 'Anonymous'}
               </button>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-gray-500 dark:text-gray-400">
                 {post.hobby_group} · {new Date(post.created_at).toLocaleDateString()}
               </div>
             </div>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">{post.title}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            {post.title}
+          </h1>
 
-          <p className="text-sm sm:text-base text-gray-700 whitespace-pre-wrap mb-6">
+          <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 whitespace-pre-wrap mb-6">
             {post.content}
           </p>
 
@@ -147,15 +149,19 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
             </div>
           )}
 
-          <div className="flex items-center gap-3 pt-4 sm:pt-6 border-t">
+          <div className="flex items-center gap-3 pt-4 sm:pt-6 border-t dark:border-gray-700">
             <LikeButton postId={post.id} initialCount={0} initialLiked={false} />
-            <span className="text-sm text-gray-500">💬 {post.comments?.length || 0} comments</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              💬 {post.comments?.length || 0} comments
+            </span>
           </div>
         </div>
 
         {/* Comment Form */}
-        <div className="bg-white rounded-lg shadow p-4 sm:p-6 mb-6">
-          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">Add a Comment</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-4 sm:p-6 mb-6">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            Add a Comment
+          </h2>
           {isAuthenticated ? (
             <form onSubmit={handleSubmitComment}>
               <textarea
@@ -165,22 +171,22 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
                 maxLength={2000}
                 rows={4}
                 placeholder="Share your thoughts..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent mb-4 text-gray-900"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent mb-4 text-gray-900 dark:text-white bg-white dark:bg-gray-700"
               />
               <button
                 type="submit"
                 disabled={submitting}
-                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all disabled:opacity-50"
+                className="bg-gradient-to-r from-green-500 to-emerald-600 dark:from-green-600 dark:to-emerald-700 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 dark:hover:from-green-500 dark:hover:to-emerald-600 transition-all disabled:opacity-50"
               >
                 {submitting ? 'Posting...' : 'Post Comment (+1 XP)'}
               </button>
             </form>
           ) : (
             <div className="text-center py-4">
-              <p className="text-gray-600 mb-4">Please log in to comment</p>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">Please log in to comment</p>
               <button
                 onClick={() => router.push(`/login?redirect=/hobbies/posts/${postId}`)}
-                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all"
+                className="bg-gradient-to-r from-green-500 to-emerald-600 dark:from-green-600 dark:to-emerald-700 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 dark:hover:from-green-500 dark:hover:to-emerald-600 transition-all"
               >
                 Log In
               </button>
@@ -192,29 +198,36 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
         <div className="space-y-4">
           {post.comments && post.comments.length > 0 ? (
             post.comments.map((comment: any) => (
-              <div key={comment.id} className="bg-white rounded-lg shadow p-6">
+              <div
+                key={comment.id}
+                className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6"
+              >
                 <div className="flex items-start space-x-4">
                   <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
                     {comment.profiles?.username?.[0]?.toUpperCase() || '?'}
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-2">
-                      <span className="font-semibold text-gray-900">
+                      <span className="font-semibold text-gray-900 dark:text-white">
                         {comment.profiles?.username || 'Anonymous'}
                       </span>
                       <span className="text-gray-400">·</span>
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
                         {new Date(comment.created_at).toLocaleDateString()}
                       </span>
                     </div>
-                    <p className="text-gray-700 whitespace-pre-wrap">{comment.content}</p>
+                    <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                      {comment.content}
+                    </p>
                   </div>
                 </div>
               </div>
             ))
           ) : (
-            <div className="bg-white rounded-lg shadow p-8 text-center">
-              <p className="text-gray-500">No comments yet. Be the first to comment!</p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-8 text-center">
+              <p className="text-gray-500 dark:text-gray-400">
+                No comments yet. Be the first to comment!
+              </p>
             </div>
           )}
         </div>
