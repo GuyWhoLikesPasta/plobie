@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import toast from 'react-hot-toast';
-import { StatsCardSkeleton, PostCardSkeleton } from '@/components/skeletons';
 
 interface User {
   id: string;
@@ -39,20 +38,45 @@ interface Analytics {
   posts_this_week: number;
 }
 
+interface XPEvent {
+  id: string;
+  profile_id: string;
+  action_type: string;
+  xp_amount: number;
+  description: string;
+  created_at: string;
+  username?: string;
+}
+
+interface SystemHealth {
+  api: 'ok' | 'error' | 'checking';
+  database: 'ok' | 'error' | 'checking';
+  unity_bridge: 'ready' | 'missing' | 'checking';
+  last_checked: string;
+}
+
+type TabType =
+  | 'analytics'
+  | 'users'
+  | 'posts'
+  | 'flags'
+  | 'xp-activity'
+  | 'system'
+  | 'quick-actions';
+
 export default function AdminDashboard() {
   const router = useRouter();
   const supabase = createClient();
 
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [activeTab, setActiveTab] = useState<'users' | 'posts' | 'flags' | 'analytics'>(
-    'analytics'
-  );
+  const [activeTab, setActiveTab] = useState<TabType>('analytics');
 
   // Data states
   const [users, setUsers] = useState<User[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
-  const [flags, setFlags] = useState<any[]>([]);
+  const [flags, setFlags] = useState<{ key: string; enabled: boolean }[]>([]);
+  const [xpActivity, setXPActivity] = useState<XPEvent[]>([]);
   const [analytics, setAnalytics] = useState<Analytics>({
     total_users: 0,
     total_posts: 0,
@@ -61,6 +85,18 @@ export default function AdminDashboard() {
     posts_today: 0,
     posts_this_week: 0,
   });
+  const [systemHealth, setSystemHealth] = useState<SystemHealth>({
+    api: 'checking',
+    database: 'checking',
+    unity_bridge: 'checking',
+    last_checked: new Date().toISOString(),
+  });
+
+  // Quick action states
+  const [awardUsername, setAwardUsername] = useState('');
+  const [awardAmount, setAwardAmount] = useState(50);
+  const [awardReason, setAwardReason] = useState('');
+  const [awarding, setAwarding] = useState(false);
 
   // Search/filter states
   const [userSearch, setUserSearch] = useState('');
@@ -101,6 +137,8 @@ export default function AdminDashboard() {
       fetchUsers();
       fetchPosts();
       fetchFlags();
+      fetchXPActivity();
+      checkSystemHealth();
     } catch (error) {
       console.error('Admin check error:', error);
       router.push('/');
@@ -109,29 +147,24 @@ export default function AdminDashboard() {
 
   const fetchAnalytics = async () => {
     try {
-      // Total users
       const { count: userCount } = await supabase
         .from('profiles')
         .select('*', { count: 'exact', head: true });
 
-      // Total posts
       const { count: postCount } = await supabase
         .from('posts')
         .select('*', { count: 'exact', head: true });
 
-      // Total comments
       const { count: commentCount } = await supabase
         .from('comments')
         .select('*', { count: 'exact', head: true });
 
-      // Posts today
       const today = new Date().toISOString().split('T')[0];
       const { count: postsToday } = await supabase
         .from('posts')
         .select('*', { count: 'exact', head: true })
         .gte('created_at', today);
 
-      // Posts this week
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
       const { count: postsThisWeek } = await supabase
@@ -139,7 +172,6 @@ export default function AdminDashboard() {
         .select('*', { count: 'exact', head: true })
         .gte('created_at', weekAgo.toISOString());
 
-      // XP awarded today
       const { data: xpData } = await supabase
         .from('xp_events')
         .select('xp_amount')
@@ -164,20 +196,12 @@ export default function AdminDashboard() {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select(
-          `
-          id,
-          username,
-          is_admin,
-          created_at
-        `
-        )
+        .select('id, username, is_admin, created_at')
         .order('created_at', { ascending: false })
         .limit(50);
 
       if (error) throw error;
 
-      // Get post, comment counts, and XP for each user
       const usersWithCounts = await Promise.all(
         (data || []).map(async profile => {
           const { count: postCount } = await supabase
@@ -190,7 +214,6 @@ export default function AdminDashboard() {
             .select('*', { count: 'exact', head: true })
             .eq('author_id', profile.id);
 
-          // Get XP from xp_balances table
           const { data: xpData } = await supabase
             .from('xp_balances')
             .select('total_xp')
@@ -199,7 +222,7 @@ export default function AdminDashboard() {
 
           return {
             id: profile.id,
-            email: profile.username + '@plobie', // Show username instead of email for privacy
+            email: profile.username + '@plobie',
             created_at: profile.created_at,
             profiles: {
               username: profile.username,
@@ -222,22 +245,12 @@ export default function AdminDashboard() {
     try {
       const { data, error } = await supabase
         .from('posts')
-        .select(
-          `
-          id,
-          title,
-          content,
-          created_at,
-          hidden,
-          author_id
-        `
-        )
+        .select('id, title, content, created_at, hidden, author_id')
         .order('created_at', { ascending: false })
         .limit(50);
 
       if (error) throw error;
 
-      // Fetch profile data separately for each post
       const postsWithProfiles = await Promise.all(
         (data || []).map(async post => {
           const { data: profile } = await supabase
@@ -274,20 +287,79 @@ export default function AdminDashboard() {
     }
   };
 
+  const fetchXPActivity = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('xp_events')
+        .select('id, profile_id, action_type, xp_amount, description, created_at')
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (error) throw error;
+
+      // Fetch usernames for each event
+      const eventsWithUsernames = await Promise.all(
+        (data || []).map(async event => {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('username')
+            .eq('id', event.profile_id)
+            .single();
+
+          return {
+            ...event,
+            username: profile?.username || 'Unknown',
+          };
+        })
+      );
+
+      setXPActivity(eventsWithUsernames);
+    } catch (error) {
+      console.error('XP Activity fetch error:', error);
+    }
+  };
+
+  const checkSystemHealth = async () => {
+    setSystemHealth(prev => ({
+      ...prev,
+      api: 'checking',
+      database: 'checking',
+      unity_bridge: 'checking',
+    }));
+
+    // Check API
+    try {
+      const response = await fetch('/api/user/me');
+      setSystemHealth(prev => ({ ...prev, api: response.status === 401 ? 'ok' : 'ok' }));
+    } catch {
+      setSystemHealth(prev => ({ ...prev, api: 'error' }));
+    }
+
+    // Check Database
+    try {
+      const { error } = await supabase.from('profiles').select('id').limit(1);
+      setSystemHealth(prev => ({ ...prev, database: error ? 'error' : 'ok' }));
+    } catch {
+      setSystemHealth(prev => ({ ...prev, database: 'error' }));
+    }
+
+    // Check Unity Bridge
+    if (typeof window !== 'undefined') {
+      const bridgeReady = !!(window as { plobie?: unknown }).plobie;
+      setSystemHealth(prev => ({
+        ...prev,
+        unity_bridge: bridgeReady ? 'ready' : 'missing',
+        last_checked: new Date().toISOString(),
+      }));
+    }
+  };
+
   const toggleAdmin = async (userId: string, currentStatus: boolean) => {
     try {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', userId)
-        .single();
-
-      if (!profile) return;
-
       const { error } = await supabase
         .from('profiles')
         .update({ is_admin: !currentStatus })
-        .eq('id', profile.id);
+        .eq('id', userId);
 
       if (error) throw error;
 
@@ -355,6 +427,62 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleAwardXP = async () => {
+    if (!awardUsername.trim()) {
+      toast.error('Please enter a username');
+      return;
+    }
+    if (awardAmount < 1) {
+      toast.error('XP amount must be at least 1');
+      return;
+    }
+
+    setAwarding(true);
+    try {
+      // Find user by username
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('username', awardUsername.trim())
+        .single();
+
+      if (profileError || !profile) {
+        toast.error('User not found');
+        return;
+      }
+
+      // Award XP via API
+      const response = await fetch('/api/xp/award', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          profile_id: profile.id,
+          action_type: 'admin_award',
+          xp_amount: awardAmount,
+          description: awardReason || 'Admin award',
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success(`Awarded ${result.data.xp_awarded} XP to ${awardUsername}`);
+        setAwardUsername('');
+        setAwardAmount(50);
+        setAwardReason('');
+        fetchXPActivity();
+        fetchAnalytics();
+      } else {
+        toast.error(result.error || 'Failed to award XP');
+      }
+    } catch (error) {
+      console.error('Award XP error:', error);
+      toast.error('Failed to award XP');
+    } finally {
+      setAwarding(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -383,34 +511,49 @@ export default function AdminDashboard() {
       p.profiles?.username.toLowerCase().includes(postSearch.toLowerCase())
   );
 
+  const tabs: { key: TabType; label: string; badge?: number }[] = [
+    { key: 'analytics', label: '📊 Analytics' },
+    { key: 'quick-actions', label: '⚡ Quick Actions' },
+    { key: 'xp-activity', label: '✨ XP Activity' },
+    { key: 'users', label: '👥 Users', badge: analytics.total_users },
+    { key: 'posts', label: '📝 Posts', badge: analytics.total_posts },
+    { key: 'flags', label: '🚩 Flags' },
+    { key: 'system', label: '🔧 System' },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">🌱 Admin Dashboard</h1>
           <p className="mt-2 text-sm sm:text-base text-gray-600">
-            Manage users, content, and system settings
+            Manage users, content, XP, and system settings
           </p>
         </div>
 
         {/* Tabs */}
         <div className="border-b border-gray-200 mb-6 overflow-x-auto">
-          <nav className="-mb-px flex gap-4 sm:gap-8">
-            {['analytics', 'users', 'posts', 'flags'].map(tab => (
+          <nav className="-mb-px flex gap-2 sm:gap-4">
+            {tabs.map(tab => (
               <button
-                key={tab}
-                onClick={() => setActiveTab(tab as any)}
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
                 className={`
-                  py-4 px-1 border-b-2 font-medium text-sm capitalize
+                  py-3 px-3 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex items-center gap-1
                   ${
-                    activeTab === tab
+                    activeTab === tab.key
                       ? 'border-green-600 text-green-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }
                 `}
               >
-                {tab}
+                {tab.label}
+                {tab.badge !== undefined && (
+                  <span className="ml-1 bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full text-xs">
+                    {tab.badge}
+                  </span>
+                )}
               </button>
             ))}
           </nav>
@@ -419,33 +562,139 @@ export default function AdminDashboard() {
         {/* Analytics Tab */}
         {activeTab === 'analytics' && (
           <div className="space-y-4 sm:space-y-6">
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500">Total Users</h3>
-                <p className="mt-2 text-3xl font-bold text-gray-900">{analytics.total_users}</p>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+              <StatCard title="Total Users" value={analytics.total_users} icon="👥" />
+              <StatCard title="Total Posts" value={analytics.total_posts} icon="📝" />
+              <StatCard title="Total Comments" value={analytics.total_comments} icon="💬" />
+              <StatCard title="XP Today" value={analytics.xp_awarded_today} icon="✨" highlight />
+              <StatCard title="Posts Today" value={analytics.posts_today} icon="📅" />
+              <StatCard title="Posts This Week" value={analytics.posts_this_week} icon="📆" />
+            </div>
+          </div>
+        )}
+
+        {/* Quick Actions Tab */}
+        {activeTab === 'quick-actions' && (
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Award XP */}
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">✨ Award XP</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                  <input
+                    type="text"
+                    value={awardUsername}
+                    onChange={e => setAwardUsername(e.target.value)}
+                    placeholder="Enter username"
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">XP Amount</label>
+                  <input
+                    type="number"
+                    value={awardAmount}
+                    onChange={e => setAwardAmount(parseInt(e.target.value) || 0)}
+                    min={1}
+                    max={1000}
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Reason (optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={awardReason}
+                    onChange={e => setAwardReason(e.target.value)}
+                    placeholder="e.g., Bug report reward"
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                </div>
+                <button
+                  onClick={handleAwardXP}
+                  disabled={awarding}
+                  className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {awarding ? 'Awarding...' : 'Award XP'}
+                </button>
               </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500">Total Posts</h3>
-                <p className="mt-2 text-3xl font-bold text-gray-900">{analytics.total_posts}</p>
+            </div>
+
+            {/* Quick Stats */}
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">📊 Today's Summary</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 border-b">
+                  <span className="text-gray-600">New Posts</span>
+                  <span className="font-semibold text-gray-900">{analytics.posts_today}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b">
+                  <span className="text-gray-600">XP Awarded</span>
+                  <span className="font-semibold text-green-600">{analytics.xp_awarded_today}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b">
+                  <span className="text-gray-600">Total Users</span>
+                  <span className="font-semibold text-gray-900">{analytics.total_users}</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-gray-600">Posts This Week</span>
+                  <span className="font-semibold text-gray-900">{analytics.posts_this_week}</span>
+                </div>
               </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500">Total Comments</h3>
-                <p className="mt-2 text-3xl font-bold text-gray-900">{analytics.total_comments}</p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500">XP Awarded Today</h3>
-                <p className="mt-2 text-3xl font-bold text-green-600">
-                  {analytics.xp_awarded_today}
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500">Posts Today</h3>
-                <p className="mt-2 text-3xl font-bold text-gray-900">{analytics.posts_today}</p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500">Posts This Week</h3>
-                <p className="mt-2 text-3xl font-bold text-gray-900">{analytics.posts_this_week}</p>
-              </div>
+            </div>
+          </div>
+        )}
+
+        {/* XP Activity Tab */}
+        {activeTab === 'xp-activity' && (
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg font-medium text-gray-900">Recent XP Activity</h3>
+              <p className="text-sm text-gray-500">Last 50 XP events</p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      User
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Action
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      XP
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Time
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {xpActivity.map(event => (
+                    <tr key={event.id}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {event.username}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <span className="capitalize">{event.action_type.replace(/_/g, ' ')}</span>
+                        {event.description && (
+                          <span className="block text-xs text-gray-400">{event.description}</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <span className="text-green-600 font-semibold">+{event.xp_amount}</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {new Date(event.created_at).toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}
@@ -464,57 +713,59 @@ export default function AdminDashboard() {
             </div>
 
             <div className="bg-white rounded-lg shadow overflow-hidden">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      User
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      Stats
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      Joined
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredUsers.map(user => (
-                    <tr key={user.id}>
-                      <td className="px-6 py-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          {user.profiles.username}
-                        </div>
-                        <div className="text-sm text-gray-500">{user.email}</div>
-                        {user.profiles.is_admin && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                            Admin
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
-                        <div>XP: {user.profiles.xp_total}</div>
-                        <div>Posts: {user.post_count}</div>
-                        <div>Comments: {user.comment_count}</div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
-                        {new Date(user.created_at).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        <button
-                          onClick={() => toggleAdmin(user.id, user.profiles.is_admin)}
-                          className="text-green-600 hover:text-green-900 mr-4"
-                        >
-                          {user.profiles.is_admin ? 'Remove Admin' : 'Make Admin'}
-                        </button>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        User
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Stats
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Joined
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Actions
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {filteredUsers.map(user => (
+                      <tr key={user.id}>
+                        <td className="px-6 py-4">
+                          <div className="text-sm font-medium text-gray-900">
+                            {user.profiles.username}
+                          </div>
+                          <div className="text-sm text-gray-500">{user.email}</div>
+                          {user.profiles.is_admin && (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                              Admin
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          <div>XP: {user.profiles.xp_total}</div>
+                          <div>Posts: {user.post_count}</div>
+                          <div>Comments: {user.comment_count}</div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {new Date(user.created_at).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 text-sm">
+                          <button
+                            onClick={() => toggleAdmin(user.id, user.profiles.is_admin)}
+                            className="text-green-600 hover:text-green-900"
+                          >
+                            {user.profiles.is_admin ? 'Remove Admin' : 'Make Admin'}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
@@ -580,32 +831,169 @@ export default function AdminDashboard() {
               <p className="mt-1 text-sm text-gray-500">Toggle features on and off</p>
             </div>
             <div className="divide-y divide-gray-200">
-              {flags.map(flag => (
-                <div key={flag.key} className="px-6 py-4 flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{flag.key}</p>
-                    <p className="text-sm text-gray-500">{flag.enabled ? 'Enabled' : 'Disabled'}</p>
-                  </div>
-                  <button
-                    onClick={() => toggleFlag(flag.key, flag.enabled)}
-                    className={`
-                      relative inline-flex h-6 w-11 items-center rounded-full transition-colors
-                      ${flag.enabled ? 'bg-green-600' : 'bg-gray-200'}
-                    `}
-                  >
-                    <span
-                      className={`
-                        inline-block h-4 w-4 transform rounded-full bg-white transition-transform
-                        ${flag.enabled ? 'translate-x-6' : 'translate-x-1'}
-                      `}
-                    />
-                  </button>
+              {flags.length === 0 ? (
+                <div className="px-6 py-8 text-center text-gray-500">
+                  No feature flags configured
                 </div>
-              ))}
+              ) : (
+                flags.map(flag => (
+                  <div key={flag.key} className="px-6 py-4 flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">{flag.key}</p>
+                      <p className="text-sm text-gray-500">
+                        {flag.enabled ? 'Enabled' : 'Disabled'}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => toggleFlag(flag.key, flag.enabled)}
+                      className={`
+                        relative inline-flex h-6 w-11 items-center rounded-full transition-colors
+                        ${flag.enabled ? 'bg-green-600' : 'bg-gray-200'}
+                      `}
+                    >
+                      <span
+                        className={`
+                          inline-block h-4 w-4 transform rounded-full bg-white transition-transform
+                          ${flag.enabled ? 'translate-x-6' : 'translate-x-1'}
+                        `}
+                      />
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* System Tab */}
+        {activeTab === 'system' && (
+          <div className="space-y-6">
+            {/* System Health */}
+            <div className="bg-white rounded-lg shadow">
+              <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900">System Health</h3>
+                  <p className="text-sm text-gray-500">
+                    Last checked: {new Date(systemHealth.last_checked).toLocaleTimeString()}
+                  </p>
+                </div>
+                <button
+                  onClick={checkSystemHealth}
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                >
+                  Refresh
+                </button>
+              </div>
+              <div className="divide-y divide-gray-200">
+                <HealthRow label="API Endpoints" status={systemHealth.api} />
+                <HealthRow label="Database Connection" status={systemHealth.database} />
+                <HealthRow
+                  label="Unity Bridge (window.plobie)"
+                  status={systemHealth.unity_bridge}
+                />
+              </div>
+            </div>
+
+            {/* Integration Status */}
+            <div className="bg-white rounded-lg shadow">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900">Unity Integration Status</h3>
+              </div>
+              <div className="px-6 py-4 space-y-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-green-500">✅</span>
+                  <span className="text-gray-700">GET /api/user/me - User profile endpoint</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-green-500">✅</span>
+                  <span className="text-gray-700">POST /api/games/session - Session tracking</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-green-500">✅</span>
+                  <span className="text-gray-700">POST /api/games/xp - XP awards</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-green-500">✅</span>
+                  <span className="text-gray-700">
+                    GET/POST /api/games/progress - Save/Load state
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-yellow-500">⏳</span>
+                  <span className="text-gray-700">Waiting for James's Unity WebGL build</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Environment Info */}
+            <div className="bg-white rounded-lg shadow">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900">Environment</h3>
+              </div>
+              <div className="px-6 py-4 space-y-2 font-mono text-sm">
+                <div className="flex gap-2">
+                  <span className="text-gray-500">API URL:</span>
+                  <span className="text-gray-900">
+                    {process.env.NEXT_PUBLIC_SITE_URL || window.location.origin}
+                  </span>
+                </div>
+                <div className="flex gap-2">
+                  <span className="text-gray-500">Environment:</span>
+                  <span className="text-gray-900">{process.env.NODE_ENV}</span>
+                </div>
+              </div>
             </div>
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+// Helper Components
+function StatCard({
+  title,
+  value,
+  icon,
+  highlight,
+}: {
+  title: string;
+  value: number;
+  icon: string;
+  highlight?: boolean;
+}) {
+  return (
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
+      <div className="flex items-center gap-2">
+        <span className="text-xl">{icon}</span>
+        <h3 className="text-sm font-medium text-gray-500">{title}</h3>
+      </div>
+      <p
+        className={`mt-2 text-2xl sm:text-3xl font-bold ${highlight ? 'text-green-600' : 'text-gray-900'}`}
+      >
+        {value.toLocaleString()}
+      </p>
+    </div>
+  );
+}
+
+function HealthRow({ label, status }: { label: string; status: string }) {
+  const statusConfig: Record<string, { color: string; text: string }> = {
+    ok: { color: 'bg-green-100 text-green-800', text: '✓ Healthy' },
+    ready: { color: 'bg-green-100 text-green-800', text: '✓ Ready' },
+    error: { color: 'bg-red-100 text-red-800', text: '✗ Error' },
+    missing: { color: 'bg-yellow-100 text-yellow-800', text: '⚠ Not Loaded' },
+    checking: { color: 'bg-gray-100 text-gray-800', text: '⋯ Checking' },
+  };
+
+  const config = statusConfig[status] || statusConfig.checking;
+
+  return (
+    <div className="px-6 py-4 flex items-center justify-between">
+      <span className="text-sm font-medium text-gray-900">{label}</span>
+      <span className={`px-3 py-1 rounded-full text-xs font-medium ${config.color}`}>
+        {config.text}
+      </span>
     </div>
   );
 }
