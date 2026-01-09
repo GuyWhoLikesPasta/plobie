@@ -59,6 +59,7 @@ export default function Navigation() {
     { name: 'Home', href: '/', icon: '🏠' },
     { name: 'Hobbies', href: '/hobbies', icon: '💬' },
     { name: 'My Plants', href: '/my-plants', icon: '🌿' },
+    { name: 'Achievements', href: '/achievements', icon: '🏆' },
     { name: 'Games', href: '/games', icon: '🎮' },
     { name: 'Shop', href: '/shop', icon: '🛍️' },
   ];
