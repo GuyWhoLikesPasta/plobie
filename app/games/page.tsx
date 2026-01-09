@@ -26,43 +26,62 @@ export default function GamesPage() {
   const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [unityLoaded, setUnityLoaded] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const router = useRouter();
   const supabase = createClient();
 
   // Check auth and device on mount
   useEffect(() => {
     const checkRequirements = async () => {
-      // Check if mobile
-      const mobile =
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        ) || window.innerWidth < 768;
+      try {
+        // Check if mobile
+        const mobile =
+          /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent
+          ) || window.innerWidth < 768;
 
-      setIsMobile(mobile);
+        setIsMobile(mobile);
 
-      if (mobile) {
-        setGameState('mobile');
-        return;
+        if (mobile) {
+          setGameState('mobile');
+          return;
+        }
+
+        // Check auth
+        setGameState('checking-auth');
+        const {
+          data: { user: authUser },
+          error: authError,
+        } = await supabase.auth.getUser();
+
+        if (authError) {
+          throw new Error('Failed to verify authentication');
+        }
+
+        if (!authUser) {
+          setGameState('not-logged-in');
+          return;
+        }
+
+        setUser(authUser);
+        setError(null);
+        setGameState('ready');
+      } catch (err) {
+        console.error('Game page error:', err);
+        setError(err instanceof Error ? err.message : 'Something went wrong');
+        setGameState('error');
       }
-
-      // Check auth
-      setGameState('checking-auth');
-      const {
-        data: { user: authUser },
-        error: authError,
-      } = await supabase.auth.getUser();
-
-      if (authError || !authUser) {
-        setGameState('not-logged-in');
-        return;
-      }
-
-      setUser(authUser);
-      setGameState('ready');
     };
 
     checkRequirements();
-  }, [supabase.auth]);
+  }, [supabase.auth, retryCount]);
+
+  // Retry handler
+  const handleRetry = () => {
+    setError(null);
+    setGameState('loading');
+    setRetryCount(prev => prev + 1);
+  };
 
   // Handle Unity iframe load
   const handleUnityLoad = () => {
@@ -110,19 +129,70 @@ export default function GamesPage() {
 
       case 'mobile':
         return (
-          <div className="flex flex-col items-center justify-center h-96 bg-gradient-to-br from-amber-900 to-orange-900 rounded-2xl p-8">
-            <span className="text-6xl mb-4">📱</span>
-            <h2 className="text-2xl font-bold text-white mb-2">Desktop Only</h2>
-            <p className="text-amber-100 mb-4 text-center max-w-md">
-              The garden game requires a desktop or laptop computer. Please visit on a larger screen
-              to play!
-            </p>
-            <div className="flex gap-3 text-amber-200 text-sm">
-              <span>💻 Desktop</span>
-              <span>•</span>
-              <span>🖥️ Laptop</span>
-              <span>•</span>
-              <span>📺 Tablet (landscape)</span>
+          <div className="bg-gradient-to-br from-amber-900 to-orange-900 rounded-2xl p-6 sm:p-8">
+            <div className="flex flex-col items-center text-center mb-8">
+              <span className="text-6xl mb-4">📱</span>
+              <h2 className="text-2xl font-bold text-white mb-2">Desktop Only</h2>
+              <p className="text-amber-100 mb-4 max-w-md">
+                The garden game requires a desktop or laptop computer.
+              </p>
+              <div className="flex flex-wrap justify-center gap-2 text-amber-200 text-sm">
+                <span className="bg-amber-800/50 px-3 py-1 rounded-full">💻 Desktop</span>
+                <span className="bg-amber-800/50 px-3 py-1 rounded-full">🖥️ Laptop</span>
+                <span className="bg-amber-800/50 px-3 py-1 rounded-full">📺 Large Tablet</span>
+              </div>
+            </div>
+
+            {/* Plant Care Tips while waiting */}
+            <div className="bg-amber-950/50 rounded-xl p-5 border border-amber-800/50">
+              <h3 className="text-lg font-semibold text-amber-100 mb-4 flex items-center gap-2">
+                <span>🌱</span> Plant Care Tips
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <span className="text-xl">💧</span>
+                  <div>
+                    <p className="text-amber-100 font-medium">Water Wisely</p>
+                    <p className="text-amber-200/70 text-sm">
+                      Most plants prefer morning watering when it&apos;s cooler.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-xl">☀️</span>
+                  <div>
+                    <p className="text-amber-100 font-medium">Light Matters</p>
+                    <p className="text-amber-200/70 text-sm">
+                      Know if your plant loves sun or prefers shade.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-xl">🪴</span>
+                  <div>
+                    <p className="text-amber-100 font-medium">Drainage is Key</p>
+                    <p className="text-amber-200/70 text-sm">
+                      Ensure pots have drainage holes to prevent root rot.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick links */}
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <button
+                onClick={() => router.push('/hobbies')}
+                className="px-4 py-2 bg-amber-800/50 hover:bg-amber-800 text-amber-100 rounded-lg transition-colors text-sm"
+              >
+                📖 Browse Community
+              </button>
+              <button
+                onClick={() => router.push('/hobbies/learn')}
+                className="px-4 py-2 bg-amber-800/50 hover:bg-amber-800 text-amber-100 rounded-lg transition-colors text-sm"
+              >
+                📚 Learn & Earn XP
+              </button>
             </div>
           </div>
         );
@@ -214,23 +284,75 @@ export default function GamesPage() {
             </div>
 
             {/* Game Controls Bar */}
-            <div className="bg-slate-900 px-4 py-3 flex items-center justify-between">
+            <div className="bg-slate-900 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => setGameState('ready')}
-                  className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded transition-colors"
+                  className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded transition-colors flex items-center gap-1"
                 >
-                  ← Exit Game
+                  <span>←</span> Exit
                 </button>
-                <span className="text-slate-400 text-sm">
+                <span className="text-slate-400 text-sm hidden sm:inline">
                   Playing as <span className="text-emerald-400">{user?.email || 'Guest'}</span>
                 </span>
               </div>
 
-              <div className="flex items-center gap-3 text-sm">
-                <span className="text-slate-400">🎯 XP earned this session: </span>
-                <span className="text-emerald-400 font-semibold">0</span>
+              <div className="flex items-center gap-4 text-sm">
+                {/* Connection indicator */}
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                  <span className="text-slate-500 hidden sm:inline">Connected</span>
+                </div>
+
+                <div className="h-4 w-px bg-slate-700 hidden sm:block" />
+
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-400">🎯</span>
+                  <span className="text-emerald-400 font-semibold">+0 XP</span>
+                </div>
               </div>
+            </div>
+
+            {/* Keyboard hints - desktop only */}
+            <div className="bg-slate-950 px-4 py-2 flex items-center justify-center gap-6 text-xs text-slate-500">
+              <span>
+                <kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-slate-400">WASD</kbd> Move
+              </span>
+              <span>
+                <kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-slate-400">E</kbd> Interact
+              </span>
+              <span>
+                <kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-slate-400">ESC</kbd> Menu
+              </span>
+              <span>
+                <kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-slate-400">F</kbd>{' '}
+                Fullscreen
+              </span>
+            </div>
+          </div>
+        );
+
+      case 'error':
+        return (
+          <div className="flex flex-col items-center justify-center h-96 bg-gradient-to-br from-red-900 to-rose-900 rounded-2xl p-8">
+            <span className="text-6xl mb-4">⚠️</span>
+            <h2 className="text-2xl font-bold text-white mb-2">Something Went Wrong</h2>
+            <p className="text-red-100 mb-6 text-center max-w-md">
+              {error || "We couldn't load the game. Please try again."}
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={handleRetry}
+                className="px-6 py-3 bg-white/20 hover:bg-white/30 text-white font-semibold rounded-lg transition-colors"
+              >
+                🔄 Try Again
+              </button>
+              <button
+                onClick={() => router.push('/hobbies')}
+                className="px-6 py-3 bg-red-800/50 hover:bg-red-800 text-white font-semibold rounded-lg transition-colors"
+              >
+                ← Back to Hobbies
+              </button>
             </div>
           </div>
         );
