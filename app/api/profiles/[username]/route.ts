@@ -8,10 +8,25 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase';
 import { ApiResponse, ErrorCodes } from '@/lib/types';
 
+function getActionIcon(actionType: string): string {
+  const icons: Record<string, string> = {
+    post: '📝',
+    comment: '💬',
+    claim: '🪴',
+    article_read: '📖',
+    game_session: '🎮',
+    game_action: '🎯',
+    admin_award: '⭐',
+    achievement_bonus: '🏆',
+    daily_login: '🔥',
+  };
+  return icons[actionType] || '✨';
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ username: string }> }
-): Promise<NextResponse<ApiResponse<{ profile: any; posts: any[]; stats: any }>>> {
+): Promise<NextResponse<ApiResponse<{ profile: any; posts: any[]; stats: any; activity: any[] }>>> {
   try {
     const { username } = await params;
 
@@ -77,15 +92,34 @@ export async function GET(
       .select('*', { count: 'exact', head: true })
       .eq('user_id', profile.id);
 
+    // Get recent XP activity
+    const { data: recentActivity } = await supabase
+      .from('xp_events')
+      .select('id, action_type, xp_amount, description, created_at')
+      .eq('profile_id', profile.id)
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    // Get earned achievements count
+    const { count: achievementCount } = await supabase
+      .from('user_achievements')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', profile.id);
+
     const stats = {
       posts: postCount || 0,
       comments: commentCount || 0,
       pots: potCount || 0,
+      achievements: achievementCount || 0,
       xp: totalXp,
       level: level,
     };
 
-    // Profile doesn't have sensitive fields to remove (id is public)
+    // Format activity with icons
+    const activityWithIcons = (recentActivity || []).map(event => ({
+      ...event,
+      icon: getActionIcon(event.action_type),
+    }));
 
     return NextResponse.json(
       {
@@ -96,6 +130,7 @@ export async function GET(
             ...stats,
           },
           posts: posts || [],
+          activity: activityWithIcons,
           stats,
         },
       },
