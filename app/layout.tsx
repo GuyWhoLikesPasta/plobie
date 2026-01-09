@@ -4,6 +4,7 @@ import './globals.css';
 import Navigation from '@/components/layout/Navigation';
 import ToastProvider from '@/components/providers/ToastProvider';
 import { AnalyticsProviders } from './analytics';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -59,10 +60,12 @@ export default function RootLayout({
         <script src="/unity-bridge.js" defer />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ToastProvider />
-        <Navigation />
-        {children}
-        <AnalyticsProviders />
+        <ThemeProvider>
+          <ToastProvider />
+          <Navigation />
+          {children}
+          <AnalyticsProviders />
+        </ThemeProvider>
       </body>
     </html>
   );
