@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import toast from 'react-hot-toast';
+import { checkAndShowAchievements } from '@/lib/achievement-toast';
 
 // Sample articles (will move to database later)
 const articles: Record<string, any> = {
@@ -142,7 +143,12 @@ Happy planting! 🌵`,
 };
 
 // Fill in minimal content for remaining articles
-['550e8400-e29b-41d4-a716-446655440003', '550e8400-e29b-41d4-a716-446655440004', '550e8400-e29b-41d4-a716-446655440005', '550e8400-e29b-41d4-a716-446655440006'].forEach((id, index) => {
+[
+  '550e8400-e29b-41d4-a716-446655440003',
+  '550e8400-e29b-41d4-a716-446655440004',
+  '550e8400-e29b-41d4-a716-446655440005',
+  '550e8400-e29b-41d4-a716-446655440006',
+].forEach((id, index) => {
   const titles = [
     'Growing Herbs Indoors Year-Round',
     'Orchid Care Mastery',
@@ -183,7 +189,9 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
 
   const checkAuth = async () => {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     setIsAuthenticated(!!user);
   };
 
@@ -207,6 +215,9 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
       if (data.success) {
         setHasRead(true);
         toast.success(`Great! You earned +${data.data.xp_awarded} XP for reading this article!`);
+
+        // Check for newly unlocked achievements
+        checkAndShowAchievements();
       } else {
         if (data.error?.code === 'ALREADY_EXISTS') {
           setHasRead(true);
@@ -246,9 +257,7 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
           <div className="text-xs sm:text-sm text-green-600 font-medium mb-2">
             {article.category}
           </div>
-          <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-4">
-            {article.title}
-          </h1>
+          <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-4">{article.title}</h1>
           <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b">
             <span>{article.readTime}</span>
             <span>•</span>
@@ -259,19 +268,43 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
           <div className="prose prose-lg max-w-none text-gray-800">
             {article.content.split('\n').map((line: string, index: number) => {
               if (line.startsWith('# ')) {
-                return <h1 key={index} className="text-3xl font-bold mt-8 mb-4 text-gray-900">{line.slice(2)}</h1>;
+                return (
+                  <h1 key={index} className="text-3xl font-bold mt-8 mb-4 text-gray-900">
+                    {line.slice(2)}
+                  </h1>
+                );
               } else if (line.startsWith('## ')) {
-                return <h2 key={index} className="text-2xl font-bold mt-6 mb-3 text-gray-900">{line.slice(3)}</h2>;
+                return (
+                  <h2 key={index} className="text-2xl font-bold mt-6 mb-3 text-gray-900">
+                    {line.slice(3)}
+                  </h2>
+                );
               } else if (line.startsWith('### ')) {
-                return <h3 key={index} className="text-xl font-semibold mt-4 mb-2 text-gray-900">{line.slice(4)}</h3>;
+                return (
+                  <h3 key={index} className="text-xl font-semibold mt-4 mb-2 text-gray-900">
+                    {line.slice(4)}
+                  </h3>
+                );
               } else if (line.startsWith('**') && line.endsWith('**')) {
-                return <p key={index} className="font-bold mt-2 text-gray-900">{line.slice(2, -2)}</p>;
+                return (
+                  <p key={index} className="font-bold mt-2 text-gray-900">
+                    {line.slice(2, -2)}
+                  </p>
+                );
               } else if (line.startsWith('- ')) {
-                return <li key={index} className="ml-6 text-gray-700">{line.slice(2)}</li>;
+                return (
+                  <li key={index} className="ml-6 text-gray-700">
+                    {line.slice(2)}
+                  </li>
+                );
               } else if (line.trim() === '') {
                 return <br key={index} />;
               } else {
-                return <p key={index} className="mb-4 text-gray-700 leading-relaxed">{line}</p>;
+                return (
+                  <p key={index} className="mb-4 text-gray-700 leading-relaxed">
+                    {line}
+                  </p>
+                );
               }
             })}
           </div>
@@ -282,18 +315,14 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
           {hasRead ? (
             <div>
               <div className="text-3xl sm:text-4xl mb-2">✅</div>
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
-                Article Completed!
-              </h3>
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-2">Article Completed!</h3>
               <p className="text-sm sm:text-base text-green-100">
                 You have earned XP for reading this article
               </p>
             </div>
           ) : isAuthenticated ? (
             <div>
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-4">
-                Finished reading?
-              </h3>
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-4">Finished reading?</h3>
               <button
                 onClick={handleMarkAsRead}
                 disabled={marking}
@@ -304,9 +333,7 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
             </div>
           ) : (
             <div>
-              <h3 className="text-xl font-bold text-white mb-4">
-                Log in to earn XP for reading
-              </h3>
+              <h3 className="text-xl font-bold text-white mb-4">Log in to earn XP for reading</h3>
               <button
                 onClick={() => router.push(`/login?redirect=/hobbies/learn/${articleId}`)}
                 className="bg-white text-green-600 px-8 py-3 rounded-lg font-medium hover:bg-green-50 transition-all"
@@ -320,4 +347,3 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
     </div>
   );
 }
-

@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase';
 import LikeButton from '@/components/posts/LikeButton';
 import toast from 'react-hot-toast';
 import { PostCardSkeleton } from '@/components/skeletons';
+import { checkAndShowAchievements } from '@/lib/achievement-toast';
 
 export default function HobbiesPage() {
   const router = useRouter();
@@ -43,7 +44,9 @@ export default function HobbiesPage() {
 
   const checkAuth = async () => {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     setIsAuthenticated(!!user);
   };
 
@@ -151,6 +154,9 @@ export default function HobbiesPage() {
         setImagePreview('');
         fetchPosts();
         toast.success(`Post created! You earned +${data.data.xp_awarded} XP!`);
+
+        // Check for newly unlocked achievements
+        checkAndShowAchievements();
       } else {
         toast.error(data.error?.message || 'Failed to create post');
       }
@@ -199,7 +205,7 @@ export default function HobbiesPage() {
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               placeholder="Search posts..."
               className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base"
             />
@@ -207,7 +213,7 @@ export default function HobbiesPage() {
           </div>
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as 'recent' | 'trending')}
+            onChange={e => setSortBy(e.target.value as 'recent' | 'trending')}
             className="px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 bg-white text-base"
           >
             <option value="recent">Recent</option>
@@ -227,7 +233,7 @@ export default function HobbiesPage() {
           >
             All Groups
           </button>
-          {hobbyGroups.map((group) => (
+          {hobbyGroups.map(group => (
             <button
               key={group.slug}
               onClick={() => setSelectedGroup(group.name)}
@@ -246,22 +252,16 @@ export default function HobbiesPage() {
         {showCreateForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Create a Post
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Create a Post</h2>
               <form onSubmit={handleSubmitPost}>
                 <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">
-                    Hobby Group
-                  </label>
+                  <label className="block text-gray-700 font-medium mb-2">Hobby Group</label>
                   <select
                     value={formData.hobby_group}
-                    onChange={(e) =>
-                      setFormData({ ...formData, hobby_group: e.target.value })
-                    }
+                    onChange={e => setFormData({ ...formData, hobby_group: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   >
-                    {hobbyGroups.map((group) => (
+                    {hobbyGroups.map(group => (
                       <option key={group.slug} value={group.name}>
                         {group.icon} {group.name}
                       </option>
@@ -269,15 +269,11 @@ export default function HobbiesPage() {
                   </select>
                 </div>
                 <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">
-                    Title
-                  </label>
+                  <label className="block text-gray-700 font-medium mb-2">Title</label>
                   <input
                     type="text"
                     value={formData.title}
-                    onChange={(e) =>
-                      setFormData({ ...formData, title: e.target.value })
-                    }
+                    onChange={e => setFormData({ ...formData, title: e.target.value })}
                     required
                     maxLength={200}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
@@ -285,14 +281,10 @@ export default function HobbiesPage() {
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">
-                    Content
-                  </label>
+                  <label className="block text-gray-700 font-medium mb-2">Content</label>
                   <textarea
                     value={formData.content}
-                    onChange={(e) =>
-                      setFormData({ ...formData, content: e.target.value })
-                    }
+                    onChange={e => setFormData({ ...formData, content: e.target.value })}
                     required
                     maxLength={10000}
                     rows={6}
@@ -301,9 +293,7 @@ export default function HobbiesPage() {
                   />
                 </div>
                 <div className="mb-6">
-                  <label className="block text-gray-700 font-medium mb-2">
-                    Image (Optional)
-                  </label>
+                  <label className="block text-gray-700 font-medium mb-2">Image (Optional)</label>
                   {imagePreview ? (
                     <div className="relative">
                       <img
@@ -333,9 +323,7 @@ export default function HobbiesPage() {
                         className="cursor-pointer flex flex-col items-center"
                       >
                         <span className="text-4xl mb-2">📸</span>
-                        <span className="text-gray-600 font-medium">
-                          Click to upload an image
-                        </span>
+                        <span className="text-gray-600 font-medium">Click to upload an image</span>
                         <span className="text-gray-400 text-sm mt-1">
                           JPG, PNG, WebP, or GIF (max 5MB)
                         </span>
@@ -365,18 +353,16 @@ export default function HobbiesPage() {
         )}
 
         {/* Posts Feed */}
-      {loading ? (
-        <div className="space-y-4">
-          <PostCardSkeleton />
-          <PostCardSkeleton />
-          <PostCardSkeleton />
-        </div>
-      ) : posts.length === 0 ? (
+        {loading ? (
+          <div className="space-y-4">
+            <PostCardSkeleton />
+            <PostCardSkeleton />
+            <PostCardSkeleton />
+          </div>
+        ) : posts.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-lg shadow">
             <div className="text-6xl mb-4">🌱</div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">
-              No posts yet
-            </h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">No posts yet</h3>
             <p className="text-gray-600 mb-6">
               Be the first to share something with the community!
             </p>
@@ -389,7 +375,7 @@ export default function HobbiesPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            {posts.map((post) => (
+            {posts.map(post => (
               <div
                 key={post.id}
                 className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 cursor-pointer"
@@ -402,7 +388,7 @@ export default function HobbiesPage() {
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-2">
                       <button
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           router.push(`/profile/${post.profiles?.username}`);
                         }}
@@ -411,17 +397,13 @@ export default function HobbiesPage() {
                         {post.profiles?.username || 'Anonymous'}
                       </button>
                       <span className="text-gray-400">·</span>
-                      <span className="text-sm text-gray-500">
-                        {post.hobby_group}
-                      </span>
+                      <span className="text-sm text-gray-500">{post.hobby_group}</span>
                       <span className="text-gray-400">·</span>
                       <span className="text-sm text-gray-500">
                         {new Date(post.created_at).toLocaleDateString()}
                       </span>
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      {post.title}
-                    </h3>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{post.title}</h3>
                     <p className="text-gray-700 line-clamp-3">{post.content}</p>
                     {post.image_url && (
                       <div className="relative w-full h-64 mt-4">

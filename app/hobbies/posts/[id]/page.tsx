@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { createClient } from '@/lib/supabase';
 import LikeButton from '@/components/posts/LikeButton';
 import toast from 'react-hot-toast';
+import { checkAndShowAchievements } from '@/lib/achievement-toast';
 
 export default function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -26,7 +27,9 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
 
   const checkAuth = async () => {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     setIsAuthenticated(!!user);
   };
 
@@ -71,6 +74,9 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
         setCommentContent('');
         fetchPost(postId);
         toast.success(`Comment posted! You earned +${data.data.xp_awarded} XP!`);
+
+        // Check for newly unlocked achievements
+        checkAndShowAchievements();
       } else {
         toast.error(data.error?.message || 'Failed to post comment');
       }
@@ -122,9 +128,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
             </div>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-            {post.title}
-          </h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">{post.title}</h1>
 
           <p className="text-sm sm:text-base text-gray-700 whitespace-pre-wrap mb-6">
             {post.content}
@@ -145,22 +149,18 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
 
           <div className="flex items-center gap-3 pt-4 sm:pt-6 border-t">
             <LikeButton postId={post.id} initialCount={0} initialLiked={false} />
-            <span className="text-sm text-gray-500">
-              💬 {post.comments?.length || 0} comments
-            </span>
+            <span className="text-sm text-gray-500">💬 {post.comments?.length || 0} comments</span>
           </div>
         </div>
 
         {/* Comment Form */}
         <div className="bg-white rounded-lg shadow p-4 sm:p-6 mb-6">
-          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
-            Add a Comment
-          </h2>
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">Add a Comment</h2>
           {isAuthenticated ? (
             <form onSubmit={handleSubmitComment}>
               <textarea
                 value={commentContent}
-                onChange={(e) => setCommentContent(e.target.value)}
+                onChange={e => setCommentContent(e.target.value)}
                 required
                 maxLength={2000}
                 rows={4}
@@ -177,9 +177,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
             </form>
           ) : (
             <div className="text-center py-4">
-              <p className="text-gray-600 mb-4">
-                Please log in to comment
-              </p>
+              <p className="text-gray-600 mb-4">Please log in to comment</p>
               <button
                 onClick={() => router.push(`/login?redirect=/hobbies/posts/${postId}`)}
                 className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all"
@@ -209,9 +207,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
                         {new Date(comment.created_at).toLocaleDateString()}
                       </span>
                     </div>
-                    <p className="text-gray-700 whitespace-pre-wrap">
-                      {comment.content}
-                    </p>
+                    <p className="text-gray-700 whitespace-pre-wrap">{comment.content}</p>
                   </div>
                 </div>
               </div>
@@ -226,4 +222,3 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
     </div>
   );
 }
-
