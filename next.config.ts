@@ -4,8 +4,27 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   async headers() {
     return [
+      // Unity WebGL build - needs special headers for WASM and iframe
       {
-        source: '/:path*',
+        source: '/unity/:path*',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'Cross-Origin-Embedder-Policy',
+            value: 'require-corp',
+          },
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin',
+          },
+        ],
+      },
+      // General security headers for other routes
+      {
+        source: '/((?!unity).*)',
         headers: [
           {
             key: 'X-Frame-Options',
@@ -27,12 +46,13 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://*.sentry.io https://va.vercel-scripts.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://*.sentry.io https://va.vercel-scripts.com blob:",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
               "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://vercel.live https://*.sentry.io https://va.vercel-scripts.com https://vitals.vercel-insights.com",
               "frame-src 'self' https://vercel.live",
+              "worker-src 'self' blob:",
             ].join('; '),
           },
         ],

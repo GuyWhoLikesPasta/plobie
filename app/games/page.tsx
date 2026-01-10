@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 
@@ -8,8 +8,9 @@ import { useRouter } from 'next/navigation';
 const GAME_WIDTH = 960;
 const GAME_HEIGHT = 600;
 
-// Placeholder URL until James sends the Firebase link
-const UNITY_BUILD_URL = process.env.NEXT_PUBLIC_UNITY_BUILD_URL || '';
+// Unity WebGL build URL - hosted locally for same-origin auth bridge
+// Can be overridden via env var for testing external builds
+const UNITY_BUILD_URL = process.env.NEXT_PUBLIC_UNITY_BUILD_URL || '/unity/index.html';
 
 type GameState =
   | 'loading'
@@ -20,15 +21,49 @@ type GameState =
   | 'playing'
   | 'error';
 
+// Extend window for Unity bridge
+declare global {
+  interface Window {
+    plobie?: {
+      getAccessToken: () => string;
+      isLoggedIn: () => boolean;
+      getUserId: () => string;
+      getApiUrl: () => string;
+      log: (msg: string) => void;
+      redirectToLogin: () => void;
+      version: string;
+    };
+  }
+}
+
 export default function GamesPage() {
   const [gameState, setGameState] = useState<GameState>('loading');
   const [isMobile, setIsMobile] = useState(false);
   const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
+  const [accessToken, setAccessToken] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [unityLoaded, setUnityLoaded] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   const router = useRouter();
   const supabase = createClient();
+
+  // Setup Unity bridge with the actual token
+  const setupUnityBridge = useCallback(
+    (token: string, userId: string) => {
+      window.plobie = {
+        getAccessToken: () => token,
+        isLoggedIn: () => !!token,
+        getUserId: () => userId,
+        getApiUrl: () => window.location.origin + '/api',
+        log: (msg: string) => console.log('[Unity]', msg),
+        redirectToLogin: () => router.push('/login?redirect=/games'),
+        version: '1.0.0',
+      };
+      console.log('[Games Page] Unity bridge configured with token');
+      console.log('[Games Page] window.plobie.getAccessToken() ready:', !!token);
+    },
+    [router]
+  );
 
   // Check auth and device on mount
   useEffect(() => {
@@ -49,21 +84,28 @@ export default function GamesPage() {
 
         // Check auth
         setGameState('checking-auth');
-        const {
-          data: { user: authUser },
-          error: authError,
-        } = await supabase.auth.getUser();
 
-        if (authError) {
+        // Get both user and session (session contains the token)
+        const {
+          data: { session },
+          error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError) {
           throw new Error('Failed to verify authentication');
         }
 
-        if (!authUser) {
+        if (!session?.user) {
           setGameState('not-logged-in');
           return;
         }
 
-        setUser(authUser);
+        setUser(session.user);
+        setAccessToken(session.access_token);
+
+        // Setup Unity bridge with the actual token
+        setupUnityBridge(session.access_token, session.user.id);
+
         setError(null);
         setGameState('ready');
       } catch (err) {
@@ -74,7 +116,7 @@ export default function GamesPage() {
     };
 
     checkRequirements();
-  }, [supabase.auth, retryCount]);
+  }, [supabase.auth, retryCount, setupUnityBridge]);
 
   // Retry handler
   const handleRetry = () => {
