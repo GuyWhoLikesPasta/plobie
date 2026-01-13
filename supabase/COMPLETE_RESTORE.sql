@@ -433,6 +433,7 @@ CREATE INDEX IF NOT EXISTS idx_pot_claims_claimed_at ON public.pot_claims(claime
 -- ==============================================
 
 -- Function to apply XP with daily caps and notifications
+-- Uses UPSERT pattern to handle users without existing xp_balances record
 CREATE OR REPLACE FUNCTION public.apply_xp(
   p_profile_id UUID,
   p_action_type TEXT,
@@ -453,20 +454,27 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 DECLARE
-  v_current_total_xp INT;
-  v_current_daily_xp INT;
+  v_current_total_xp INT := 0;
+  v_current_daily_xp INT := 0;
   v_last_reset_at TIMESTAMPTZ;
-  v_level_before INT;
+  v_level_before INT := 1;
   v_level_after INT;
   v_xp_to_add INT;
   v_capped BOOLEAN := false;
   v_daily_cap INT := 100;
 BEGIN
-  -- Get current XP balance
+  -- Get current XP balance (may not exist)
   SELECT xp_balances.total_xp, xp_balances.daily_xp, xp_balances.last_reset_at
   INTO v_current_total_xp, v_current_daily_xp, v_last_reset_at
   FROM public.xp_balances
   WHERE profile_id = p_profile_id;
+  
+  -- Handle case where no record exists
+  IF v_current_total_xp IS NULL THEN
+    v_current_total_xp := 0;
+    v_current_daily_xp := 0;
+    v_last_reset_at := NOW();
+  END IF;
   
   -- Reset daily XP if it's a new day
   IF v_last_reset_at IS NULL OR v_last_reset_at < CURRENT_DATE THEN
@@ -475,33 +483,42 @@ BEGIN
   END IF;
   
   -- Calculate level before
-  v_level_before := FLOOR(v_current_total_xp / 100.0) + 1;
+  v_level_before := GREATEST(1, FLOOR(v_current_total_xp / 100.0) + 1);
   
   -- Check if daily cap would be exceeded
   IF v_current_daily_xp + p_xp_amount > v_daily_cap THEN
     v_xp_to_add := GREATEST(0, v_daily_cap - v_current_daily_xp);
     v_capped := true;
     
-    -- Create XP cap notification
-    PERFORM public.create_notification(
-      (SELECT id FROM auth.users WHERE id = p_profile_id),
-      'xp_cap',
-      'Daily XP Cap Reached',
-      'You''ve reached your daily XP cap of ' || v_daily_cap || ' XP. Come back tomorrow for more!',
-      '/my-plants'
-    );
+    -- Create XP cap notification (only if we have a notification function)
+    BEGIN
+      PERFORM public.create_notification(
+        p_profile_id,
+        'xp_cap',
+        'Daily XP Cap Reached',
+        'You''ve reached your daily XP cap of ' || v_daily_cap || ' XP. Come back tomorrow for more!',
+        '/my-plants'
+      );
+    EXCEPTION WHEN OTHERS THEN
+      -- Ignore notification errors
+      NULL;
+    END;
   ELSE
     v_xp_to_add := p_xp_amount;
   END IF;
   
-  -- Update XP balance
-  UPDATE public.xp_balances
+  -- UPSERT XP balance (insert if not exists, update if exists)
+  INSERT INTO public.xp_balances (profile_id, total_xp, daily_xp, last_reset_at, updated_at)
+  VALUES (p_profile_id, v_xp_to_add, v_xp_to_add, v_last_reset_at, NOW())
+  ON CONFLICT (profile_id) DO UPDATE
   SET 
-    total_xp = total_xp + v_xp_to_add,
-    daily_xp = v_current_daily_xp + v_xp_to_add,
+    total_xp = xp_balances.total_xp + v_xp_to_add,
+    daily_xp = CASE 
+      WHEN xp_balances.last_reset_at < CURRENT_DATE THEN v_xp_to_add
+      ELSE xp_balances.daily_xp + v_xp_to_add
+    END,
     last_reset_at = v_last_reset_at,
     updated_at = NOW()
-  WHERE profile_id = p_profile_id
   RETURNING xp_balances.total_xp, xp_balances.daily_xp
   INTO v_current_total_xp, v_current_daily_xp;
   
@@ -510,7 +527,7 @@ BEGIN
   VALUES (p_profile_id, p_action_type, v_xp_to_add, p_description);
   
   -- Calculate level after
-  v_level_after := FLOOR(v_current_total_xp / 100.0) + 1;
+  v_level_after := GREATEST(1, FLOOR(v_current_total_xp / 100.0) + 1);
   
   -- Return results
   RETURN QUERY SELECT 

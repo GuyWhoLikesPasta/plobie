@@ -195,48 +195,13 @@ export default function AdminDashboard() {
 
   const fetchUsers = async () => {
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id, username, is_admin, created_at')
-        .order('created_at', { ascending: false })
-        .limit(50);
-
-      if (error) throw error;
-
-      const usersWithCounts = await Promise.all(
-        (data || []).map(async profile => {
-          const { count: postCount } = await supabase
-            .from('posts')
-            .select('*', { count: 'exact', head: true })
-            .eq('author_id', profile.id);
-
-          const { count: commentCount } = await supabase
-            .from('comments')
-            .select('*', { count: 'exact', head: true })
-            .eq('author_id', profile.id);
-
-          const { data: xpData } = await supabase
-            .from('xp_balances')
-            .select('total_xp')
-            .eq('profile_id', profile.id)
-            .single();
-
-          return {
-            id: profile.id,
-            email: profile.username + '@plobie',
-            created_at: profile.created_at,
-            profiles: {
-              username: profile.username,
-              is_admin: profile.is_admin || false,
-              xp_total: xpData?.total_xp || 0,
-            },
-            post_count: postCount || 0,
-            comment_count: commentCount || 0,
-          };
-        })
-      );
-
-      setUsers(usersWithCounts);
+      // Use admin API route to bypass RLS for xp_balances
+      const response = await fetch('/api/admin/users');
+      if (!response.ok) {
+        throw new Error('Failed to fetch users');
+      }
+      const data = await response.json();
+      setUsers(data.users || []);
     } catch (error) {
       console.error('Users fetch error:', error);
     }
@@ -357,18 +322,23 @@ export default function AdminDashboard() {
 
   const toggleAdmin = async (userId: string, currentStatus: boolean) => {
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ is_admin: !currentStatus })
-        .eq('id', userId);
+      const response = await fetch(`/api/admin/users/${userId}/actions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'toggle_admin', currentStatus }),
+      });
 
-      if (error) throw error;
+      const data = await response.json();
 
-      toast.success(`User ${!currentStatus ? 'promoted to' : 'removed from'} admin`);
-      fetchUsers();
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update admin status');
+      }
+
+      toast.success(data.message);
+      await fetchUsers();
     } catch (error) {
       console.error('Toggle admin error:', error);
-      toast.error('Failed to update admin status');
+      toast.error((error as Error).message || 'Failed to update admin status');
     }
   };
 
@@ -377,20 +347,24 @@ export default function AdminDashboard() {
       return;
 
     try {
-      // Reset XP balance
-      const { error } = await supabase
-        .from('xp_balances')
-        .update({ total_xp: 0, daily_xp: 0 })
-        .eq('profile_id', userId);
+      const response = await fetch(`/api/admin/users/${userId}/actions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'reset_xp' }),
+      });
 
-      if (error) throw error;
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to reset XP');
+      }
 
       toast.success(`XP reset for ${username}`);
-      fetchUsers();
-      fetchAnalytics();
+      await fetchUsers();
+      await fetchAnalytics();
     } catch (error) {
       console.error('Reset XP error:', error);
-      toast.error('Failed to reset XP');
+      toast.error((error as Error).message || 'Failed to reset XP');
     }
   };
 
@@ -403,17 +377,19 @@ export default function AdminDashboard() {
       return;
 
     try {
-      // Delete profile (cascades to related data due to foreign keys)
-      const { error: profileError } = await supabase.from('profiles').delete().eq('id', userId);
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: 'DELETE',
+      });
 
-      if (profileError) throw profileError;
+      const data = await response.json();
 
-      // Also delete from auth (requires service role, so we'll use an API)
-      // For now, just remove the profile - auth cleanup can be done separately
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete user');
+      }
 
       toast.success(`User ${username} deleted`);
-      fetchUsers();
-      fetchAnalytics();
+      await fetchUsers();
+      await fetchAnalytics();
     } catch (error) {
       console.error('Delete user error:', error);
       toast.error('Failed to delete user');
@@ -506,8 +482,8 @@ export default function AdminDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           profile_id: profile.id,
-          action_type: 'admin_award',
-          xp_amount: awardAmount,
+          action_type: 'admin_adjust',
+          amount: awardAmount,
           description: awardReason || 'Admin award',
         }),
       });
@@ -522,7 +498,8 @@ export default function AdminDashboard() {
         fetchXPActivity();
         fetchAnalytics();
       } else {
-        toast.error(result.error || 'Failed to award XP');
+        const errorMessage = result.error?.message || result.error || 'Failed to award XP';
+        toast.error(errorMessage);
       }
     } catch (error) {
       console.error('Award XP error:', error);
