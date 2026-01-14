@@ -99,20 +99,20 @@ export default function HomePage() {
           </p>
           <div className="grid grid-cols-2 sm:flex gap-4 sm:gap-6 justify-center text-sm">
             <div>
-              <p className="font-semibold">+50 XP</p>
+              <p className="font-semibold">+500 XP</p>
               <p className="opacity-90">Claim a Pot</p>
             </div>
             <div>
-              <p className="font-semibold">+3 XP</p>
+              <p className="font-semibold">+20 XP</p>
               <p className="opacity-90">Create a Post</p>
             </div>
             <div>
-              <p className="font-semibold">+2 XP</p>
-              <p className="opacity-90">Play Games</p>
+              <p className="font-semibold">+20 XP</p>
+              <p className="opacity-90">Play 30 min</p>
             </div>
             <div>
-              <p className="font-semibold">+1 XP</p>
-              <p className="opacity-90">Read Articles</p>
+              <p className="font-semibold">+10 XP</p>
+              <p className="opacity-90">Learn Session</p>
             </div>
           </div>
         </div>

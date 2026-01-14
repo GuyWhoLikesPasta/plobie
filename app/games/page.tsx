@@ -427,17 +427,17 @@ export default function GamesPage() {
               <div className="grid sm:grid-cols-3 gap-4">
                 <div className="bg-slate-700/50 rounded-lg p-4 text-center">
                   <div className="text-3xl mb-2">⏱️</div>
-                  <div className="text-emerald-400 font-bold">2 XP</div>
+                  <div className="text-emerald-400 font-bold">20 XP</div>
                   <div className="text-slate-400 text-sm">per 30 min session</div>
                 </div>
                 <div className="bg-slate-700/50 rounded-lg p-4 text-center">
                   <div className="text-3xl mb-2">📊</div>
-                  <div className="text-emerald-400 font-bold">8 XP</div>
+                  <div className="text-emerald-400 font-bold">120 XP</div>
                   <div className="text-slate-400 text-sm">daily game cap</div>
                 </div>
                 <div className="bg-slate-700/50 rounded-lg p-4 text-center">
                   <div className="text-3xl mb-2">🏆</div>
-                  <div className="text-emerald-400 font-bold">100 XP</div>
+                  <div className="text-emerald-400 font-bold">3,000 XP</div>
                   <div className="text-slate-400 text-sm">total daily cap</div>
                 </div>
               </div>
