@@ -3,6 +3,7 @@ import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase';
 import { stripe } from '@/lib/stripe';
 import { z } from 'zod';
 import { ErrorCodes } from '@/lib/types';
+import { RateLimits } from '@/lib/rate-limit';
 
 // Gift card denominations with promo values
 // Mother's Day Promo: Spend $20 get $45 (125% bonus!)
@@ -96,6 +97,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: { code: ErrorCodes.UNAUTHORIZED, message: 'Not authenticated' } },
         { status: 401 }
+      );
+    }
+
+    // Rate limit: 5 gift card purchases per hour
+    if (!RateLimits.giftCardPurchase(user.id)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: ErrorCodes.RATE_LIMITED,
+            message: 'Too many gift card purchases. Please try again later.',
+          },
+        },
+        { status: 429 }
       );
     }
 

@@ -2,13 +2,17 @@ import { NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase';
 import { stripe, STRIPE_CONFIG } from '@/lib/stripe';
 import { CreateCheckoutSchema, ErrorCodes } from '@/lib/types';
+import { RateLimits } from '@/lib/rate-limit';
 
 export async function POST(request: Request) {
   try {
     const supabase = await createServerSupabaseClient();
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json(
         { success: false, error: { code: ErrorCodes.UNAUTHORIZED, message: 'Not authenticated' } },
@@ -16,13 +20,34 @@ export async function POST(request: Request) {
       );
     }
 
+    // Rate limit: 10 checkouts per hour
+    if (!RateLimits.checkout(user.id)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: ErrorCodes.RATE_LIMITED,
+            message: 'Too many checkout attempts. Please try again later.',
+          },
+        },
+        { status: 429 }
+      );
+    }
+
     // Validate request body
     const body = await request.json();
     const validation = CreateCheckoutSchema.safeParse(body);
-    
+
     if (!validation.success) {
       return NextResponse.json(
-        { success: false, error: { code: ErrorCodes.VALIDATION_ERROR, message: 'Invalid request', details: validation.error } },
+        {
+          success: false,
+          error: {
+            code: ErrorCodes.VALIDATION_ERROR,
+            message: 'Invalid request',
+            details: validation.error,
+          },
+        },
         { status: 400 }
       );
     }
@@ -46,7 +71,13 @@ export async function POST(request: Request) {
     for (let i = 0; i < variants.length; i++) {
       if (variants[i].stock_qty < quantities[i]) {
         return NextResponse.json(
-          { success: false, error: { code: ErrorCodes.VALIDATION_ERROR, message: `Insufficient stock for ${variants[i].sku}` } },
+          {
+            success: false,
+            error: {
+              code: ErrorCodes.VALIDATION_ERROR,
+              message: `Insufficient stock for ${variants[i].sku}`,
+            },
+          },
           { status: 400 }
         );
       }
@@ -54,7 +85,7 @@ export async function POST(request: Request) {
 
     // Calculate total
     const total_cents = variants.reduce((sum, variant, i) => {
-      return sum + (variant.price_cents * quantities[i]);
+      return sum + variant.price_cents * quantities[i];
     }, 0);
 
     // Create draft order
@@ -71,7 +102,10 @@ export async function POST(request: Request) {
     if (orderError || !order) {
       console.error('Error creating order:', orderError);
       return NextResponse.json(
-        { success: false, error: { code: ErrorCodes.INTERNAL_ERROR, message: 'Failed to create order' } },
+        {
+          success: false,
+          error: { code: ErrorCodes.INTERNAL_ERROR, message: 'Failed to create order' },
+        },
         { status: 500 }
       );
     }
@@ -84,16 +118,17 @@ export async function POST(request: Request) {
       price_cents: variant.price_cents,
     }));
 
-    const { error: itemsError } = await supabase
-      .from('order_items')
-      .insert(orderItems);
+    const { error: itemsError } = await supabase.from('order_items').insert(orderItems);
 
     if (itemsError) {
       console.error('Error creating order items:', itemsError);
       // Rollback order
       await supabase.from('orders').delete().eq('id', order.id);
       return NextResponse.json(
-        { success: false, error: { code: ErrorCodes.INTERNAL_ERROR, message: 'Failed to create order' } },
+        {
+          success: false,
+          error: { code: ErrorCodes.INTERNAL_ERROR, message: 'Failed to create order' },
+        },
         { status: 500 }
       );
     }
@@ -131,10 +166,7 @@ export async function POST(request: Request) {
     );
 
     // Update order with session ID
-    await supabase
-      .from('orders')
-      .update({ stripe_session_id: session.id })
-      .eq('id', order.id);
+    await supabase.from('orders').update({ stripe_session_id: session.id }).eq('id', order.id);
 
     return NextResponse.json({
       success: true,
@@ -147,9 +179,11 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Unexpected error in checkout:', error);
     return NextResponse.json(
-      { success: false, error: { code: ErrorCodes.INTERNAL_ERROR, message: 'Internal server error' } },
+      {
+        success: false,
+        error: { code: ErrorCodes.INTERNAL_ERROR, message: 'Internal server error' },
+      },
       { status: 500 }
     );
   }
 }
-

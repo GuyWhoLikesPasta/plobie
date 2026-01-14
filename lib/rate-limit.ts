@@ -1,6 +1,6 @@
 /**
  * Rate Limiting Utility
- * 
+ *
  * Simple in-memory rate limiter for MVP.
  * TODO: Upgrade to Upstash Redis for production multi-instance deployment.
  */
@@ -16,9 +16,12 @@ class RateLimiter {
 
   constructor() {
     // Clean up expired entries every 5 minutes
-    this.cleanupInterval = setInterval(() => {
-      this.cleanup();
-    }, 5 * 60 * 1000);
+    this.cleanupInterval = setInterval(
+      () => {
+        this.cleanup();
+      },
+      5 * 60 * 1000
+    );
   }
 
   /**
@@ -107,20 +110,17 @@ export const RateLimits = {
   /**
    * QR claim token generation: 5 requests per minute per IP
    */
-  claimToken: (identifier: string) =>
-    rateLimiter.check(`claim-token:${identifier}`, 5, 60 * 1000),
+  claimToken: (identifier: string) => rateLimiter.check(`claim-token:${identifier}`, 5, 60 * 1000),
 
   /**
    * QR claim execution: 3 claims per hour per user
    */
-  claimExecution: (userId: string) =>
-    rateLimiter.check(`claim-exec:${userId}`, 3, 60 * 60 * 1000),
+  claimExecution: (userId: string) => rateLimiter.check(`claim-exec:${userId}`, 3, 60 * 60 * 1000),
 
   /**
    * Post creation: 10 posts per hour per user
    */
-  postCreate: (userId: string) =>
-    rateLimiter.check(`post-create:${userId}`, 10, 60 * 60 * 1000),
+  postCreate: (userId: string) => rateLimiter.check(`post-create:${userId}`, 10, 60 * 60 * 1000),
 
   /**
    * Comment creation: 30 comments per hour per user
@@ -129,10 +129,19 @@ export const RateLimits = {
     rateLimiter.check(`comment-create:${userId}`, 30, 60 * 60 * 1000),
 
   /**
+   * Checkout: 10 checkout attempts per hour per user
+   */
+  checkout: (userId: string) => rateLimiter.check(`checkout:${userId}`, 10, 60 * 60 * 1000),
+
+  /**
+   * Gift card purchase: 5 purchases per hour per user
+   */
+  giftCardPurchase: (userId: string) => rateLimiter.check(`gift-card:${userId}`, 5, 60 * 60 * 1000),
+
+  /**
    * Generic rate limit check
    */
-  check: (key: string, limit: number, windowMs: number) =>
-    rateLimiter.check(key, limit, windowMs),
+  check: (key: string, limit: number, windowMs: number) => rateLimiter.check(key, limit, windowMs),
 
   /**
    * Get rate limit status
@@ -146,4 +155,3 @@ export const RateLimits = {
 };
 
 export default rateLimiter;
-
