@@ -267,15 +267,26 @@ export default function SignupPage() {
             </div>
           </div>
 
-          <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-            Already have an account?{' '}
-            <Link
-              href="/login"
-              className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium"
-            >
-              Sign in
-            </Link>
-          </p>
+          <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400 space-y-2">
+            <p>
+              Already have an account?{' '}
+              <Link
+                href="/login"
+                className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium"
+              >
+                Sign in
+              </Link>
+            </p>
+            <p>
+              Forgot your password?{' '}
+              <Link
+                href="/reset-password"
+                className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium"
+              >
+                Reset it
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
