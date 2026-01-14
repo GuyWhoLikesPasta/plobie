@@ -11,18 +11,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createAdminClient } from '@/lib/supabase';
 import { ApiResponse, ErrorCodes } from '@/lib/types';
-import { trackEvent, GA4_EVENTS } from '@/lib/analytics';
+import { trackEvent } from '@/lib/analytics';
+import { XP_RULES } from '@/lib/xp-engine';
+
+// All valid action types from Connor's XP spec
+const validActionTypes = Object.keys(XP_RULES) as [string, ...string[]];
 
 const RequestSchema = z.object({
   profile_id: z.string().uuid(),
-  action_type: z.enum([
-    'post_create',
-    'comment_create',
-    'learn_read',
-    'game_play_30m',
-    'pot_link',
-    'admin_adjust',
-  ]),
+  action_type: z.enum(validActionTypes),
   amount: z.number().int().optional(), // Only used for admin_adjust
   description: z.string().optional(),
   reference_id: z.string().uuid().optional(),
@@ -58,6 +55,9 @@ export async function POST(
 
     const { profile_id, action_type, amount, description, reference_id } = validation.data;
 
+    // Get the XP rule for this action
+    const rule = XP_RULES[action_type as keyof typeof XP_RULES];
+
     // Validate amount for admin_adjust
     if (action_type === 'admin_adjust' && amount === undefined) {
       return NextResponse.json(
@@ -72,13 +72,16 @@ export async function POST(
       );
     }
 
+    // Determine XP amount: use provided amount for admin_adjust, otherwise use base from rules
+    const xpAmount = action_type === 'admin_adjust' ? amount || 0 : amount || rule?.base || 0;
+
     // Call stored procedure using admin client (service role)
     const adminSupabase = createAdminClient();
 
     const { data, error } = await adminSupabase.rpc('apply_xp', {
       p_profile_id: profile_id,
       p_action_type: action_type,
-      p_xp_amount: amount || 0,
+      p_xp_amount: xpAmount,
       p_description: description || null,
       p_reference_id: reference_id || null,
     });

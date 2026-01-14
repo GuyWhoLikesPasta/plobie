@@ -1,5 +1,6 @@
 import { createServerSupabaseClient } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
+import { levelFromTotalXp, xpProgressInLevel, DAILY_TOTAL_CAP } from '@/lib/xp-engine';
 
 // =====================================
 // USER PROFILE API
@@ -44,9 +45,10 @@ export async function GET() {
 
     const totalXp = xpBalance?.total_xp || 0;
     const dailyXp = xpBalance?.daily_xp || 0;
-    const level = Math.floor(totalXp / 100) + 1;
-    const xpForNextLevel = level * 100;
-    const xpProgress = totalXp - (level - 1) * 100; // XP progress within current level
+    const level = levelFromTotalXp(totalXp);
+    const progress = xpProgressInLevel(totalXp);
+    const xpForNextLevel = progress.required;
+    const xpProgress = progress.current;
 
     // Get user's pot count
     const { count: potCount } = await supabase
@@ -84,7 +86,7 @@ export async function GET() {
         level: level,
         xp_for_next_level: xpForNextLevel,
         xp_progress: xpProgress, // XP earned within current level
-        remaining_today: Math.max(0, 100 - dailyXp),
+        remaining_today: Math.max(0, DAILY_TOTAL_CAP - dailyXp),
       },
       stats: {
         pots: potCount || 0,
