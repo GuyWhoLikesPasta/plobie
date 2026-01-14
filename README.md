@@ -5,10 +5,11 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 ## 🚀 Features
 
 **Core Systems:**
-- ✅ Authentication - Email and OAuth (Google, Apple)
+- ✅ Authentication - Email, OAuth (Google, Apple), Password Reset
 - ✅ Shop - E-commerce with Stripe integration
-- ✅ QR Claiming - Link physical pots (+50 XP per pot)
-- ✅ XP System - Gamification with daily rewards and caps
+- ✅ Gift Cards - Mother's Day promo ($20 → $45 value, 125% bonus)
+- ✅ QR Claiming - Link physical pots (+500 XP per pot)
+- ✅ XP System - Tiered leveling (250 levels), 25+ action types, 3000 XP daily cap
 
 **Community:**
 - ✅ Posts & Comments - Create content, earn XP
@@ -34,6 +35,7 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - ✅ Auto-refresh - 30-second polling for updates
 
 **Performance:**
+- ✅ Lighthouse Scores - 96% perf, 95% a11y, 96% bp, 100% seo (production)
 - ✅ Image Optimization - next/image with AVIF/WebP
 - ✅ Lazy Loading - Images load on scroll
 - ✅ Database Indexes - 15+ optimized queries
@@ -66,15 +68,25 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 
 **Unity Integration:** ✅ **Ready for James**
 - ✅ User Profile API - Get user data, XP, level, stats
-- ✅ Game Session API - Track playtime, award XP (2 XP per 30 min)
+- ✅ Game Session API - Track playtime, award XP (20 XP per 30 min block)
 - ✅ Game Progress API - Save/load game state (up to 1MB)
 - ✅ Action XP API - Reward in-game achievements (1-100 XP)
+- ✅ JavaScript Bridge - `window.plobie.getAccessToken()` for auth
+- ✅ Local Unity Hosting - `/public/unity/` with iframe embedding
 - ✅ Test User - unity_test@plobie.com (password: UnityTest123!)
 - ✅ Complete Documentation - See `.local-docs/unity/`
 
 **Production:** https://plobie.vercel.app
 
-**Status:** ✅ All systems operational | Unity integration ready
+**Status:** ✅ All systems operational | Unity integration ready | Gift cards live
+
+**Security:**
+- ✅ Rate limiting on checkout and gift card APIs
+- ✅ RLS policies on all database tables
+- ✅ Input validation with Zod schemas
+- ✅ CSRF protection via Supabase auth
+- ✅ No secrets in codebase (env vars only)
+- ✅ .gitignore excludes all .env files and .local-docs
 
 ## Overview
 
@@ -238,14 +250,19 @@ plobie/
 ## Key Features
 
 ### XP System
-Users earn experience points through:
-- Creating posts (+3 XP, cap 5/day)
-- Commenting (+1 XP, cap 10/day)
-- Reading Learn articles (+1 XP, cap 5/day)
-- Playing games (+2 XP per 30 min, cap 4/day)
-- Linking pots (+50 XP, one-time)
+Tiered leveling system with 250 levels:
+- **Tier 1 (1-49):** 150 + 17*(level-1) XP per level
+- **Tier 2 (50-99):** 1000 + 30*(level-50) XP per level  
+- **Tier 3 (100-249):** 2500 + 40*(level-100) XP per level
 
-Daily cap: 100 XP across all actions
+Key XP actions:
+- Claiming pots: +500 XP (one-time per pot)
+- Creating posts: +20 XP (cap 10/day)
+- Playing games: +20 XP per 30 min (cap 6 blocks/day)
+- Reading articles: +10 XP (cap 10/day)
+- Garden care: +25 XP (cap 200/day)
+
+Daily cap: 3000 XP across all activities
 
 ### Feature Flags
 Control features dynamically:
@@ -287,8 +304,11 @@ Control features dynamically:
 - `POST /api/profiles/avatar` - Upload avatar
 
 **Shop:**
-- `POST /api/checkout` - Create Stripe checkout
+- `POST /api/checkout` - Create Stripe checkout (rate limited: 10/hr)
 - `POST /api/stripe/webhook` - Handle Stripe events
+- `GET /api/gift-cards` - List user's gift cards
+- `POST /api/gift-cards` - Purchase gift card (rate limited: 5/hr)
+- `POST /api/gift-cards/redeem` - Redeem gift card code
 
 **XP & Claims:**
 - `POST /api/xp/award` - Award XP (admin)
