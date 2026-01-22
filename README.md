@@ -287,9 +287,9 @@ Control features dynamically:
 
 **Posts & Community:**
 - `GET /api/posts` - List posts with filters
-- `POST /api/posts` - Create post (+3 XP)
+- `POST /api/posts` - Create post (+20 XP)
 - `GET /api/posts/[id]` - Get post detail
-- `POST /api/posts/[id]/comments` - Add comment (+1 XP)
+- `POST /api/posts/[id]/comments` - Add comment (+2 XP)
 - `POST /api/posts/[id]/like` - Like post
 - `DELETE /api/posts/[id]/like` - Unlike post
 

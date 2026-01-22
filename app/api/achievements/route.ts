@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase';
+import { levelFromTotalXp } from '@/lib/xp-engine';
 
 interface Achievement {
   id: string;
@@ -91,7 +92,7 @@ export async function GET() {
       .eq('user_id', user.id);
 
     const totalXp = (xpBalance?.total_xp as number) || 0;
-    const level = Math.floor(Math.sqrt(totalXp / 100)) + 1;
+    const level = levelFromTotalXp(totalXp);
 
     // Map achievements with earned status and progress
     const achievementsWithProgress = ((achievements || []) as Achievement[]).map(

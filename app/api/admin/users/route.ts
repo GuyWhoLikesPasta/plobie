@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { levelFromTotalXp } from '@/lib/xp-engine';
 
 // Admin client for bypassing RLS
 const adminSupabase = createClient(
@@ -78,7 +79,7 @@ export async function GET() {
         xp.profile_id,
         {
           ...xp,
-          level: Math.floor((xp.total_xp || 0) / 100) + 1,
+          level: levelFromTotalXp(xp.total_xp || 0),
         },
       ])
     );

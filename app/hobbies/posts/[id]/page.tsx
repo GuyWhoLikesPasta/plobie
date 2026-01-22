@@ -178,7 +178,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
                 disabled={submitting}
                 className="bg-gradient-to-r from-green-500 to-emerald-600 dark:from-green-600 dark:to-emerald-700 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 dark:hover:from-green-500 dark:hover:to-emerald-600 transition-all disabled:opacity-50"
               >
-                {submitting ? 'Posting...' : 'Post Comment (+1 XP)'}
+                {submitting ? 'Posting...' : 'Post Comment (+2 XP)'}
               </button>
             </form>
           ) : (

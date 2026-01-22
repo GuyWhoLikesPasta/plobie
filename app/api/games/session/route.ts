@@ -1,6 +1,7 @@
 import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { levelFromTotalXp, DAILY_TOTAL_CAP } from '@/lib/xp-engine';
 
 // =====================================
 // GAME SESSION API
@@ -211,9 +212,9 @@ export async function POST(request: Request) {
                 awarded: xpRaw.xp_awarded || 0, // Fixed: was awarded_xp
                 capped: xpRaw.capped || false,
                 new_total_xp: xpRaw.new_total_xp || 0,
-                new_level: Math.floor((xpRaw.new_total_xp || 0) / 100) + 1, // Calculate level
+                new_level: levelFromTotalXp(xpRaw.new_total_xp || 0),
                 level_up: (xpRaw.level_after || 0) > (xpRaw.level_before || 0),
-                remaining_today: 100 - (xpRaw.new_daily_xp || 0), // Calculate remaining
+                remaining_today: DAILY_TOTAL_CAP - (xpRaw.new_daily_xp || 0),
               };
             }
           }

@@ -146,7 +146,7 @@ function ClaimContent() {
           <div className="text-center">
             <p className="text-gray-700 mb-6">
               You're about to claim this pot and add it to your collection. You'll earn{' '}
-              <span className="font-bold text-green-600">+50 XP</span> for linking it!
+              <span className="font-bold text-green-600">+500 XP</span> for linking it!
             </p>
             <button
               onClick={handleClaim}

@@ -28,6 +28,8 @@ interface Stats {
   totalPots: number;
   totalXP: number;
   level: number;
+  xpProgress: number;
+  xpNeeded: number;
   gameSessions: number;
   potXP: number;
 }
@@ -153,13 +155,15 @@ export default function MyPlantsPage() {
                 Level {stats.level} Progress
               </h3>
               <span className="text-sm text-gray-600 dark:text-gray-400">
-                {stats.totalXP % 100} / 100 XP
+                {stats.xpProgress} / {stats.xpNeeded} XP
               </span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
               <div
                 className="bg-gradient-to-r from-green-500 to-emerald-600 h-4 rounded-full transition-all duration-500"
-                style={{ width: `${stats.totalXP % 100}%` }}
+                style={{
+                  width: `${stats.xpNeeded > 0 ? (stats.xpProgress / stats.xpNeeded) * 100 : 0}%`,
+                }}
               ></div>
             </div>
           </div>

@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase';
 import { ApiResponse, ErrorCodes } from '@/lib/types';
+import { levelFromTotalXp } from '@/lib/xp-engine';
 
 function getActionIcon(actionType: string): string {
   const icons: Record<string, string> = {
@@ -59,9 +60,9 @@ export async function GET(
       .eq('profile_id', profile.id)
       .single();
 
-    // Calculate level from total XP (100 XP per level)
+    // Calculate level from total XP using tiered formula
     const totalXp = xpBalance?.total_xp || 0;
-    const level = Math.floor(totalXp / 100) + 1;
+    const level = levelFromTotalXp(totalXp);
 
     // Get user's posts
     const { data: posts } = await supabase

@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase';
 import { ApiResponse, ErrorCodes } from '@/lib/types';
+import { levelFromTotalXp, xpProgressInLevel, xpForNextLevel, XP_RULES } from '@/lib/xp-engine';
 
 export async function GET(
   request: NextRequest
@@ -77,7 +78,9 @@ export async function GET(
       .single();
 
     const totalXp = xpBalance?.total_xp || 0;
-    const level = Math.floor(totalXp / 100) + 1;
+    const level = levelFromTotalXp(totalXp);
+    const progress = xpProgressInLevel(totalXp);
+    const xpNeeded = xpForNextLevel(level);
 
     // Get game sessions count
     const { count: sessionCount } = await supabase
@@ -85,13 +88,15 @@ export async function GET(
       .select('*', { count: 'exact', head: true })
       .eq('profile_id', profile.id);
 
-    // Get total XP from pots
-    const potXP = (claims?.length || 0) * 50;
+    // Get total XP from pots (500 XP per pot)
+    const potXP = (claims?.length || 0) * XP_RULES.pot_link.base;
 
     const stats = {
       totalPots: claims?.length || 0,
       totalXP: totalXp,
       level: level,
+      xpProgress: progress,
+      xpNeeded: xpNeeded,
       gameSessions: sessionCount || 0,
       potXP,
     };
