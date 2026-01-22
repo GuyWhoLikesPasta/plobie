@@ -60,6 +60,168 @@ const articles = [
     icon: '🌱',
     difficulty: 'Beginner',
   },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440007',
+    title: 'Understanding Plant Lighting Needs',
+    category: 'Indoor Plants',
+    description: 'Decode light requirements and find the perfect spot for every plant.',
+    readTime: '7 min read',
+    icon: '☀️',
+    difficulty: 'Beginner',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440008',
+    title: 'Watering 101: When and How Much',
+    category: 'Indoor Plants',
+    description: 'Master the most common cause of plant problems with proper watering techniques.',
+    readTime: '6 min read',
+    icon: '💧',
+    difficulty: 'Beginner',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440009',
+    title: 'Repotting Your Plants: A Step-by-Step Guide',
+    category: 'Indoor Plants',
+    description: 'Know when and how to repot for healthier, happier plants.',
+    readTime: '8 min read',
+    icon: '🏺',
+    difficulty: 'Intermediate',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440010',
+    title: 'Common Pests and How to Fight Them',
+    category: 'Indoor Plants',
+    description: 'Identify and eliminate spider mites, mealybugs, fungus gnats, and more.',
+    readTime: '10 min read',
+    icon: '🐛',
+    difficulty: 'Intermediate',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440011',
+    title: 'Creating the Perfect Soil Mix',
+    category: 'Indoor Plants',
+    description: 'Learn to customize soil for different plant types and drainage needs.',
+    readTime: '7 min read',
+    icon: '🪨',
+    difficulty: 'Intermediate',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440012',
+    title: 'Fertilizing Fundamentals',
+    category: 'Indoor Plants',
+    description: 'When, what, and how much to feed your plants for optimal growth.',
+    readTime: '6 min read',
+    icon: '🧪',
+    difficulty: 'Beginner',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440013',
+    title: 'Rare Succulents Worth Collecting',
+    category: 'Succulents',
+    description: 'Discover unique and beautiful succulents to add to your collection.',
+    readTime: '8 min read',
+    icon: '💎',
+    difficulty: 'Intermediate',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440014',
+    title: 'Succulent Arrangements and Displays',
+    category: 'Succulents',
+    description: 'Create stunning arrangements that showcase your succulents beautifully.',
+    readTime: '7 min read',
+    icon: '🎨',
+    difficulty: 'Beginner',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440015',
+    title: 'Winter Care for Succulents',
+    category: 'Succulents',
+    description: 'Help your succulents survive and thrive through the cold months.',
+    readTime: '5 min read',
+    icon: '❄️',
+    difficulty: 'Intermediate',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440016',
+    title: 'Growing Tomatoes in Containers',
+    category: 'Herbs & Edibles',
+    description: 'Fresh tomatoes from your balcony or patio with container gardening.',
+    readTime: '9 min read',
+    icon: '🍅',
+    difficulty: 'Intermediate',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440017',
+    title: 'Microgreens at Home',
+    category: 'Herbs & Edibles',
+    description: 'Grow nutritious microgreens in just 1-2 weeks on your windowsill.',
+    readTime: '6 min read',
+    icon: '🥗',
+    difficulty: 'Beginner',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440018',
+    title: 'Advanced Bonsai Techniques',
+    category: 'Bonsai',
+    description: 'Take your bonsai skills to the next level with wiring, grafting, and styling.',
+    readTime: '15 min read',
+    icon: '✂️',
+    difficulty: 'Advanced',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440019',
+    title: 'Choosing Your First Bonsai Tree',
+    category: 'Bonsai',
+    description: 'The best beginner-friendly species and where to find quality trees.',
+    readTime: '8 min read',
+    icon: '🌲',
+    difficulty: 'Beginner',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440020',
+    title: 'Water Propagation Masterclass',
+    category: 'Propagation',
+    description: 'Root cuttings in water successfully with tips for faster growth.',
+    readTime: '7 min read',
+    icon: '🫧',
+    difficulty: 'Beginner',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440021',
+    title: 'Division and Separation Techniques',
+    category: 'Propagation',
+    description: 'Multiply your plants by dividing root systems the right way.',
+    readTime: '6 min read',
+    icon: '🔀',
+    difficulty: 'Intermediate',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440022',
+    title: 'Reblooming Your Orchids',
+    category: 'Orchids',
+    description: 'Trigger new blooms and extend flowering with proven techniques.',
+    readTime: '8 min read',
+    icon: '🌺',
+    difficulty: 'Intermediate',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440023',
+    title: 'Orchid Mounting and Display',
+    category: 'Orchids',
+    description: 'Create stunning mounted orchid displays that mimic natural habitats.',
+    readTime: '10 min read',
+    icon: '🪵',
+    difficulty: 'Advanced',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440024',
+    title: 'Air Plants: The No-Soil Solution',
+    category: 'Indoor Plants',
+    description: 'Care for Tillandsia and other air plants with minimal fuss.',
+    readTime: '5 min read',
+    icon: '🌬️',
+    difficulty: 'Beginner',
+  },
 ];
 
 // Get unique categories
@@ -147,10 +309,10 @@ export default function LearnPage() {
             <div className="text-3xl">⭐</div>
             <div>
               <p className="text-blue-900 dark:text-blue-100 font-semibold">
-                Earn +1 XP for each article you read
+                Earn +10 XP for each article you read
               </p>
               <p className="text-blue-700 dark:text-blue-300 text-sm">
-                Up to 5 articles per day • Knowledge is power!
+                Up to 10 articles per day • Knowledge is power!
               </p>
             </div>
           </div>
@@ -252,7 +414,7 @@ export default function LearnPage() {
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-500 dark:text-gray-500">{article.readTime}</span>
                       <span className="text-green-600 dark:text-green-400 font-semibold">
-                        {isRead ? '✓ Complete' : '+1 XP'}
+                        {isRead ? '✓ Complete' : '+10 XP'}
                       </span>
                     </div>
                   </div>

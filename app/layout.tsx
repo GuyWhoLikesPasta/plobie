@@ -84,6 +84,45 @@ export default function RootLayout({
       <head>
         {/* Unity Bridge - exposes window.plobie for WebGL auth */}
         <script src="/unity-bridge.js" defer />
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'Plobie',
+              description: 'Plant-centered social commerce platform',
+              url: process.env.NEXT_PUBLIC_APP_URL || 'https://plobie.vercel.app',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: {
+                  '@type': 'EntryPoint',
+                  urlTemplate: `${process.env.NEXT_PUBLIC_APP_URL || 'https://plobie.vercel.app'}/shop?q={search_term_string}`,
+                },
+                'query-input': 'required name=search_term_string',
+              },
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'Plobie',
+              url: process.env.NEXT_PUBLIC_APP_URL || 'https://plobie.vercel.app',
+              logo: `${process.env.NEXT_PUBLIC_APP_URL || 'https://plobie.vercel.app'}/favicon.ico`,
+              sameAs: [],
+              contactPoint: {
+                '@type': 'ContactPoint',
+                contactType: 'customer service',
+                availableLanguage: 'English',
+              },
+            }),
+          }}
+        />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider>

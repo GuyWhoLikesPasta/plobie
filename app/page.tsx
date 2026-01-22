@@ -112,9 +112,10 @@ export default function HomePage() {
             </div>
             <div>
               <p className="font-semibold">+10 XP</p>
-              <p className="opacity-90">Learn Session</p>
+              <p className="opacity-90">Read Article</p>
             </div>
           </div>
+          <p className="mt-6 text-sm opacity-90">Daily cap: 3,000 XP</p>
         </div>
       </section>
 

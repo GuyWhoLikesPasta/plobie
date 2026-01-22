@@ -213,7 +213,7 @@ export default function MyPlantsPage() {
                   <div className="aspect-square bg-gradient-to-br from-green-100 via-emerald-100 to-teal-100 dark:from-green-900/30 dark:via-emerald-900/30 dark:to-teal-900/30 flex items-center justify-center relative">
                     <span className="text-8xl group-hover:scale-110 transition-transform">🏺</span>
                     <div className="absolute top-3 right-3 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                      +50 XP
+                      +500 XP
                     </div>
                   </div>
 
@@ -262,27 +262,27 @@ export default function MyPlantsPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <div className="bg-white/20 backdrop-blur rounded-lg p-4">
               <p className="font-bold mb-2 text-lg">🏺 Claim a Pot</p>
-              <p className="text-sm text-white/90">+50 XP (one-time per pot)</p>
+              <p className="text-sm text-white/90">+500 XP (one-time per pot)</p>
             </div>
 
             <div className="bg-white/20 backdrop-blur rounded-lg p-4">
               <p className="font-bold mb-2 text-lg">💬 Post in Hobbies</p>
-              <p className="text-sm text-white/90">+3 XP per post (max 5/day)</p>
+              <p className="text-sm text-white/90">+20 XP per post (max 10/day)</p>
             </div>
 
             <div className="bg-white/20 backdrop-blur rounded-lg p-4">
               <p className="font-bold mb-2 text-lg">📚 Read Articles</p>
-              <p className="text-sm text-white/90">+1 XP per article (max 5/day)</p>
+              <p className="text-sm text-white/90">+10 XP per article (max 10/day)</p>
             </div>
 
             <div className="bg-white/20 backdrop-blur rounded-lg p-4">
               <p className="font-bold mb-2 text-lg">🎮 Play Games</p>
-              <p className="text-sm text-white/90">+2 XP per 30 min (max 4/day)</p>
+              <p className="text-sm text-white/90">+20 XP per 30 min (max 6/day)</p>
             </div>
           </div>
 
           <p className="text-center text-white/90 font-medium">
-            Daily cap: 100 XP total across all activities
+            Daily cap: 3,000 XP total across all activities
           </p>
         </section>
       </div>

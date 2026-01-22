@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Unity build files (minified, auto-generated)
+    "public/unity/**",
+    "unity/**",
   ]),
   {
     rules: {
@@ -19,6 +22,8 @@ const eslintConfig = defineConfig([
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "@typescript-eslint/no-explicit-any": "warn",
       "prefer-rest-params": "warn",
+      // Allow setting state in effects for data fetching on mount (common pattern)
+      "react-hooks/set-state-in-effect": "off",
     },
   },
 ]);

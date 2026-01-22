@@ -185,7 +185,7 @@ export default function HobbiesPage() {
                 onClick={() => router.push('/hobbies/learn')}
                 className="flex-1 sm:flex-none bg-blue-500 text-white px-4 sm:px-6 py-3 min-h-[48px] rounded-lg font-medium text-sm sm:text-base hover:bg-blue-600 transition-all"
               >
-                📚 Learn (+1 XP)
+                📚 Learn (+10 XP)
               </button>
               <button
                 onClick={handleCreatePost}
@@ -349,7 +349,7 @@ export default function HobbiesPage() {
                     disabled={submitting || uploading}
                     className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all disabled:opacity-50"
                   >
-                    {uploading ? 'Uploading Image...' : submitting ? 'Posting...' : 'Post (+3 XP)'}
+                    {uploading ? 'Uploading Image...' : submitting ? 'Posting...' : 'Post (+20 XP)'}
                   </button>
                   <button
                     type="button"
