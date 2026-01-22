@@ -2,7 +2,7 @@
  * POST /api/pots/claim
  *
  * Claim a pot using a valid JWT token.
- * Binds pot to user profile and awards +50 XP.
+ * Binds pot to user profile and awards +500 XP.
  * Rate limited: 3 claims per hour per user.
  */
 
