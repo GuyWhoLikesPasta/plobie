@@ -142,11 +142,11 @@ export async function POST(
       );
     }
 
-    // Award XP for comment creation (+1 XP, cap 100/day)
+    // Award XP for comment creation (+2 XP, cap 20/day)
     const { data: xpData, error: xpError } = await adminSupabase.rpc('apply_xp', {
       p_profile_id: profile.id,
       p_action_type: 'comment_create',
-      p_xp_amount: 1,
+      p_xp_amount: 2,
       p_description: 'Created a comment',
       p_reference_id: comment.id,
     });

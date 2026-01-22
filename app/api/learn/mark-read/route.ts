@@ -77,12 +77,12 @@ export async function POST(
 
     const { article_id } = validation.data;
 
-    // Award XP for reading article (+1 XP, cap 100/day)
+    // Award XP for reading article (+10 XP, cap 10/day)
     const adminSupabase = createAdminClient();
     const { data: xpData, error: xpError } = await adminSupabase.rpc('apply_xp', {
       p_profile_id: profile.id,
       p_action_type: 'learn_read',
-      p_xp_amount: 1,
+      p_xp_amount: 10,
       p_description: 'Read an article',
       p_reference_id: article_id,
     });

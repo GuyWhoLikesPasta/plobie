@@ -1,5 +1,6 @@
 import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
+import { DAILY_TOTAL_CAP, levelFromTotalXp } from '@/lib/xp-engine';
 
 // =====================================
 // DEV: XP STATUS
@@ -26,10 +27,7 @@ export async function GET() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get XP balance
@@ -67,10 +65,9 @@ export async function GET() {
     const todayTotal = todayEvents?.reduce((sum, e) => sum + e.xp_amount, 0) || 0;
     const gamesXPToday =
       todayEvents
-        ?.filter((e) => e.action_type === 'game_session')
+        ?.filter(e => e.action_type === 'game_session')
         .reduce((sum, e) => sum + e.xp_amount, 0) || 0;
-    const sessionsToday =
-      todayEvents?.filter((e) => e.action_type === 'game_session').length || 0;
+    const sessionsToday = todayEvents?.filter(e => e.action_type === 'game_session').length || 0;
 
     // Get today's game sessions
     const { data: sessions, error: sessionsError } = await adminSupabase
@@ -87,26 +84,22 @@ export async function GET() {
       success: true,
       xp_status: {
         total_xp: xpBalance.total_xp,
-        level: xpBalance.level,
+        level: levelFromTotalXp(xpBalance.total_xp),
         today_total: todayTotal,
-        today_cap: 100,
-        today_remaining: Math.max(0, 100 - todayTotal),
+        today_cap: DAILY_TOTAL_CAP,
+        today_remaining: Math.max(0, DAILY_TOTAL_CAP - todayTotal),
         games_xp_today: gamesXPToday,
-        games_cap: 8,
-        games_remaining: Math.max(0, 8 - gamesXPToday),
+        games_cap: 6, // 6 x 30-min blocks = 120 XP/day from games
+        games_remaining: Math.max(0, 6 - gamesXPToday),
         sessions_today: sessionsToday,
-        sessions_cap: 4,
-        sessions_remaining: Math.max(0, 4 - sessionsToday),
+        sessions_cap: 6,
+        sessions_remaining: Math.max(0, 6 - sessionsToday),
       },
       today_events: todayEvents,
       today_sessions: sessions || [],
     });
   } catch (error) {
     console.error('Error in GET /api/dev/xp-status:', error);
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
-

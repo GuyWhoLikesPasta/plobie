@@ -292,11 +292,11 @@ export async function POST(
       );
     }
 
-    // Award XP for post creation (+3 XP, cap 100/day)
+    // Award XP for post creation (+20 XP, cap 10/day)
     const { data: xpData, error: xpError } = await adminSupabase.rpc('apply_xp', {
       p_profile_id: profile.id,
       p_action_type: 'post_create',
-      p_xp_amount: 3,
+      p_xp_amount: 20,
       p_description: 'Created a post',
       p_reference_id: post.id,
     });
