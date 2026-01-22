@@ -19,7 +19,7 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - ✅ User Profiles - View stats, posts, and achievements
 
 **Content:**
-- ✅ Learn Articles - Educational guides (+1 XP per article)
+- ✅ Learn Articles - 24 educational guides (+10 XP per article, cap 10/day)
 - ✅ My Plants Dashboard - View collection and stats
 
 **Admin:**
@@ -35,7 +35,7 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - ✅ Auto-refresh - 30-second polling for updates
 
 **Performance:**
-- ✅ Lighthouse Scores - 96% perf, 95% a11y, 96% bp, 100% seo (production)
+- ✅ Lighthouse Scores - 93% perf, 95% a11y, 96% bp, 100% seo (production)
 - ✅ Image Optimization - next/image with AVIF/WebP
 - ✅ Lazy Loading - Images load on scroll
 - ✅ Database Indexes - 15+ optimized queries
@@ -43,7 +43,7 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - ✅ Core Web Vitals - Optimized LCP, FID, CLS
 
 **Quality:**
-- ✅ 50+ total tests (6 E2E + 44 unit) passing
+- ✅ 101 unit tests passing
 - ✅ TypeScript strict mode
 - ✅ 100% mobile responsive (16 pages)
 - ✅ Toast notifications
@@ -312,8 +312,8 @@ Control features dynamically:
 
 **XP & Claims:**
 - `POST /api/xp/award` - Award XP (admin)
-- `POST /api/pots/claim` - Claim pot (+50 XP)
-- `POST /api/learn/mark-read` - Mark article read (+1 XP)
+- `POST /api/pots/claim` - Claim pot (+500 XP)
+- `POST /api/learn/mark-read` - Mark article read (+10 XP)
 
 **Unity/Games:**
 - `POST /api/games/session` - Start/end game session
