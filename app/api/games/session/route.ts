@@ -174,10 +174,10 @@ export async function POST(request: Request) {
         );
       }
 
-      // Calculate XP
+      // Calculate XP: +20 XP per 30 min block (per Connor's spec)
       const durationMinutes = data.duration_minutes;
-      const xpBlocks = Math.floor(durationMinutes / 30); // +2 XP per 30 min
-      const baseXP = xpBlocks * 2;
+      const xpBlocks = Math.floor(durationMinutes / 30);
+      const baseXP = xpBlocks * 20;
 
       let xpAwarded = 0;
       let xpResult: any = null;

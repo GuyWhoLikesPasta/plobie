@@ -1,6 +1,7 @@
 import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { DAILY_TOTAL_CAP, levelFromTotalXp } from '@/lib/xp-engine';
 
 // =====================================
 // GAME XP API
@@ -92,12 +93,12 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       xp_result: {
-        awarded: xpAwarded, // Fixed: was result.awarded_xp
+        awarded: xpAwarded,
         capped: xpResult.capped || false,
         new_total_xp: newTotalXp,
-        new_level: levelAfter,
+        new_level: levelFromTotalXp(newTotalXp),
         level_up: levelAfter > levelBefore,
-        remaining_today: 100 - newDailyXp,
+        remaining_today: Math.max(0, DAILY_TOTAL_CAP - newDailyXp),
       },
       message:
         xpAwarded > 0

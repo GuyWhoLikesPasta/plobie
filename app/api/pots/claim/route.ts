@@ -182,8 +182,8 @@ export async function POST(
       );
     }
 
-    // Award +50 XP for pot linking (using the original apply_xp function)
-    const xpAmount = 50;
+    // Award +500 XP for pot linking
+    const xpAmount = 500;
     const { error: xpError } = await adminSupabase.from('xp_events').insert({
       user_id: user.id,
       action_type: 'pot_link',
