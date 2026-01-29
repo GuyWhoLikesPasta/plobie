@@ -2,6 +2,40 @@ import { createServerSupabaseClient } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import AddToCartButton from '@/components/shop/AddToCartButton';
+import { Metadata } from 'next';
+
+// Generate dynamic metadata for SEO
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = await createServerSupabaseClient();
+
+  const { data: product } = await supabase
+    .from('products')
+    .select('name, description')
+    .eq('id', id)
+    .single();
+
+  if (!product) {
+    return {
+      title: 'Product Not Found',
+    };
+  }
+
+  return {
+    title: product.name,
+    description:
+      product.description || `Shop ${product.name} at Plobie - Beautiful handcrafted pottery`,
+    openGraph: {
+      title: product.name,
+      description: product.description || `Shop ${product.name} at Plobie`,
+      type: 'website',
+    },
+  };
+}
 
 interface ProductVariant {
   id: string;
