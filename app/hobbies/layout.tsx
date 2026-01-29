@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Community | Plobie',
+  title: 'Community',
   description:
     'Join the Plobie plant community! Share your plant journey, get tips from fellow enthusiasts, and connect with plant lovers worldwide.',
   openGraph: {
-    title: 'Community | Plobie',
+    title: 'Community',
     description: 'Join the Plobie plant community and share your plant journey.',
     type: 'website',
   },

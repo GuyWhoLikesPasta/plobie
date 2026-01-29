@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Notifications | Plobie',
+  title: 'Notifications',
   description:
     'Stay updated with your Plobie notifications. See likes, comments, achievements, and more.',
   openGraph: {
-    title: 'Notifications | Plobie',
+    title: 'Notifications',
     description: 'Your Plobie notifications.',
     type: 'website',
   },

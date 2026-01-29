@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Admin Dashboard | Plobie',
+  title: 'Admin',
   description: 'Plobie admin dashboard for managing users, content, and system settings.',
   robots: {
     index: false,

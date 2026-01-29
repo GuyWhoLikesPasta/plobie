@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase';
 
 // Sample articles (will move to database later)
@@ -235,7 +235,6 @@ const difficultyColors: Record<string, string> = {
 };
 
 export default function LearnPage() {
-  const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [readArticles, setReadArticles] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -359,10 +358,10 @@ export default function LearnPage() {
               const isRead = readArticles.includes(article.id);
 
               return (
-                <div
+                <Link
                   key={article.id}
-                  onClick={() => router.push(`/hobbies/learn/${article.id}`)}
-                  className={`group bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-xl dark:shadow-gray-900/50 transition-all cursor-pointer overflow-hidden ${
+                  href={`/hobbies/learn/${article.id}`}
+                  className={`group bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-xl dark:shadow-gray-900/50 transition-all overflow-hidden ${
                     isRead ? 'ring-2 ring-green-500 dark:ring-green-400' : ''
                   }`}
                 >
@@ -418,7 +417,7 @@ export default function LearnPage() {
                       </span>
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>

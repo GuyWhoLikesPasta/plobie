@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Achievements | Plobie',
+  title: 'Achievements',
   description:
     'Track your plant journey achievements! Earn badges, level up, and unlock rewards as you grow your green thumb.',
   openGraph: {
-    title: 'Achievements | Plobie',
+    title: 'Achievements',
     description: 'Earn badges and level up your plant journey on Plobie.',
     type: 'website',
   },
