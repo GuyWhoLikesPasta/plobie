@@ -77,8 +77,52 @@ export async function POST(
 
     const { article_id } = validation.data;
 
-    // Award XP for reading article (+10 XP, cap 10/day)
+    // First, check if already read (prevent duplicate XP)
+    const { data: existingRead } = await supabase
+      .from('article_reads')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('article_id', article_id)
+      .single();
+
+    if (existingRead) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: ErrorCodes.ALREADY_EXISTS,
+            message: 'You have already read this article',
+          },
+        },
+        { status: 400 }
+      );
+    }
+
+    // Record the article read in article_reads table
     const adminSupabase = createAdminClient();
+    const { error: insertError } = await adminSupabase.from('article_reads').insert({
+      user_id: user.id,
+      article_id: article_id,
+    });
+
+    if (insertError) {
+      console.error('Article read insert error:', insertError);
+      // If it's a duplicate key error, treat as already read
+      if (insertError.code === '23505') {
+        return NextResponse.json(
+          {
+            success: false,
+            error: {
+              code: ErrorCodes.ALREADY_EXISTS,
+              message: 'You have already read this article',
+            },
+          },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Award XP for reading article (+10 XP, cap 10/day)
     const { data: xpData, error: xpError } = await adminSupabase.rpc('apply_xp', {
       p_profile_id: profile.id,
       p_action_type: 'learn_read',
