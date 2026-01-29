@@ -21,6 +21,7 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 **Content:**
 - ✅ Learn Articles - 24 educational guides (+10 XP per article, cap 10/day)
 - ✅ My Plants Dashboard - View collection and stats
+- ✅ Achievements System - 15+ unlockable achievements with XP rewards
 
 **Admin:**
 - ✅ User Management - Promote admins, view user stats
@@ -30,17 +31,20 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 
 **Notifications:**
 - ✅ Real-time Notifications - Bell icon with unread badge
-- ✅ Notification Types - Comments, likes, level-ups, XP caps
+- ✅ Notification Types - Comments, likes, level-ups, XP caps, achievements
+- ✅ Achievement Notifications - Auto-notify when unlocking achievements
 - ✅ Full Notifications Page - History, filters, management
 - ✅ Auto-refresh - 30-second polling for updates
 
 **Performance:**
-- ✅ Lighthouse Scores - 93% perf, 95% a11y, 96% bp, 100% seo (production)
+- ✅ Lighthouse Scores - 94-98% perf, 100% a11y, 100% bp, 100% seo (production)
+- ✅ WCAG AA Compliant - 4.5:1 contrast ratio on all buttons
 - ✅ Image Optimization - next/image with AVIF/WebP
 - ✅ Lazy Loading - Images load on scroll
 - ✅ Database Indexes - 15+ optimized queries
 - ✅ Bundle Optimization - Code splitting and tree-shaking
 - ✅ Core Web Vitals - Optimized LCP, FID, CLS
+- ✅ Font Optimization - Preloaded with display swap
 
 **Quality:**
 - ✅ 101 unit tests passing
