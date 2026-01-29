@@ -80,8 +80,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Theme initialization script - prevents flash of wrong theme */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('plobie_theme') || 'system';
+                  var isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                  if (isDark) {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         {/* Unity Bridge - exposes window.plobie for WebGL auth */}
         <script src="/unity-bridge.js" defer />
         {/* JSON-LD Structured Data */}
