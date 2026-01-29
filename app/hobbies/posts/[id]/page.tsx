@@ -150,7 +150,11 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
           )}
 
           <div className="flex items-center gap-3 pt-4 sm:pt-6 border-t dark:border-gray-700">
-            <LikeButton postId={post.id} initialCount={0} initialLiked={false} />
+            <LikeButton
+              postId={post.id}
+              initialCount={post.reaction_count || 0}
+              initialLiked={post.liked_by_user || false}
+            />
             <span className="text-sm text-gray-500 dark:text-gray-400">
               💬 {post.comments?.length || 0} comments
             </span>

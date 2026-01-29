@@ -139,7 +139,7 @@ export async function POST(
 
     // Get updated reaction count
     const { count } = await adminSupabase
-      .from('reactions')
+      .from('post_reactions')
       .select('*', { count: 'exact', head: true })
       .eq('post_id', postId);
 
@@ -198,7 +198,7 @@ export async function DELETE(
     // Remove reaction
     const adminSupabase = createAdminClient();
     const { error: deleteError } = await adminSupabase
-      .from('reactions')
+      .from('post_reactions')
       .delete()
       .eq('user_id', user.id)
       .eq('post_id', postId);
@@ -219,7 +219,7 @@ export async function DELETE(
 
     // Get updated reaction count
     const { count } = await adminSupabase
-      .from('reactions')
+      .from('post_reactions')
       .select('*', { count: 'exact', head: true })
       .eq('post_id', postId);
 

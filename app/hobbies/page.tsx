@@ -435,8 +435,15 @@ export default function HobbiesPage() {
                         />
                       </div>
                     )}
-                    <div className="mt-4 flex items-center space-x-3">
-                      <LikeButton postId={post.id} initialCount={0} initialLiked={false} />
+                    <div
+                      className="mt-4 flex items-center space-x-3"
+                      onClick={e => e.stopPropagation()}
+                    >
+                      <LikeButton
+                        postId={post.id}
+                        initialCount={post.reactions?.[0]?.count || 0}
+                        initialLiked={post.liked_by_user || false}
+                      />
                       <span className="text-sm text-gray-500 dark:text-gray-400">
                         💬 {post.comments?.[0]?.count || 0}
                       </span>

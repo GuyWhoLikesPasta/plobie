@@ -115,6 +115,12 @@ export async function GET(
     // Fetch profiles and counts separately
     if (posts && posts.length > 0) {
       const authorIds = [...new Set(posts.map((p: any) => p.author_id))];
+      const postIds = posts.map((p: any) => p.id);
+
+      // Get current user (if logged in) for checking likes
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       // Get profiles
       const { data: profiles } = await supabase
@@ -126,19 +132,25 @@ export async function GET(
       const { data: commentCounts } = await supabase
         .from('comments')
         .select('post_id')
-        .in(
-          'post_id',
-          posts.map((p: any) => p.id)
-        );
+        .in('post_id', postIds);
 
       // Get reaction counts
       const { data: reactionCounts } = await supabase
         .from('post_reactions')
         .select('post_id')
-        .in(
-          'post_id',
-          posts.map((p: any) => p.id)
-        );
+        .in('post_id', postIds);
+
+      // Get user's likes (if logged in)
+      let userLikes: string[] = [];
+      if (user) {
+        const { data: userReactions } = await supabase
+          .from('post_reactions')
+          .select('post_id')
+          .eq('user_id', user.id)
+          .in('post_id', postIds);
+
+        userLikes = (userReactions || []).map((r: any) => r.post_id);
+      }
 
       // Map counts
       const commentCountMap = (commentCounts || []).reduce((acc: any, c: any) => {
@@ -156,6 +168,7 @@ export async function GET(
         post.profiles = profiles?.find((p: any) => p.id === post.author_id) || null;
         post.comments = [{ count: commentCountMap[post.id] || 0 }];
         post.reactions = [{ count: reactionCountMap[post.id] || 0 }];
+        post.liked_by_user = userLikes.includes(post.id);
       });
     }
 

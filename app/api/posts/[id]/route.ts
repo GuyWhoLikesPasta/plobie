@@ -65,11 +65,36 @@ export async function GET(
       profiles: commentProfiles.find((p: any) => p.id === comment.author_id) || null,
     }));
 
+    // Get reaction count for this post
+    const { count: reactionCount } = await supabase
+      .from('post_reactions')
+      .select('*', { count: 'exact', head: true })
+      .eq('post_id', id);
+
+    // Check if current user has liked the post
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    let likedByUser = false;
+    if (user) {
+      const { data: userReaction } = await supabase
+        .from('post_reactions')
+        .select('id')
+        .eq('post_id', id)
+        .eq('user_id', user.id)
+        .single();
+
+      likedByUser = !!userReaction;
+    }
+
     // Attach to post
     const postWithData = {
       ...post,
       profiles: authorProfile,
       comments: commentsWithProfiles,
+      reaction_count: reactionCount || 0,
+      liked_by_user: likedByUser,
     };
 
     return NextResponse.json(
