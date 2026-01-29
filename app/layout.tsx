@@ -82,6 +82,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Preconnect to external domains for faster loading */}
+        <link rel="preconnect" href="https://puhblesoxhizcfuubphh.supabase.co" />
+        <link rel="dns-prefetch" href="https://puhblesoxhizcfuubphh.supabase.co" />
         {/* Theme initialization script - prevents flash of wrong theme */}
         <script
           dangerouslySetInnerHTML={{

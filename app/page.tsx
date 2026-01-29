@@ -19,7 +19,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-md mx-auto sm:max-w-none">
             <Link
               href="/signup"
-              className="px-8 py-4 min-h-[56px] bg-green-600 text-white rounded-lg font-semibold text-base sm:text-lg hover:bg-green-700 transition flex items-center justify-center"
+              className="px-8 py-4 min-h-[56px] bg-green-700 text-white rounded-lg font-semibold text-base sm:text-lg hover:bg-green-800 transition flex items-center justify-center"
             >
               Get Started
             </Link>
@@ -129,7 +129,7 @@ export default function HomePage() {
         </p>
         <Link
           href="/signup"
-          className="inline-flex items-center justify-center px-12 py-4 min-h-[56px] bg-green-600 text-white rounded-lg font-semibold text-base sm:text-lg hover:bg-green-700 transition"
+          className="inline-flex items-center justify-center px-12 py-4 min-h-[56px] bg-green-700 text-white rounded-lg font-semibold text-base sm:text-lg hover:bg-green-800 transition"
         >
           Sign Up Free
         </Link>

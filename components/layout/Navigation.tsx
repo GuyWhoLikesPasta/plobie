@@ -144,7 +144,7 @@ export default function Navigation() {
                 </Link>
                 <Link
                   href="/signup"
-                  className="px-4 py-2 min-h-[44px] flex items-center text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition"
+                  className="px-4 py-2 min-h-[44px] flex items-center text-sm font-medium text-white bg-green-700 hover:bg-green-800 rounded-lg transition"
                 >
                   Sign Up
                 </Link>
