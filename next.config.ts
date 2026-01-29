@@ -91,8 +91,16 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   experimental: {
-    optimizePackageImports: ['react-hot-toast', '@supabase/supabase-js'],
+    optimizePackageImports: [
+      'react-hot-toast',
+      '@supabase/supabase-js',
+      '@sentry/nextjs',
+      '@vercel/analytics',
+      '@vercel/speed-insights',
+    ],
   },
+  // Enable modern bundling for better performance
+  bundlePagesRouterDependencies: true,
 };
 
 // Sentry configuration
