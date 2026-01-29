@@ -24,7 +24,7 @@ export default function NotificationBell() {
 
   useEffect(() => {
     fetchNotifications();
-    
+
     // Poll for new notifications every 30 seconds
     const interval = setInterval(() => {
       fetchNotifications();
@@ -68,9 +68,7 @@ export default function NotificationBell() {
       });
 
       // Update local state
-      setNotifications(prev =>
-        prev.map(n => (n.id === notificationId ? { ...n, read: true } : n))
-      );
+      setNotifications(prev => prev.map(n => (n.id === notificationId ? { ...n, read: true } : n)));
       setUnreadCount(prev => Math.max(0, prev - 1));
     } catch (error) {
       console.error('Failed to mark as read:', error);
@@ -106,6 +104,10 @@ export default function NotificationBell() {
         return '🎉';
       case 'xp_cap':
         return '⚠️';
+      case 'achievement':
+        return '🏆';
+      case 'system':
+        return '📢';
       default:
         return '🔔';
     }
@@ -131,12 +133,7 @@ export default function NotificationBell() {
         className="relative p-2 text-gray-700 hover:text-green-600 transition-colors"
         aria-label="Notifications"
       >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -179,7 +176,7 @@ export default function NotificationBell() {
               </div>
             ) : (
               <div className="divide-y divide-gray-100">
-                {notifications.map((notification) => (
+                {notifications.map(notification => (
                   <div
                     key={notification.id}
                     className={`p-4 hover:bg-gray-50 transition-colors ${
@@ -245,12 +242,8 @@ function NotificationContent({
     <div className="flex gap-3">
       <div className="text-2xl flex-shrink-0">{icon}</div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-900 mb-1">
-          {notification.title}
-        </p>
-        <p className="text-xs text-gray-600 mb-2 line-clamp-2">
-          {notification.message}
-        </p>
+        <p className="text-sm font-medium text-gray-900 mb-1">{notification.title}</p>
+        <p className="text-xs text-gray-600 mb-2 line-clamp-2">{notification.message}</p>
         <p className="text-xs text-gray-400">{timeAgo}</p>
       </div>
       {!notification.read && (
@@ -259,4 +252,3 @@ function NotificationContent({
     </div>
   );
 }
-
