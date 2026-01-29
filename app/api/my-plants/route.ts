@@ -95,7 +95,7 @@ export async function GET(
       totalPots: claims?.length || 0,
       totalXP: totalXp,
       level: level,
-      xpProgress: progress,
+      xpProgress: progress.current, // Use .current from the object
       xpNeeded: xpNeeded,
       gameSessions: sessionCount || 0,
       potXP,
