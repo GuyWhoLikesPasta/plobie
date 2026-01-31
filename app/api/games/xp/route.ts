@@ -11,7 +11,7 @@ import { DAILY_TOTAL_CAP, levelFromTotalXp } from '@/lib/xp-engine';
 // Request schema
 const AwardXPSchema = z.object({
   action: z.string().min(1).max(50),
-  xp_amount: z.number().int().min(1).max(100), // Reasonable per-action limit
+  xp_amount: z.number().int().min(1).max(500), // Increased to support plant_register (150) and special events
   metadata: z.record(z.string(), z.any()).optional(),
 });
 
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
 
     const { action, xp_amount, metadata } = validation.data;
 
-    // Get user's profile
+    // Get user's profile (profiles.id = auth.users.id directly)
     const { data: profile, error: profileError } = await adminSupabase
       .from('profiles')
       .select('id')

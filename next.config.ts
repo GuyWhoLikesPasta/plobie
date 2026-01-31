@@ -24,7 +24,7 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      // Unity WebGL build - needs special headers for WASM and iframe
+      // Unity WebGL build - cache aggressively and enable WASM streaming
       {
         source: '/unity/:path*',
         headers: [
@@ -39,6 +39,24 @@ const nextConfig: NextConfig = {
           {
             key: 'Cross-Origin-Opener-Policy',
             value: 'same-origin',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Unity WASM needs proper MIME type for streaming compilation
+      {
+        source: '/unity/Build/:path*.wasm',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/wasm',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },

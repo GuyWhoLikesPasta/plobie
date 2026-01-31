@@ -114,7 +114,7 @@ export async function POST(
       data: { publicUrl },
     } = supabase.storage.from('post-images').getPublicUrl(data.path);
 
-    // Update profile with new avatar URL
+    // Update profile with new avatar URL (profiles.id = auth.users.id directly)
     const adminSupabase = createAdminClient();
     const { error: updateError } = await adminSupabase
       .from('profiles')

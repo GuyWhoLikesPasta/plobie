@@ -37,6 +37,7 @@ async function verifyAdmin(userId: string) {
     return { error: 'Unauthorized', status: 401 };
   }
 
+  // profiles.id = auth.users.id directly
   const { data: profile } = await supabase
     .from('profiles')
     .select('is_admin')

@@ -30,10 +30,10 @@ export async function GET() {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get XP balance
+    // Get XP balance (level is calculated from total_xp, not stored)
     const { data: xpBalance, error: balanceError } = await adminSupabase
       .from('xp_balances')
-      .select('total_xp, level')
+      .select('total_xp, daily_xp')
       .eq('profile_id', user.id)
       .single();
 

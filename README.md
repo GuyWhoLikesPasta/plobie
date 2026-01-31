@@ -70,19 +70,19 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - ✅ Admin Role Management - Grant/revoke admin
 - ✅ Data Seeding - Products, pots, sample data
 
-**Unity Integration:** ✅ **Ready for James**
+**Unity Integration:** ✅ **Deployed - Testing with James**
 - ✅ User Profile API - Get user data, XP, level, stats
 - ✅ Game Session API - Track playtime, award XP (20 XP per 30 min block)
 - ✅ Game Progress API - Save/load game state (up to 1MB)
-- ✅ Action XP API - Reward in-game achievements (1-100 XP)
+- ✅ Action XP API - Award XP for game actions (up to 500 XP)
 - ✅ JavaScript Bridge - `window.plobie.getAccessToken()` for auth
-- ✅ Local Unity Hosting - `/public/unity/` with iframe embedding
-- ✅ Test User - unity_test@plobie.com (password: UnityTest123!)
-- ✅ Complete Documentation - See `.local-docs/unity/`
+- ✅ Unity WebGL Build - Live at `/games` page
+- ✅ Game Actions - `register_plant` (160 XP), `daily_reward` (5 XP), `fetch_throw` (5 XP)
+- ✅ Complete Documentation - See `.local-docs/unity/JAMES_COMPLETE_GUIDE.md`
 
 **Production:** https://plobie.vercel.app
 
-**Status:** ✅ All systems operational | Unity integration ready | Gift cards live
+**Status:** ✅ All systems operational | Unity build deployed | Awaiting James QA
 
 **Security:**
 - ✅ Rate limiting on checkout and gift card APIs

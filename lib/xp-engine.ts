@@ -39,6 +39,11 @@ export const XP_RULES = {
   game_play_30m: { base: 20, dailyCap: 6, cooldown: '30 min blocks' }, // ~2 hrs max
   game_session: { base: 2, dailyCap: 6, cooldown: '30 min blocks' }, // Legacy support
 
+  // Unity Game Actions (from James's implementation)
+  register_plant: { base: 160, dailyCap: 10, cooldown: 'once per plant' }, // James's plant registration
+  daily_reward: { base: 5, dailyCap: 1, cooldown: '24 hours' }, // Daily login bonus
+  fetch_throw: { base: 5, dailyCap: 20, cooldown: null }, // Fetch mini-game throws
+
   // Milestones (awarded by system)
   milestone_plants: { base: 200, dailyCap: null, cooldown: 'milestone' },
   milestone_stickers: { base: 80, dailyCap: null, cooldown: 'milestone' },

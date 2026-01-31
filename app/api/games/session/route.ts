@@ -184,7 +184,7 @@ export async function POST(request: Request) {
 
       // Award XP if session is long enough (minimum 30 minutes for 2 XP)
       if (baseXP > 0) {
-        // Get user's profile
+        // Get user's profile (profiles.id = auth.users.id directly)
         const { data: profile } = await adminSupabase
           .from('profiles')
           .select('id')

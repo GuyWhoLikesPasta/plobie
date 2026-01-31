@@ -24,7 +24,7 @@ export async function GET() {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get user's profile
+    // Get user's profile (profiles.id = auth.users.id directly)
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('id, username, full_name, bio, avatar_url, is_admin, created_at')

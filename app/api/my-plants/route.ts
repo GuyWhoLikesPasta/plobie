@@ -33,7 +33,7 @@ export async function GET(
       );
     }
 
-    // Get profile
+    // Get profile (profiles.id = auth.users.id directly)
     const { data: profile } = await supabase
       .from('profiles')
       .select('id, username')

@@ -44,7 +44,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Check if user is admin
+    // Check if user is admin (profiles.id = auth.users.id directly)
     const { data: profile } = await supabase
       .from('profiles')
       .select('is_admin')

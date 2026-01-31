@@ -41,7 +41,7 @@ export async function PATCH(
       );
     }
 
-    // Get user profile
+    // Get user profile (profiles.id = auth.users.id directly)
     const { data: profile } = await supabase
       .from('profiles')
       .select('id')
@@ -187,7 +187,7 @@ export async function DELETE(
       );
     }
 
-    // Get user profile
+    // Get user profile (profiles.id = auth.users.id directly)
     const { data: profile } = await supabase
       .from('profiles')
       .select('id, is_admin')
