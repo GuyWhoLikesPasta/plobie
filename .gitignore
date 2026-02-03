@@ -82,3 +82,4 @@ public/unity/Build/
 # Test reports (regenerated on CI)
 playwright-report/
 test-results/
+lighthouse-report.json
