@@ -61,6 +61,7 @@ export default function Navigation() {
     { name: 'Hobbies', href: '/hobbies', icon: '💬' },
     { name: 'Learn', href: '/hobbies/learn', icon: '📚' },
     { name: 'My Plants', href: '/my-plants', icon: '🌿' },
+    { name: 'Plantdex', href: '/plantdex', icon: '🌱' },
     { name: 'Achievements', href: '/achievements', icon: '🏆' },
     { name: 'Games', href: '/games', icon: '🎮' },
     { name: 'Shop', href: '/shop', icon: '🛍️' },
