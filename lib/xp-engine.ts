@@ -44,6 +44,12 @@ export const XP_RULES = {
   daily_reward: { base: 5, dailyCap: 1, cooldown: '24 hours' }, // Daily login bonus
   fetch_throw: { base: 5, dailyCap: 20, cooldown: null }, // Fetch mini-game throws
 
+  // Plantdex System (web + Unity)
+  plant_new: { base: 50, dailyCap: 10, cooldown: null }, // Plant a new plant
+  plant_water: { base: 5, dailyCap: 20, cooldown: null }, // Water a plant
+  plant_mature: { base: 100, dailyCap: null, cooldown: 'once per plant' }, // Plant reaches maturity
+  plant_harvest: { base: 25, dailyCap: 10, cooldown: null }, // Harvest from plant
+
   // Milestones (awarded by system)
   milestone_plants: { base: 200, dailyCap: null, cooldown: 'milestone' },
   milestone_stickers: { base: 80, dailyCap: null, cooldown: 'milestone' },
