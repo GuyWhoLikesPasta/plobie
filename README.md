@@ -265,6 +265,9 @@ Key XP actions:
 - Playing games: +20 XP per 30 min (cap 6 blocks/day)
 - Reading articles: +10 XP (cap 10/day)
 - Garden care: +25 XP (cap 200/day)
+- Planting new: +50 XP (cap 10/day)
+- Watering plants: +5 XP (cap 20/day)
+- Plant maturity: +100 XP (one-time per plant)
 
 Daily cap: 3000 XP across all activities
 
@@ -330,6 +333,15 @@ Control features dynamically:
 
 **My Plants:**
 - `GET /api/my-plants` - Get user's garden
+
+**Plantdex (Plant Encyclopedia & Collection):**
+- `GET /api/plantdex` - List all plant species (15 starter plants)
+- `GET /api/plantdex/[id]` - Get plant details by ID or key
+- `GET /api/user/plants` - Get user's plant collection + stats
+- `POST /api/user/plants` - Plant something new (+50 XP)
+- `GET /api/user/plants/[id]` - Get specific user plant
+- `PUT /api/user/plants/[id]` - Water/care/grow/rename plant
+- `DELETE /api/user/plants/[id]` - Remove plant from collection
 
 ## Development
 
