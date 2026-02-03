@@ -9,10 +9,30 @@ import { z } from 'zod';
 
 // Schema for updating a plant
 const UpdatePlantSchema = z.object({
-  action: z.enum(['water', 'care', 'grow', 'rename', 'link_pot']).optional(),
+  action: z
+    .enum(['water', 'care', 'grow', 'rename', 'link_pot', 'fertilize', 'place', 'hide'])
+    .optional(),
   nickname: z.string().max(50).optional(),
   pot_id: z.string().uuid().nullable().optional(),
   growth_stage: z.number().int().min(1).optional(),
+  // Unity positioning
+  position: z
+    .object({
+      x: z.number(),
+      y: z.number(),
+      z: z.number(),
+    })
+    .optional(),
+  rotation: z
+    .object({
+      x: z.number(),
+      y: z.number(),
+      z: z.number(),
+    })
+    .optional(),
+  scale: z.number().min(0.1).max(10).optional(),
+  is_placed: z.boolean().optional(),
+  is_visible: z.boolean().optional(),
 });
 
 // =====================================
@@ -87,7 +107,17 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       );
     }
 
-    const { action, nickname, pot_id, growth_stage } = validation.data;
+    const {
+      action,
+      nickname,
+      pot_id,
+      growth_stage,
+      position,
+      rotation,
+      scale,
+      is_placed,
+      is_visible,
+    } = validation.data;
 
     // Get current plant state
     const { data: currentPlant, error: fetchError } = await supabase
@@ -182,10 +212,43 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         }
         break;
 
+      case 'fertilize':
+        updates.last_fertilized_at = new Date().toISOString();
+        updates.health = Math.min(100, (currentPlant.health || 0) + 15);
+        xpAction = 'garden_care';
+        xpAmount = 10;
+        message = `Fertilized ${currentPlant.plant?.name || 'plant'}`;
+        break;
+
+      case 'place':
+        updates.is_placed = true;
+        updates.is_visible = true;
+        message = `Placed ${currentPlant.plant?.name || 'plant'} in garden`;
+        break;
+
+      case 'hide':
+        updates.is_visible = false;
+        message = `Hid ${currentPlant.plant?.name || 'plant'}`;
+        break;
+
       default:
-        // Allow direct updates without action
+        // Allow direct updates without action (for Unity positioning, etc.)
         if (nickname !== undefined) updates.nickname = nickname;
         if (pot_id !== undefined) updates.pot_id = pot_id;
+        // Unity positioning
+        if (position) {
+          updates.position_x = position.x;
+          updates.position_y = position.y;
+          updates.position_z = position.z;
+        }
+        if (rotation) {
+          updates.rotation_x = rotation.x;
+          updates.rotation_y = rotation.y;
+          updates.rotation_z = rotation.z;
+        }
+        if (scale !== undefined) updates.scale = scale;
+        if (is_placed !== undefined) updates.is_placed = is_placed;
+        if (is_visible !== undefined) updates.is_visible = is_visible;
         message = 'Plant updated';
     }
 
