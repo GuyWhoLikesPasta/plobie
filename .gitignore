@@ -74,10 +74,9 @@ CHECK_*
 CONNOR_MESSAGE*
 unity/*.mp4
 
-# Unity builds (too large for GitHub, deploy separately)
+# Unity build artifacts (keep .br compressed files for deployment)
 unity/public/Build/
 unity/*.zip
-public/unity/Build/
 
 # Test reports (regenerated on CI)
 playwright-report/
