@@ -335,8 +335,8 @@ Control features dynamically:
 - `GET /api/my-plants` - Get user's garden
 
 **Plantdex (Plant Encyclopedia & Collection):**
-- `GET /api/plantdex` - List all plant species (15 starter plants)
-- `GET /api/plantdex/[id]` - Get plant details by ID or key
+- `GET /api/plantdex` - List all 50 plant species (filter by category, difficulty)
+- `GET /api/plantdex/[id]` - Get plant details by ID or key (includes toxicity, rarity, biome)
 - `GET /api/user/plants` - Get user's plant collection + stats
 - `POST /api/user/plants` - Plant something new (+50 XP)
 - `GET /api/user/plants/[id]` - Get specific user plant
