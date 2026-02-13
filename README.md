@@ -7,7 +7,7 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 **Core Systems:**
 - ✅ Authentication - Email, OAuth (Google, Apple), Password Reset
 - ✅ Shop - E-commerce with Stripe integration
-- ✅ Gift Cards - Mother's Day promo ($20 → $45 value, 125% bonus)
+- ✅ Gift Cards - Special offers ($20 → $45 value, 125% bonus)
 - ✅ QR Claiming - Link physical pots (+500 XP per pot)
 - ✅ XP System - Tiered leveling (250 levels), 25+ action types, 3000 XP daily cap
 
@@ -85,11 +85,12 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 **Status:** ✅ All systems operational | Unity build deployed | Awaiting James QA
 
 **Security:**
-- ✅ Rate limiting on checkout and gift card APIs
+- ✅ Centralized middleware for route protection (auth + admin)
+- ✅ Rate limiting (Upstash Redis in production, in-memory for dev)
 - ✅ RLS policies on all database tables
 - ✅ Input validation with Zod schemas
 - ✅ CSRF protection via Supabase auth
-- ✅ No secrets in codebase (env vars only)
+- ✅ No secrets in codebase (env vars only, `.env.example` template provided)
 - ✅ .gitignore excludes all .env files and .local-docs
 
 ## Overview
@@ -102,7 +103,7 @@ Plobie combines four core experiences:
 
 ## Tech Stack
 
-- **Frontend:** Next.js 15 (App Router), TypeScript, Tailwind CSS
+- **Frontend:** Next.js 16 (App Router), TypeScript, Tailwind CSS v4
 - **Backend:** Supabase (Postgres, Auth, Storage)
 - **Payments:** Stripe
 - **Hosting:** Vercel
@@ -113,8 +114,8 @@ Plobie combines four core experiences:
 ## Getting Started
 
 ### Prerequisites
-- Node.js 18+
-- npm or pnpm
+- Node.js 22+ (see `.nvmrc`)
+- npm
 - Supabase account
 - Stripe account (test mode)
 
@@ -317,10 +318,14 @@ Control features dynamically:
 - `POST /api/gift-cards` - Purchase gift card (rate limited: 5/hr)
 - `POST /api/gift-cards/redeem` - Redeem gift card code
 
+**Learn Articles:**
+- `GET /api/articles` - List all published articles (filter by category, difficulty)
+- `GET /api/articles/[id]` - Get article by ID or slug (includes full content)
+- `POST /api/learn/mark-read` - Mark article read (+10 XP)
+
 **XP & Claims:**
 - `POST /api/xp/award` - Award XP (admin)
 - `POST /api/pots/claim` - Claim pot (+500 XP)
-- `POST /api/learn/mark-read` - Mark article read (+10 XP)
 
 **Unity/Games:**
 - `POST /api/games/session` - Start/end game session

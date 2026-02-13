@@ -103,26 +103,25 @@ export default function GiftCardsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white dark:from-gray-900 dark:to-gray-950">
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-950">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <span className="text-6xl mb-4 block">🎁</span>
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <h1 className="text-4xl font-bold text-stone-900 dark:text-white mb-4 tracking-tight">
             Plobie Gift Cards
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-2">
+          <p className="text-xl text-stone-600 dark:text-stone-400 mb-2">
             Give the gift of plants to someone special
           </p>
-          <div className="inline-block bg-pink-100 dark:bg-pink-900/30 text-pink-800 dark:text-pink-300 px-4 py-2 rounded-full text-sm font-medium">
-            🌸 Mother&apos;s Day Special: Spend $20, Get $45 Value!
+          <div className="inline-block bg-stone-200 dark:bg-stone-700 text-stone-800 dark:text-stone-200 px-4 py-2 rounded-xl text-sm font-medium">
+            Special Offer: Spend $20, Get $45 Value
           </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {/* Purchase Section */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+          <div className="bg-white dark:bg-stone-800 rounded-2xl shadow-xl p-8 border border-stone-200 dark:border-stone-700">
+            <h2 className="text-2xl font-bold text-stone-900 dark:text-white mb-6 tracking-tight">
               Buy a Gift Card
             </h2>
 
@@ -134,22 +133,22 @@ export default function GiftCardsPage() {
                   onClick={() => setSelectedOption(option)}
                   className={`relative p-4 rounded-xl border-2 transition-all ${
                     selectedOption.price_cents === option.price_cents
-                      ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
-                      : 'border-gray-200 dark:border-gray-700 hover:border-green-300'
+                      ? 'border-green-600 bg-stone-50 dark:bg-stone-700/50'
+                      : 'border-stone-200 dark:border-stone-700 hover:border-stone-400'
                   }`}
                 >
                   {option.featured && (
-                    <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-full">
-                      Best Deal!
+                    <span className="absolute -top-2 -right-2 bg-green-600 text-white text-xs px-2 py-1 rounded-lg">
+                      Best Deal
                     </span>
                   )}
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <div className="text-2xl font-bold text-stone-900 dark:text-white">
                     {option.label}
                   </div>
                   <div className="text-green-600 dark:text-green-400 font-medium">
                     Get {option.value_label} value
                   </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">{option.bonus}</div>
+                  <div className="text-sm text-stone-500 dark:text-stone-400">{option.bonus}</div>
                 </button>
               ))}
             </div>
@@ -157,7 +156,7 @@ export default function GiftCardsPage() {
             {/* Recipient Details */}
             <div className="space-y-4 mb-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                   Recipient&apos;s Name (optional)
                 </label>
                 <input
@@ -165,11 +164,11 @@ export default function GiftCardsPage() {
                   value={recipientName}
                   onChange={e => setRecipientName(e.target.value)}
                   placeholder="Enter their name"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 rounded-xl border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-900 dark:text-white"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                   Recipient&apos;s Email (optional)
                 </label>
                 <input
@@ -177,11 +176,11 @@ export default function GiftCardsPage() {
                   value={recipientEmail}
                   onChange={e => setRecipientEmail(e.target.value)}
                   placeholder="We'll send the gift card to them"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 rounded-xl border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-900 dark:text-white"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                   Your Name (optional)
                 </label>
                 <input
@@ -189,11 +188,11 @@ export default function GiftCardsPage() {
                   value={senderName}
                   onChange={e => setSenderName(e.target.value)}
                   placeholder="So they know who it's from"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 rounded-xl border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-900 dark:text-white"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                   Personal Message (optional)
                 </label>
                 <textarea
@@ -201,13 +200,13 @@ export default function GiftCardsPage() {
                   onChange={e => setPersonalMessage(e.target.value)}
                   placeholder="Add a heartfelt message..."
                   rows={3}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none"
+                  className="w-full px-4 py-3 rounded-xl border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-900 dark:text-white resize-none"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-lg text-sm">
+              <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-xl text-sm">
                 {error}
               </div>
             )}
@@ -215,12 +214,12 @@ export default function GiftCardsPage() {
             <button
               onClick={handlePurchase}
               disabled={loading}
-              className="w-full py-4 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-semibold rounded-xl transition text-lg"
+              className="w-full py-4 bg-green-600 hover:bg-green-700 disabled:bg-stone-400 text-white font-semibold rounded-xl transition text-lg"
             >
               {loading ? 'Processing...' : `Buy ${selectedOption.label} Gift Card`}
             </button>
 
-            <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
+            <p className="text-center text-sm text-stone-500 dark:text-stone-400 mt-4">
               You&apos;ll pay {selectedOption.label} and they&apos;ll get{' '}
               {selectedOption.value_label} to spend!
             </p>
@@ -228,11 +227,11 @@ export default function GiftCardsPage() {
 
           {/* Redeem Section */}
           <div>
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            <div className="bg-white dark:bg-stone-800 rounded-2xl shadow-xl p-8 mb-8 border border-stone-200 dark:border-stone-700">
+              <h2 className="text-2xl font-bold text-stone-900 dark:text-white mb-6 tracking-tight">
                 Have a Gift Card?
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <p className="text-stone-600 dark:text-stone-400 mb-4">
                 Enter your gift card code to add the balance to your account
               </p>
 
@@ -242,12 +241,12 @@ export default function GiftCardsPage() {
                   value={redeemCode}
                   onChange={e => setRedeemCode(e.target.value.toUpperCase())}
                   placeholder="XXXX-XXXX-XXXX"
-                  className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-lg tracking-wider"
+                  className="flex-1 px-4 py-3 rounded-xl border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-900 dark:text-white font-mono text-lg tracking-wider"
                 />
                 <button
                   onClick={handleRedeem}
                   disabled={redeemLoading || !redeemCode.trim()}
-                  className="px-6 py-3 bg-gray-900 dark:bg-white dark:text-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 disabled:bg-gray-400 transition"
+                  className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl disabled:bg-stone-400 transition"
                 >
                   {redeemLoading ? '...' : 'Redeem'}
                 </button>
@@ -255,7 +254,7 @@ export default function GiftCardsPage() {
 
               {redeemResult && (
                 <div
-                  className={`mt-4 p-3 rounded-lg text-sm ${
+                  className={`mt-4 p-3 rounded-xl text-sm ${
                     redeemResult.success
                       ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400'
                       : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400'
@@ -267,25 +266,25 @@ export default function GiftCardsPage() {
             </div>
 
             {/* Info Section */}
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-8">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="bg-stone-100 dark:bg-stone-800 rounded-2xl p-8 border border-stone-200 dark:border-stone-700">
+              <h3 className="text-lg font-semibold text-stone-900 dark:text-white mb-4 tracking-tight">
                 How Gift Cards Work
               </h3>
-              <ul className="space-y-3 text-gray-600 dark:text-gray-400">
+              <ul className="space-y-3 text-stone-600 dark:text-stone-400">
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500">✓</span>
+                  <span className="text-green-600 font-bold">·</span>
                   Never expires (valid for 1 year from purchase)
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500">✓</span>
+                  <span className="text-green-600 font-bold">·</span>
                   Works on all Plobie products
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500">✓</span>
+                  <span className="text-green-600 font-bold">·</span>
                   Can be used in multiple purchases
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500">✓</span>
+                  <span className="text-green-600 font-bold">·</span>
                   Instant delivery via email
                 </li>
               </ul>
@@ -299,7 +298,7 @@ export default function GiftCardsPage() {
             href="/shop"
             className="text-green-600 dark:text-green-400 hover:underline font-medium"
           >
-            ← Back to Shop
+            Back to Shop
           </Link>
         </div>
       </div>

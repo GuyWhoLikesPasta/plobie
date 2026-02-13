@@ -71,11 +71,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    // Add these when you have the verification codes
-    // google: 'your-google-verification-code',
-    // yandex: 'your-yandex-verification-code',
-  },
 };
 
 export default function RootLayout({
@@ -87,8 +82,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Preconnect to external domains for faster loading */}
-        <link rel="preconnect" href="https://puhblesoxhizcfuubphh.supabase.co" />
-        <link rel="dns-prefetch" href="https://puhblesoxhizcfuubphh.supabase.co" />
+        <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL!} />
+        <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_SUPABASE_URL!} />
         {/* Theme initialization script - prevents flash of wrong theme */}
         <script
           dangerouslySetInnerHTML={{

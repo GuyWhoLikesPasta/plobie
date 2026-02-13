@@ -93,23 +93,23 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-950 flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full">
         <div className="text-center mb-6 sm:mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-green-800 dark:text-green-400 mb-2">
-            🌱 Plobie
+          <h1 className="text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white mb-2">
+            Plobie
           </h1>
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-white mb-2">
+          <h2 className="text-xl sm:text-2xl font-semibold text-stone-800 dark:text-white mb-2">
             Join Our Community
           </h2>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+          <p className="text-sm sm:text-base text-stone-600 dark:text-stone-400">
             Start your plant journey today
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-gray-900 p-8">
+        <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-lg border border-stone-200 dark:border-stone-800 p-8">
           {error && (
-            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg text-sm">
+            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-xl text-sm">
               {error}
             </div>
           )}
@@ -118,7 +118,7 @@ export default function SignupPage() {
             <div>
               <label
                 htmlFor="username"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
               >
                 Username
               </label>
@@ -128,7 +128,7 @@ export default function SignupPage() {
                 value={username}
                 onChange={e => setUsername(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 dark:text-white bg-white dark:bg-gray-700 text-base"
+                className="w-full px-4 py-3 border border-stone-300 dark:border-stone-700 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent text-stone-900 dark:text-white bg-white dark:bg-stone-900 text-base"
                 placeholder="plantlover123"
                 disabled={loading}
               />
@@ -137,7 +137,7 @@ export default function SignupPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
               >
                 Email
               </label>
@@ -147,7 +147,7 @@ export default function SignupPage() {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 dark:text-white bg-white dark:bg-gray-700 text-base"
+                className="w-full px-4 py-3 border border-stone-300 dark:border-stone-700 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent text-stone-900 dark:text-white bg-white dark:bg-stone-900 text-base"
                 placeholder="you@example.com"
                 disabled={loading}
               />
@@ -156,7 +156,7 @@ export default function SignupPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
               >
                 Password
               </label>
@@ -167,11 +167,13 @@ export default function SignupPage() {
                 onChange={e => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 dark:text-white bg-white dark:bg-gray-700 text-base"
+                className="w-full px-4 py-3 border border-stone-300 dark:border-stone-700 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent text-stone-900 dark:text-white bg-white dark:bg-stone-900 text-base"
                 placeholder="••••••••"
                 disabled={loading}
               />
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">At least 6 characters</p>
+              <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
+                At least 6 characters
+              </p>
             </div>
 
             <div className="space-y-3 pt-2">
@@ -183,7 +185,7 @@ export default function SignupPage() {
                   className="mt-0.5 mr-3 h-5 w-5 text-green-600 rounded"
                   disabled={loading}
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">
+                <span className="text-sm text-stone-700 dark:text-stone-300">
                   I confirm that I am at least 13 years old
                 </span>
               </label>
@@ -196,7 +198,7 @@ export default function SignupPage() {
                   className="mt-0.5 mr-3 h-5 w-5 text-green-600 rounded"
                   disabled={loading}
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">
+                <span className="text-sm text-stone-700 dark:text-stone-300">
                   I agree to communicate respectfully and follow Plobie's community guidelines
                 </span>
               </label>
@@ -205,7 +207,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading || !ageConfirmed || !conductConfirmed}
-              className="w-full py-3 min-h-[48px] bg-green-600 dark:bg-green-700 text-white rounded-lg font-medium text-base hover:bg-green-700 dark:hover:bg-green-600 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition"
+              className="w-full py-3 min-h-[48px] bg-green-600 text-white rounded-xl font-medium text-base hover:bg-green-700 disabled:bg-stone-400 dark:disabled:bg-stone-600 disabled:cursor-not-allowed transition"
             >
               {loading ? 'Creating account...' : 'Sign Up'}
             </button>
@@ -214,10 +216,10 @@ export default function SignupPage() {
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                <div className="w-full border-t border-stone-300 dark:border-stone-700"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                <span className="px-2 bg-white dark:bg-stone-900 text-stone-500 dark:text-stone-400">
                   Or continue with
                 </span>
               </div>
@@ -227,7 +229,7 @@ export default function SignupPage() {
               <button
                 onClick={handleGoogleSignup}
                 disabled={loading || !ageConfirmed || !conductConfirmed}
-                className="flex items-center justify-center px-4 py-3 min-h-[48px] border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed transition bg-white dark:bg-gray-800"
+                className="flex items-center justify-center px-4 py-3 min-h-[48px] border border-stone-300 dark:border-stone-700 rounded-xl hover:bg-stone-50 dark:hover:bg-stone-800 disabled:bg-stone-100 dark:disabled:bg-stone-800 disabled:cursor-not-allowed transition bg-white dark:bg-stone-900"
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                   <path
@@ -247,27 +249,31 @@ export default function SignupPage() {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Google</span>
+                <span className="text-sm font-medium text-stone-700 dark:text-stone-200">
+                  Google
+                </span>
               </button>
 
               <button
                 onClick={handleAppleSignup}
                 disabled={loading || !ageConfirmed || !conductConfirmed}
-                className="flex items-center justify-center px-4 py-3 min-h-[48px] border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed transition bg-white dark:bg-gray-800"
+                className="flex items-center justify-center px-4 py-3 min-h-[48px] border border-stone-300 dark:border-stone-700 rounded-xl hover:bg-stone-50 dark:hover:bg-stone-800 disabled:bg-stone-100 dark:disabled:bg-stone-800 disabled:cursor-not-allowed transition bg-white dark:bg-stone-900"
               >
                 <svg
-                  className="w-5 h-5 mr-2 text-gray-900 dark:text-white"
+                  className="w-5 h-5 mr-2 text-stone-900 dark:text-white"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
                   <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
                 </svg>
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Apple</span>
+                <span className="text-sm font-medium text-stone-700 dark:text-stone-200">
+                  Apple
+                </span>
               </button>
             </div>
           </div>
 
-          <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400 space-y-2">
+          <div className="mt-6 text-center text-sm text-stone-600 dark:text-stone-400 space-y-2">
             <p>
               Already have an account?{' '}
               <Link

@@ -119,15 +119,85 @@ export default function NotificationsPage() {
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'comment':
-        return '💬';
+        return (
+          <svg
+            className="w-6 h-6 text-stone-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+            />
+          </svg>
+        );
       case 'like':
-        return '❤️';
+        return (
+          <svg
+            className="w-6 h-6 text-stone-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+            />
+          </svg>
+        );
       case 'level_up':
-        return '🎉';
+        return (
+          <svg
+            className="w-6 h-6 text-stone-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+            />
+          </svg>
+        );
       case 'xp_cap':
-        return '⚠️';
+        return (
+          <svg
+            className="w-6 h-6 text-stone-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+        );
       default:
-        return '🔔';
+        return (
+          <svg
+            className="w-6 h-6 text-stone-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+            />
+          </svg>
+        );
     }
   };
 
@@ -153,35 +223,47 @@ export default function NotificationsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center transition-colors">
+      <div className="min-h-screen bg-stone-50 dark:bg-stone-950 flex items-center justify-center transition-colors">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 dark:border-green-400"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors">
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-950 transition-colors">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center">
-                  <span className="text-2xl">🔔</span>
+                <div className="w-12 h-12 bg-stone-200 dark:bg-stone-700 rounded-2xl flex items-center justify-center">
+                  <svg
+                    className="w-6 h-6 text-stone-600 dark:text-stone-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                    />
+                  </svg>
                 </div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                <h1 className="text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white tracking-tight">
                   Notifications
                 </h1>
               </div>
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+              <p className="text-sm sm:text-base text-stone-600 dark:text-stone-400">
                 {unreadCount > 0 ? (
                   <span className="inline-flex items-center gap-2">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    <span className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></span>
                     {unreadCount} unread notification{unreadCount !== 1 ? 's' : ''}
                   </span>
                 ) : (
-                  <span>All caught up! 🎉</span>
+                  <span>All caught up</span>
                 )}
               </p>
             </div>
@@ -207,27 +289,26 @@ export default function NotificationsPage() {
           </div>
 
           {/* Filters */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+          <div className="bg-white dark:bg-stone-800 rounded-xl shadow-sm border border-stone-200 dark:border-stone-700 p-3">
             <div className="flex flex-wrap gap-2">
               {[
-                { key: 'all', label: 'All', icon: '📋' },
-                { key: 'unread', label: 'Unread', icon: '🟢' },
-                { key: 'comment', label: 'Comments', icon: '💬' },
-                { key: 'like', label: 'Likes', icon: '❤️' },
-                { key: 'level_up', label: 'Level Up', icon: '🎉' },
-                { key: 'xp_cap', label: 'XP Cap', icon: '⚠️' },
-                { key: 'system', label: 'System', icon: '🔔' },
-              ].map(({ key, label, icon }) => (
+                { key: 'all', label: 'All' },
+                { key: 'unread', label: 'Unread' },
+                { key: 'comment', label: 'Comments' },
+                { key: 'like', label: 'Likes' },
+                { key: 'level_up', label: 'Level Up' },
+                { key: 'xp_cap', label: 'XP Cap' },
+                { key: 'system', label: 'System' },
+              ].map(({ key, label }) => (
                 <button
                   key={key}
                   onClick={() => setFilter(key)}
-                  className={`px-3 sm:px-4 py-2 min-h-[44px] rounded-lg text-xs sm:text-sm font-medium transition flex items-center gap-1.5 ${
+                  className={`px-3 sm:px-4 py-2 min-h-[44px] rounded-xl text-xs sm:text-sm font-medium transition flex items-center gap-1.5 ${
                     filter === key
                       ? 'bg-green-600 dark:bg-green-700 text-white shadow-md'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      : 'bg-stone-100 dark:bg-stone-700 text-stone-700 dark:text-stone-200 hover:bg-stone-200 dark:hover:bg-stone-600'
                   }`}
                 >
-                  <span>{icon}</span>
                   <span>{label}</span>
                   {key === 'unread' && unreadCount > 0 && (
                     <span className="ml-1 bg-white text-green-600 px-2 py-0.5 rounded-full text-xs font-bold">
@@ -242,14 +323,26 @@ export default function NotificationsPage() {
 
         {/* Notifications List */}
         {filteredNotifications.length === 0 ? (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 sm:p-12 text-center">
-            <div className="w-24 h-24 bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-3xl flex items-center justify-center mx-auto mb-6">
-              <span className="text-6xl">🔔</span>
+          <div className="bg-white dark:bg-stone-800 rounded-2xl shadow-lg border border-stone-200 dark:border-stone-700 p-8 sm:p-12 text-center">
+            <div className="w-24 h-24 bg-stone-100 dark:bg-stone-700 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <svg
+                className="w-12 h-12 text-stone-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                />
+              </svg>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3">
+            <h2 className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-white mb-3 tracking-tight">
               {filter === 'unread' ? 'No unread notifications' : 'No notifications yet'}
             </h2>
-            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
+            <p className="text-sm sm:text-base text-stone-600 dark:text-stone-400 mb-8 max-w-md mx-auto">
               {filter === 'unread'
                 ? "You're all caught up! Check back later for updates on your posts and activity."
                 : 'Notifications will appear here when you receive comments, likes, level up, or reach your daily XP cap.'}
@@ -257,15 +350,15 @@ export default function NotificationsPage() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/"
-                className="inline-flex items-center justify-center px-6 py-3 min-h-[48px] bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition shadow-md"
+                className="inline-flex items-center justify-center px-6 py-3 min-h-[48px] bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition shadow-md"
               >
-                🏠 Go to Home
+                Go to Home
               </Link>
               <Link
                 href="/hobbies"
-                className="inline-flex items-center justify-center px-6 py-3 min-h-[48px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition"
+                className="inline-flex items-center justify-center px-6 py-3 min-h-[48px] bg-white dark:bg-stone-700 text-stone-700 dark:text-stone-200 border border-stone-300 dark:border-stone-600 rounded-xl font-medium hover:bg-stone-50 dark:hover:bg-stone-600 transition"
               >
-                💬 Browse Hobbies
+                Browse Hobbies
               </Link>
             </div>
           </div>
@@ -274,18 +367,16 @@ export default function NotificationsPage() {
             {filteredNotifications.map(notification => (
               <div
                 key={notification.id}
-                className={`bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg dark:hover:shadow-gray-900/50 transition-all overflow-hidden border ${
+                className={`bg-white dark:bg-stone-800 rounded-xl shadow-md hover:shadow-lg transition-all overflow-hidden border ${
                   !notification.read
-                    ? 'border-l-4 border-green-500 bg-green-50/30 dark:bg-green-900/20'
-                    : 'border-gray-200 dark:border-gray-700'
+                    ? 'border-l-4 border-green-600 bg-stone-50 dark:bg-stone-800/80'
+                    : 'border-stone-200 dark:border-stone-700'
                 }`}
               >
                 <div className="p-4 sm:p-6">
                   <div className="flex gap-3 sm:gap-4">
                     {/* Icon */}
-                    <div className="text-3xl sm:text-4xl flex-shrink-0">
-                      {getNotificationIcon(notification.type)}
-                    </div>
+                    <div className="shrink-0 mt-0.5">{getNotificationIcon(notification.type)}</div>
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
@@ -295,25 +386,25 @@ export default function NotificationsPage() {
                           onClick={() => markAsRead(notification.id)}
                           className="block group"
                         >
-                          <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition">
+                          <h3 className="text-base sm:text-lg font-semibold text-stone-900 dark:text-white mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition">
                             {notification.title}
                           </h3>
-                          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
+                          <p className="text-sm sm:text-base text-stone-600 dark:text-stone-400 mb-2 line-clamp-2">
                             {notification.message}
                           </p>
-                          <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500">
+                          <p className="text-xs sm:text-sm text-stone-400 dark:text-stone-500">
                             {formatTimeAgo(notification.created_at)}
                           </p>
                         </Link>
                       ) : (
                         <>
-                          <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                          <h3 className="text-base sm:text-lg font-semibold text-stone-900 dark:text-white mb-1">
                             {notification.title}
                           </h3>
-                          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-2">
+                          <p className="text-sm sm:text-base text-stone-600 dark:text-stone-400 mb-2">
                             {notification.message}
                           </p>
-                          <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500">
+                          <p className="text-xs sm:text-sm text-stone-400 dark:text-stone-500">
                             {formatTimeAgo(notification.created_at)}
                           </p>
                         </>
@@ -372,7 +463,7 @@ export default function NotificationsPage() {
 
         {/* Showing count */}
         {filteredNotifications.length > 0 && (
-          <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+          <div className="mt-6 text-center text-sm text-stone-500 dark:text-stone-400">
             Showing {filteredNotifications.length} of {notifications.length} notifications
           </div>
         )}

@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     }
 
     // Rate limit: 10 checkouts per hour
-    if (!RateLimits.checkout(user.id)) {
+    if (!(await RateLimits.checkout(user.id))) {
       return NextResponse.json(
         {
           success: false,

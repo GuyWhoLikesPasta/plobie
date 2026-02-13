@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Rate limit: 5 gift card purchases per hour
-    if (!RateLimits.giftCardPurchase(user.id)) {
+    if (!(await RateLimits.giftCardPurchase(user.id))) {
       return NextResponse.json(
         {
           success: false,

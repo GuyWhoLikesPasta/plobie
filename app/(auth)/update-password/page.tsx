@@ -62,10 +62,10 @@ export default function UpdatePasswordPage() {
   // Still checking session
   if (isValidSession === null) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-stone-900 dark:to-stone-800 flex items-center justify-center px-4">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Verifying your session...</p>
+          <p className="text-stone-600 dark:text-stone-400">Verifying your session...</p>
         </div>
       </div>
     );
@@ -74,19 +74,31 @@ export default function UpdatePasswordPage() {
   // No valid session - show error
   if (!isValidSession) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-stone-900 dark:to-stone-800 flex items-center justify-center px-4">
         <div className="max-w-md w-full">
           <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-green-800 dark:text-green-400 mb-2">
-              🌱 Plobie
-            </h1>
+            <h1 className="text-3xl font-bold text-green-800 dark:text-green-400 mb-2">Plobie</h1>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
-            <div className="text-5xl mb-4">⏰</div>
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
+          <div className="bg-white dark:bg-stone-800 rounded-2xl shadow-lg p-8 text-center border border-stone-200 dark:border-stone-700">
+            <div className="w-14 h-14 bg-stone-100 dark:bg-stone-700 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg
+                className="w-7 h-7 text-stone-500 dark:text-stone-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h2 className="text-xl font-semibold text-stone-800 dark:text-white mb-2 tracking-tight">
               Link Expired
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-stone-600 dark:text-stone-400 mb-6">
               This password reset link has expired or is invalid. Please request a new one.
             </p>
             <Link
@@ -102,21 +114,21 @@ export default function UpdatePasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-stone-900 dark:to-stone-800 flex items-center justify-center px-4">
       <div className="max-w-md w-full">
         <div className="text-center mb-6 sm:mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-green-800 dark:text-green-400 mb-2">
-            🌱 Plobie
+            Plobie
           </h1>
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-white mb-2">
+          <h2 className="text-xl sm:text-2xl font-semibold text-stone-800 dark:text-white mb-2 tracking-tight">
             Set New Password
           </h2>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+          <p className="text-sm sm:text-base text-stone-600 dark:text-stone-400">
             Choose a strong password for your account
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-gray-900 p-8">
+        <div className="bg-white dark:bg-stone-800 rounded-lg shadow-lg dark:shadow-stone-900 p-8">
           {error && (
             <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg text-sm">
               {error}
@@ -126,7 +138,7 @@ export default function UpdatePasswordPage() {
           {success ? (
             <div className="text-center">
               <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 rounded-lg">
-                <p className="font-medium mb-2">Password Updated! ✅</p>
+                <p className="font-medium mb-2">Password Updated!</p>
                 <p className="text-sm">Redirecting you to the home page...</p>
               </div>
             </div>
@@ -135,7 +147,7 @@ export default function UpdatePasswordPage() {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
                 >
                   New Password
                 </label>
@@ -146,11 +158,11 @@ export default function UpdatePasswordPage() {
                   onChange={e => setPassword(e.target.value)}
                   required
                   minLength={6}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 dark:text-white bg-white dark:bg-gray-700 text-base"
+                  className="w-full px-4 py-3 border border-stone-300 dark:border-stone-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-stone-900 dark:text-white bg-white dark:bg-stone-700 text-base"
                   placeholder="••••••••"
                   disabled={loading}
                 />
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
                   At least 6 characters
                 </p>
               </div>
@@ -158,7 +170,7 @@ export default function UpdatePasswordPage() {
               <div>
                 <label
                   htmlFor="confirmPassword"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
                 >
                   Confirm New Password
                 </label>
@@ -169,7 +181,7 @@ export default function UpdatePasswordPage() {
                   onChange={e => setConfirmPassword(e.target.value)}
                   required
                   minLength={6}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 dark:text-white bg-white dark:bg-gray-700 text-base"
+                  className="w-full px-4 py-3 border border-stone-300 dark:border-stone-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-stone-900 dark:text-white bg-white dark:bg-stone-700 text-base"
                   placeholder="••••••••"
                   disabled={loading}
                 />
@@ -178,7 +190,7 @@ export default function UpdatePasswordPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 min-h-[48px] bg-green-600 dark:bg-green-700 text-white rounded-lg font-medium text-base hover:bg-green-700 dark:hover:bg-green-600 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition"
+                className="w-full py-3 min-h-[48px] bg-green-600 dark:bg-green-700 text-white rounded-lg font-medium text-base hover:bg-green-700 dark:hover:bg-green-600 disabled:bg-stone-400 dark:disabled:bg-stone-600 disabled:cursor-not-allowed transition"
               >
                 {loading ? 'Updating...' : 'Update Password'}
               </button>

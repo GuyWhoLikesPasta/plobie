@@ -134,7 +134,7 @@ export default function GamesPage() {
   // Handle play button click
   const handlePlay = () => {
     if (!UNITY_BUILD_URL) {
-      setError('Game build not yet available. Coming soon!');
+      setError('Game build not available.');
       return;
     }
     setGameState('playing');
@@ -146,23 +146,39 @@ export default function GamesPage() {
       case 'loading':
       case 'checking-auth':
         return (
-          <div className="flex flex-col items-center justify-center h-96 bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-emerald-500 border-t-transparent mb-4" />
-            <p className="text-slate-300">Loading...</p>
+          <div className="flex flex-col items-center justify-center h-96 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-600 border-t-transparent mb-4" />
+            <p className="text-stone-600 dark:text-stone-400">Loading...</p>
           </div>
         );
 
       case 'not-logged-in':
         return (
-          <div className="flex flex-col items-center justify-center h-96 bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8">
-            <span className="text-6xl mb-4">🔒</span>
-            <h2 className="text-2xl font-bold text-white mb-2">Login Required</h2>
-            <p className="text-slate-300 mb-6 text-center">
+          <div className="flex flex-col items-center justify-center h-96 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-8">
+            <div className="mb-4">
+              <svg
+                className="w-16 h-16 text-stone-400 dark:text-stone-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white mb-2">
+              Login Required
+            </h2>
+            <p className="text-stone-600 dark:text-stone-400 mb-6 text-center">
               Sign in to play games and earn XP for your garden!
             </p>
             <button
               onClick={() => router.push('/login?redirect=/games')}
-              className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors"
+              className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors"
             >
               Sign In to Play
             </button>
@@ -171,49 +187,109 @@ export default function GamesPage() {
 
       case 'mobile':
         return (
-          <div className="bg-gradient-to-br from-amber-900 to-orange-900 rounded-2xl p-6 sm:p-8">
+          <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 sm:p-8">
             <div className="flex flex-col items-center text-center mb-8">
-              <span className="text-6xl mb-4">📱</span>
-              <h2 className="text-2xl font-bold text-white mb-2">Desktop Only</h2>
-              <p className="text-amber-100 mb-4 max-w-md">
+              <div className="mb-4">
+                <svg
+                  className="w-16 h-16 text-stone-400 dark:text-stone-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white mb-2">
+                Desktop Only
+              </h2>
+              <p className="text-stone-600 dark:text-stone-400 mb-4 max-w-md">
                 The garden game requires a desktop or laptop computer.
               </p>
-              <div className="flex flex-wrap justify-center gap-2 text-amber-200 text-sm">
-                <span className="bg-amber-800/50 px-3 py-1 rounded-full">💻 Desktop</span>
-                <span className="bg-amber-800/50 px-3 py-1 rounded-full">🖥️ Laptop</span>
-                <span className="bg-amber-800/50 px-3 py-1 rounded-full">📺 Large Tablet</span>
+              <div className="flex flex-wrap justify-center gap-2 text-sm">
+                <span className="bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 px-3 py-1 rounded-xl">
+                  Desktop
+                </span>
+                <span className="bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 px-3 py-1 rounded-xl">
+                  Laptop
+                </span>
+                <span className="bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 px-3 py-1 rounded-xl">
+                  Large Tablet
+                </span>
               </div>
             </div>
 
             {/* Plant Care Tips while waiting */}
-            <div className="bg-amber-950/50 rounded-xl p-5 border border-amber-800/50">
-              <h3 className="text-lg font-semibold text-amber-100 mb-4 flex items-center gap-2">
-                <span>🌱</span> Plant Care Tips
+            <div className="bg-stone-50 dark:bg-stone-800/50 rounded-xl p-5 border border-stone-200 dark:border-stone-700">
+              <h3 className="text-lg font-semibold tracking-tight text-stone-900 dark:text-white mb-4">
+                Plant Care Tips
               </h3>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <span className="text-xl">💧</span>
+                  <svg
+                    className="w-5 h-5 text-green-600 mt-0.5 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                    />
+                  </svg>
                   <div>
-                    <p className="text-amber-100 font-medium">Water Wisely</p>
-                    <p className="text-amber-200/70 text-sm">
+                    <p className="text-stone-800 dark:text-stone-200 font-medium">Water Wisely</p>
+                    <p className="text-stone-600 dark:text-stone-400 text-sm">
                       Most plants prefer morning watering when it&apos;s cooler.
                     </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <span className="text-xl">☀️</span>
+                  <svg
+                    className="w-5 h-5 text-green-600 mt-0.5 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                    />
+                  </svg>
                   <div>
-                    <p className="text-amber-100 font-medium">Light Matters</p>
-                    <p className="text-amber-200/70 text-sm">
+                    <p className="text-stone-800 dark:text-stone-200 font-medium">Light Matters</p>
+                    <p className="text-stone-600 dark:text-stone-400 text-sm">
                       Know if your plant loves sun or prefers shade.
                     </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <span className="text-xl">🪴</span>
+                  <svg
+                    className="w-5 h-5 text-green-600 mt-0.5 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M4 20h16v4H4zM6 20V10a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v10"
+                    />
+                  </svg>
                   <div>
-                    <p className="text-amber-100 font-medium">Drainage is Key</p>
-                    <p className="text-amber-200/70 text-sm">
+                    <p className="text-stone-800 dark:text-stone-200 font-medium">
+                      Drainage is Key
+                    </p>
+                    <p className="text-stone-600 dark:text-stone-400 text-sm">
                       Ensure pots have drainage holes to prevent root rot.
                     </p>
                   </div>
@@ -225,15 +301,15 @@ export default function GamesPage() {
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <button
                 onClick={() => router.push('/hobbies')}
-                className="px-4 py-2 bg-amber-800/50 hover:bg-amber-800 text-amber-100 rounded-lg transition-colors text-sm"
+                className="px-4 py-2 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 rounded-xl transition-colors text-sm border border-stone-200 dark:border-stone-700"
               >
-                📖 Browse Community
+                Browse Community
               </button>
               <button
                 onClick={() => router.push('/hobbies/learn')}
-                className="px-4 py-2 bg-amber-800/50 hover:bg-amber-800 text-amber-100 rounded-lg transition-colors text-sm"
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-colors text-sm"
               >
-                📚 Learn & Earn XP
+                Learn & Earn XP
               </button>
             </div>
           </div>
@@ -241,44 +317,54 @@ export default function GamesPage() {
 
       case 'ready':
         return (
-          <div className="flex flex-col items-center justify-center h-96 bg-gradient-to-br from-emerald-900 to-teal-900 rounded-2xl p-8 relative overflow-hidden">
-            {/* Background decoration */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute top-10 left-10 text-8xl">🌱</div>
-              <div className="absolute bottom-10 right-10 text-8xl">🌿</div>
-              <div className="absolute top-20 right-20 text-6xl">🌻</div>
-              <div className="absolute bottom-20 left-20 text-6xl">🌷</div>
+          <div className="flex flex-col items-center justify-center h-96 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-8 relative overflow-hidden">
+            <div className="mb-4">
+              <svg
+                className="w-20 h-20 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                />
+              </svg>
             </div>
-
-            <span className="text-7xl mb-4 relative z-10">🏡</span>
-            <h2 className="text-3xl font-bold text-white mb-2 relative z-10">Your Garden Awaits</h2>
-            <p className="text-emerald-100 mb-6 text-center max-w-md relative z-10">
+            <h2 className="text-3xl font-bold tracking-tight text-stone-900 dark:text-white mb-2">
+              Your Garden Awaits
+            </h2>
+            <p className="text-stone-600 dark:text-stone-400 mb-6 text-center max-w-md">
               Enter your virtual garden, tend to your plants, and earn XP!
             </p>
 
             {UNITY_BUILD_URL ? (
               <button
                 onClick={handlePlay}
-                className="px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-emerald-500/25 transition-all transform hover:scale-105 relative z-10"
+                className="px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-xl shadow-lg transition-all transform hover:scale-105"
               >
-                🎮 Enter Garden
+                Enter Garden
               </button>
             ) : (
-              <div className="text-center relative z-10">
-                <div className="px-8 py-4 bg-slate-700 text-slate-300 font-semibold rounded-xl mb-3">
-                  🚧 Coming Soon
+              <div className="text-center">
+                <div className="px-8 py-4 bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300 font-semibold rounded-xl mb-3">
+                  Build Unavailable
                 </div>
-                <p className="text-emerald-200 text-sm">Unity build in development</p>
+                <p className="text-stone-500 dark:text-stone-400 text-sm">
+                  Unity build not deployed
+                </p>
               </div>
             )}
 
-            {error && <p className="text-red-300 mt-4 text-sm relative z-10">{error}</p>}
+            {error && <p className="text-red-600 dark:text-red-400 mt-4 text-sm">{error}</p>}
           </div>
         );
 
       case 'playing':
         return (
-          <div className="relative bg-black rounded-2xl overflow-hidden shadow-2xl">
+          <div className="relative bg-black rounded-2xl overflow-hidden shadow-2xl border border-stone-800">
             {/* Unity WebGL Container */}
             <div
               className="relative"
@@ -290,10 +376,10 @@ export default function GamesPage() {
               }}
             >
               {!unityLoaded && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900">
-                  <div className="animate-spin rounded-full h-16 w-16 border-4 border-emerald-500 border-t-transparent mb-4" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-stone-900">
+                  <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-600 border-t-transparent mb-4" />
                   <p className="text-white text-lg">Loading Garden...</p>
-                  <p className="text-slate-400 text-sm mt-2">This may take a moment</p>
+                  <p className="text-stone-400 text-sm mt-2">This may take a moment</p>
                 </div>
               )}
 
@@ -309,65 +395,102 @@ export default function GamesPage() {
                   title="Plobie Garden Game"
                 />
               ) : (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
-                  <span className="text-8xl mb-4 animate-bounce">🌱</span>
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-stone-900">
+                  <div className="mb-4">
+                    <svg
+                      className="w-16 h-16 text-stone-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M4 20h16v4H4zM6 20V10a4 4 0 014-4h4a4 4 0 014 4v10"
+                      />
+                    </svg>
+                  </div>
                   <h3 className="text-xl font-bold text-white mb-2">Build Not Available</h3>
-                  <p className="text-slate-400 text-center max-w-sm">
-                    The Unity game build hasn&apos;t been deployed yet. Check back soon!
+                  <p className="text-stone-400 text-center max-w-sm">
+                    The Unity game build hasn&apos;t been deployed yet.
                   </p>
                   <button
                     onClick={() => setGameState('ready')}
-                    className="mt-6 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+                    className="mt-6 px-4 py-2 bg-stone-700 hover:bg-stone-600 text-white rounded-xl transition-colors text-sm"
                   >
-                    ← Go Back
+                    <span className="inline-flex items-center gap-1">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                        />
+                      </svg>
+                      Go Back
+                    </span>
                   </button>
                 </div>
               )}
             </div>
 
             {/* Game Controls Bar */}
-            <div className="bg-slate-900 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div className="bg-stone-900 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => setGameState('ready')}
-                  className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded transition-colors flex items-center gap-1"
+                  className="px-3 py-1.5 bg-stone-700 hover:bg-stone-600 text-white text-sm rounded-xl transition-colors flex items-center gap-1"
                 >
-                  <span>←</span> Exit
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                    />
+                  </svg>
+                  Exit
                 </button>
-                <span className="text-slate-400 text-sm hidden sm:inline">
-                  Playing as <span className="text-emerald-400">{user?.email || 'Guest'}</span>
+                <span className="text-stone-400 text-sm hidden sm:inline">
+                  Playing as <span className="text-green-400">{user?.email || 'Guest'}</span>
                 </span>
               </div>
 
               <div className="flex items-center gap-4 text-sm">
                 {/* Connection indicator */}
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                  <span className="text-slate-500 hidden sm:inline">Connected</span>
+                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  <span className="text-stone-500 hidden sm:inline">Connected</span>
                 </div>
 
-                <div className="h-4 w-px bg-slate-700 hidden sm:block" />
+                <div className="h-4 w-px bg-stone-700 hidden sm:block" />
 
                 <div className="flex items-center gap-2">
-                  <span className="text-slate-400">🎯</span>
-                  <span className="text-emerald-400 font-semibold">+0 XP</span>
+                  <span className="text-stone-400">XP</span>
+                  <span className="text-green-400 font-semibold">+0</span>
                 </div>
               </div>
             </div>
 
             {/* Keyboard hints - desktop only */}
-            <div className="bg-slate-950 px-4 py-2 flex items-center justify-center gap-6 text-xs text-slate-500">
+            <div className="bg-stone-950 px-4 py-2 flex items-center justify-center gap-6 text-xs text-stone-500">
               <span>
-                <kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-slate-400">WASD</kbd> Move
+                <kbd className="px-1.5 py-0.5 bg-stone-800 rounded text-stone-400">WASD</kbd> Move
               </span>
               <span>
-                <kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-slate-400">E</kbd> Interact
+                <kbd className="px-1.5 py-0.5 bg-stone-800 rounded text-stone-400">E</kbd> Interact
               </span>
               <span>
-                <kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-slate-400">ESC</kbd> Menu
+                <kbd className="px-1.5 py-0.5 bg-stone-800 rounded text-stone-400">ESC</kbd> Menu
               </span>
               <span>
-                <kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-slate-400">F</kbd>{' '}
+                <kbd className="px-1.5 py-0.5 bg-stone-800 rounded text-stone-400">F</kbd>{' '}
                 Fullscreen
               </span>
             </div>
@@ -376,24 +499,50 @@ export default function GamesPage() {
 
       case 'error':
         return (
-          <div className="flex flex-col items-center justify-center h-96 bg-gradient-to-br from-red-900 to-rose-900 rounded-2xl p-8">
-            <span className="text-6xl mb-4">⚠️</span>
-            <h2 className="text-2xl font-bold text-white mb-2">Something Went Wrong</h2>
-            <p className="text-red-100 mb-6 text-center max-w-md">
+          <div className="flex flex-col items-center justify-center h-96 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-8">
+            <div className="mb-4">
+              <svg
+                className="w-16 h-16 text-amber-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white mb-2">
+              Something Went Wrong
+            </h2>
+            <p className="text-stone-600 dark:text-stone-400 mb-6 text-center max-w-md">
               {error || "We couldn't load the game. Please try again."}
             </p>
             <div className="flex gap-3">
               <button
                 onClick={handleRetry}
-                className="px-6 py-3 bg-white/20 hover:bg-white/30 text-white font-semibold rounded-lg transition-colors"
+                className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors"
               >
-                🔄 Try Again
+                Try Again
               </button>
               <button
                 onClick={() => router.push('/hobbies')}
-                className="px-6 py-3 bg-red-800/50 hover:bg-red-800 text-white font-semibold rounded-lg transition-colors"
+                className="px-6 py-3 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 font-semibold rounded-xl transition-colors border border-stone-200 dark:border-stone-700"
               >
-                ← Back to Hobbies
+                <span className="inline-flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                    />
+                  </svg>
+                  Back to Hobbies
+                </span>
               </button>
             </div>
           </div>
@@ -405,12 +554,14 @@ export default function GamesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-950">
       <div className="container mx-auto px-4 py-6 sm:py-8">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">🏡 Garden Game</h1>
-          <p className="text-slate-400">Grow your virtual garden and earn XP</p>
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-stone-900 dark:text-white mb-2">
+            Garden Game
+          </h1>
+          <p className="text-stone-600 dark:text-stone-400">Grow your virtual garden and earn XP</p>
         </div>
 
         {/* Main Game Area */}
@@ -420,63 +571,114 @@ export default function GamesPage() {
         {gameState !== 'playing' && (
           <div className="max-w-4xl mx-auto space-y-6">
             {/* XP Info Card */}
-            <div className="bg-slate-800/50 backdrop-blur rounded-xl p-6 border border-slate-700">
-              <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                <span>🎯</span> How XP Works
+            <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6">
+              <h2 className="text-xl font-bold tracking-tight text-stone-900 dark:text-white mb-4">
+                How XP Works
               </h2>
               <div className="grid sm:grid-cols-3 gap-4">
-                <div className="bg-slate-700/50 rounded-lg p-4 text-center">
-                  <div className="text-3xl mb-2">⏱️</div>
-                  <div className="text-emerald-400 font-bold">20 XP</div>
-                  <div className="text-slate-400 text-sm">per 30 min session</div>
+                <div className="bg-stone-50 dark:bg-stone-800/50 rounded-xl p-4 text-center border border-stone-200 dark:border-stone-700">
+                  <div className="text-green-600 font-bold text-lg">20 XP</div>
+                  <div className="text-stone-500 dark:text-stone-400 text-sm">
+                    per 30 min session
+                  </div>
                 </div>
-                <div className="bg-slate-700/50 rounded-lg p-4 text-center">
-                  <div className="text-3xl mb-2">📊</div>
-                  <div className="text-emerald-400 font-bold">120 XP</div>
-                  <div className="text-slate-400 text-sm">daily game cap</div>
+                <div className="bg-stone-50 dark:bg-stone-800/50 rounded-xl p-4 text-center border border-stone-200 dark:border-stone-700">
+                  <div className="text-green-600 font-bold text-lg">120 XP</div>
+                  <div className="text-stone-500 dark:text-stone-400 text-sm">daily game cap</div>
                 </div>
-                <div className="bg-slate-700/50 rounded-lg p-4 text-center">
-                  <div className="text-3xl mb-2">🏆</div>
-                  <div className="text-emerald-400 font-bold">3,000 XP</div>
-                  <div className="text-slate-400 text-sm">total daily cap</div>
+                <div className="bg-stone-50 dark:bg-stone-800/50 rounded-xl p-4 text-center border border-stone-200 dark:border-stone-700">
+                  <div className="text-green-600 font-bold text-lg">3,000 XP</div>
+                  <div className="text-stone-500 dark:text-stone-400 text-sm">total daily cap</div>
                 </div>
               </div>
             </div>
 
             {/* Features Preview */}
-            <div className="bg-slate-800/50 backdrop-blur rounded-xl p-6 border border-slate-700">
-              <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                <span>✨</span> Garden Features
+            <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6">
+              <h2 className="text-xl font-bold tracking-tight text-stone-900 dark:text-white mb-4">
+                Garden Features
               </h2>
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="flex items-start gap-3">
-                  <span className="text-2xl">🌻</span>
+                  <svg
+                    className="w-6 h-6 text-green-600 shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                    />
+                  </svg>
                   <div>
-                    <h3 className="font-semibold text-white">Plant & Grow</h3>
-                    <p className="text-slate-400 text-sm">
+                    <h3 className="font-semibold text-stone-900 dark:text-white">Plant & Grow</h3>
+                    <p className="text-stone-600 dark:text-stone-400 text-sm">
                       Place pots, plant seeds, and watch them grow
                     </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <span className="text-2xl">💧</span>
+                  <svg
+                    className="w-6 h-6 text-green-600 shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                    />
+                  </svg>
                   <div>
-                    <h3 className="font-semibold text-white">Daily Care</h3>
-                    <p className="text-slate-400 text-sm">Water and tend to your plants each day</p>
+                    <h3 className="font-semibold text-stone-900 dark:text-white">Daily Care</h3>
+                    <p className="text-stone-600 dark:text-stone-400 text-sm">
+                      Water and tend to your plants each day
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <span className="text-2xl">🏡</span>
+                  <svg
+                    className="w-6 h-6 text-green-600 shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                    />
+                  </svg>
                   <div>
-                    <h3 className="font-semibold text-white">Customize</h3>
-                    <p className="text-slate-400 text-sm">Decorate with benches, paths, and more</p>
+                    <h3 className="font-semibold text-stone-900 dark:text-white">Customize</h3>
+                    <p className="text-stone-600 dark:text-stone-400 text-sm">
+                      Decorate with benches, paths, and more
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <span className="text-2xl">🐾</span>
+                  <svg
+                    className="w-6 h-6 text-green-600 shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    />
+                  </svg>
                   <div>
-                    <h3 className="font-semibold text-white">Garden Pet</h3>
-                    <p className="text-slate-400 text-sm">
+                    <h3 className="font-semibold text-stone-900 dark:text-white">Garden Pet</h3>
+                    <p className="text-stone-600 dark:text-stone-400 text-sm">
                       A friendly companion to help in your garden
                     </p>
                   </div>
@@ -485,11 +687,11 @@ export default function GamesPage() {
             </div>
 
             {/* Developer Info - Collapsed by default */}
-            <details className="bg-slate-800/30 backdrop-blur rounded-xl border border-slate-700">
-              <summary className="px-6 py-4 cursor-pointer text-slate-400 hover:text-white transition-colors">
-                🛠️ Developer Info
+            <details className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl">
+              <summary className="px-6 py-4 cursor-pointer text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white transition-colors">
+                Developer Info
               </summary>
-              <div className="px-6 pb-4 pt-2 border-t border-slate-700 font-mono text-xs text-slate-500 space-y-1">
+              <div className="px-6 pb-4 pt-2 border-t border-stone-200 dark:border-stone-800 font-mono text-xs text-stone-500 dark:text-stone-400 space-y-1">
                 <p>• Unity WebGL → iframe embed</p>
                 <p>• Auth: window.plobie.getAccessToken()</p>
                 <p>• API: GET /api/user/me, POST /api/games/*</p>

@@ -1,6 +1,6 @@
 /**
  * POST /api/pots/claim-token
- * 
+ *
  * Generate a claim token for a pot code.
  * Rate limited: 5 requests per minute per IP.
  */
@@ -16,15 +16,16 @@ const RequestSchema = z.object({
   pot_code: z.string().min(1).max(20),
 });
 
-export async function POST(request: NextRequest): Promise<NextResponse<ApiResponse<{ token: string; expires_in: number }>>> {
+export async function POST(
+  request: NextRequest
+): Promise<NextResponse<ApiResponse<{ token: string; expires_in: number }>>> {
   try {
     // Get client IP for rate limiting
-    const ip = request.headers.get('x-forwarded-for') || 
-               request.headers.get('x-real-ip') || 
-               'unknown';
+    const ip =
+      request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 
     // Rate limit check: 5 requests per minute per IP
-    if (!RateLimits.claimToken(ip)) {
+    if (!(await RateLimits.claimToken(ip))) {
       return NextResponse.json(
         {
           success: false,
@@ -105,4 +106,3 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     );
   }
 }
-

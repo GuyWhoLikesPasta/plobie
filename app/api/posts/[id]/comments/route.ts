@@ -43,7 +43,7 @@ export async function POST(
     }
 
     // Rate limit check: 30 comments per hour per user
-    if (!RateLimits.commentCreate(user.id)) {
+    if (!(await RateLimits.commentCreate(user.id))) {
       return NextResponse.json(
         {
           success: false,

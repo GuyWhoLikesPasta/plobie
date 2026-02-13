@@ -1,13 +1,19 @@
 /**
  * QR Claim Token Utilities
- * 
+ *
  * Generates and verifies JWT tokens for pot claiming.
  * Tokens have a 10-minute TTL and include pot_code.
  */
 
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET environment variable is required');
+  }
+  return secret;
+}
 const TOKEN_TTL = 10 * 60; // 10 minutes in seconds
 
 export interface ClaimTokenPayload {
@@ -26,7 +32,7 @@ export function generateClaimToken(potCode: string): string {
     pot_code: potCode,
   };
 
-  return jwt.sign(payload, JWT_SECRET, {
+  return jwt.sign(payload, getJwtSecret(), {
     expiresIn: TOKEN_TTL,
   });
 }
@@ -38,7 +44,7 @@ export function generateClaimToken(potCode: string): string {
  */
 export function verifyClaimToken(token: string): ClaimTokenPayload | null {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as ClaimTokenPayload;
+    const decoded = jwt.verify(token, getJwtSecret()) as ClaimTokenPayload;
     return decoded;
   } catch (error) {
     // Token invalid, expired, or malformed
@@ -59,4 +65,3 @@ export function decodeClaimToken(token: string): ClaimTokenPayload | null {
     return null;
   }
 }
-

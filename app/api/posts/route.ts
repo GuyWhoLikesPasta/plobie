@@ -222,7 +222,7 @@ export async function POST(
     }
 
     // Rate limit check: 10 posts per hour per user
-    if (!RateLimits.postCreate(user.id)) {
+    if (!(await RateLimits.postCreate(user.id))) {
       return NextResponse.json(
         {
           success: false,

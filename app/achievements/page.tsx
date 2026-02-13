@@ -97,7 +97,7 @@ export default function AchievementsPage() {
 
         if (newly_earned.length > 0) {
           toast.success(
-            `🎉 Unlocked ${newly_earned.length} achievement(s)! +${total_xp_bonus} bonus XP!`
+            `Unlocked ${newly_earned.length} achievement(s)! +${total_xp_bonus} bonus XP!`
           );
           // Show each achievement
           newly_earned.forEach((a: { icon: string; name: string }) => {
@@ -125,38 +125,41 @@ export default function AchievementsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center transition-colors">
+      <div className="min-h-screen bg-stone-50 dark:bg-stone-950 flex items-center justify-center transition-colors">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 dark:border-amber-400 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading achievements...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-stone-400 dark:border-stone-500 mx-auto"></div>
+          <p className="mt-4 text-stone-600 dark:text-stone-400">Loading achievements...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors">
-      {/* Hero */}
-      <div className="bg-gradient-to-r from-amber-500 to-orange-500 dark:from-amber-700 dark:to-orange-700 text-white py-8 sm:py-12">
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-950 transition-colors">
+      {/* Header */}
+      <div className="bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold mb-2">🏆 Achievements</h1>
-              <p className="text-amber-100 dark:text-amber-200">
+              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-stone-900 dark:text-white mb-2">
+                Achievements
+              </h1>
+              <p className="text-stone-500 dark:text-stone-400">
                 Track your progress and unlock rewards
               </p>
             </div>
             <button
               onClick={handleCheckAchievements}
               disabled={checking}
-              className="bg-white dark:bg-gray-800 text-amber-600 dark:text-amber-400 px-6 py-3 rounded-lg font-semibold hover:bg-amber-50 dark:hover:bg-gray-700 transition-all disabled:opacity-50 flex items-center gap-2"
+              className="bg-stone-900 dark:bg-white text-white dark:text-stone-900 px-6 py-3 rounded-xl font-semibold hover:bg-stone-800 dark:hover:bg-stone-100 transition-all disabled:opacity-50 flex items-center gap-2"
             >
               {checking ? (
                 <>
-                  <span className="animate-spin">⏳</span> Checking...
+                  <span className="animate-spin rounded-full h-4 w-4 border-2 border-white dark:border-stone-900 border-t-transparent" />
+                  Checking...
                 </>
               ) : (
-                <>🔍 Check Progress</>
+                'Check Progress'
               )}
             </button>
           </div>
@@ -167,29 +170,29 @@ export default function AchievementsPage() {
         {/* Stats Overview */}
         {stats && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-amber-600 dark:text-amber-400">
+            <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 text-center">
+              <div className="text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white">
                 {stats.earned}/{stats.total}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Unlocked</div>
+              <div className="text-sm text-stone-500 dark:text-stone-400">Unlocked</div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-400">
+            <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 text-center">
+              <div className="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-500">
                 {stats.total_xp.toLocaleString()}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Total XP</div>
+              <div className="text-sm text-stone-500 dark:text-stone-400">Total XP</div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400">
+            <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 text-center">
+              <div className="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-500">
                 Lv.{stats.level}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Level</div>
+              <div className="text-sm text-stone-500 dark:text-stone-400">Level</div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-400">
+            <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 text-center">
+              <div className="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-500">
                 {Math.round((stats.earned / stats.total) * 100)}%
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Complete</div>
+              <div className="text-sm text-stone-500 dark:text-stone-400">Complete</div>
             </div>
           </div>
         )}
@@ -197,20 +200,20 @@ export default function AchievementsPage() {
         {/* Category Filter */}
         <div className="flex flex-wrap gap-2 mb-6">
           {categories.map(cat => {
-            const catInfo = categoryLabels[cat] || { label: cat, icon: '🏷️' };
+            const catInfo = categoryLabels[cat] || { label: cat, icon: '' };
             const count = cat === 'all' ? achievements.length : grouped[cat]?.length || 0;
 
             return (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                   selectedCategory === cat
-                    ? 'bg-amber-600 dark:bg-amber-700 text-white'
-                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-gray-700'
+                    ? 'bg-stone-900 dark:bg-white text-white dark:text-stone-900'
+                    : 'bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800'
                 }`}
               >
-                {cat === 'all' ? '🏆 All' : `${catInfo.icon} ${catInfo.label}`} ({count})
+                {cat === 'all' ? 'All' : catInfo.label} ({count})
               </button>
             );
           })}
@@ -224,12 +227,11 @@ export default function AchievementsPage() {
         </div>
 
         {filteredAchievements.length === 0 && (
-          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg shadow">
-            <div className="text-5xl mb-4">🎯</div>
-            <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
+          <div className="text-center py-12 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl">
+            <h3 className="text-xl font-semibold tracking-tight text-stone-900 dark:text-white mb-2">
               No achievements in this category yet
             </h3>
-            <p className="text-gray-600 dark:text-gray-400">Keep exploring to unlock more!</p>
+            <p className="text-stone-600 dark:text-stone-400">Keep exploring to unlock more!</p>
           </div>
         )}
       </div>
@@ -242,35 +244,37 @@ function AchievementCard({ achievement }: { achievement: Achievement }) {
 
   return (
     <div
-      className={`bg-white dark:bg-gray-800 rounded-lg shadow p-5 transition-all ${
-        earned ? 'ring-2 ring-amber-400 dark:ring-amber-500' : 'opacity-80 grayscale-[30%]'
+      className={`bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 transition-all ${
+        earned ? 'opacity-100' : 'opacity-75'
       }`}
     >
       <div className="flex items-start gap-4">
-        <div className={`text-4xl ${earned ? '' : 'filter grayscale'}`}>{achievement.icon}</div>
+        <div className={`text-4xl ${earned ? '' : 'opacity-70'}`}>{achievement.icon}</div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-semibold text-gray-900 dark:text-white truncate">
+            <h3 className="font-semibold tracking-tight text-stone-900 dark:text-white truncate">
               {achievement.name}
             </h3>
             {earned && (
-              <span className="flex-shrink-0 text-amber-500 dark:text-amber-400 text-lg">✓</span>
+              <span className="shrink-0 text-green-600 dark:text-green-500 text-lg">✓</span>
             )}
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{achievement.description}</p>
+          <p className="text-sm text-stone-600 dark:text-stone-400 mb-3">
+            {achievement.description}
+          </p>
 
           {/* Progress Bar */}
           {!earned && (
             <div className="mb-2">
-              <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+              <div className="flex justify-between text-xs text-stone-500 dark:text-stone-400 mb-1">
                 <span>
                   {achievement.current_value} / {achievement.requirement_value}
                 </span>
                 <span>{achievement.progress}%</span>
               </div>
-              <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+              <div className="h-2 bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-amber-400 dark:bg-amber-500 rounded-full transition-all"
+                  className="h-full bg-green-500 dark:bg-green-600 rounded-full transition-all"
                   style={{ width: `${achievement.progress}%` }}
                 />
               </div>
@@ -279,11 +283,11 @@ function AchievementCard({ achievement }: { achievement: Achievement }) {
 
           {/* Reward */}
           <div className="flex items-center justify-between text-sm">
-            <span className="text-amber-600 dark:text-amber-400 font-medium">
+            <span className="text-green-600 dark:text-green-500 font-medium">
               +{achievement.xp_reward} XP reward
             </span>
             {earned && achievement.earned_at && (
-              <span className="text-gray-400 dark:text-gray-500 text-xs">
+              <span className="text-stone-400 dark:text-stone-500 text-xs">
                 {new Date(achievement.earned_at).toLocaleDateString()}
               </span>
             )}

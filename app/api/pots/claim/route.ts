@@ -78,7 +78,7 @@ export async function POST(
     }
 
     // Rate limit check: 3 claims per hour per user
-    if (!RateLimits.claimExecution(user.id)) {
+    if (!(await RateLimits.claimExecution(user.id))) {
       return NextResponse.json(
         {
           success: false,

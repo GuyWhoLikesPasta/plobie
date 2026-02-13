@@ -28,7 +28,7 @@ export function showAchievementToast(achievement: Achievement) {
         <div className="flex-1 p-4">
           <div className="flex items-start">
             <div className="flex-1">
-              <p className="text-sm font-bold text-amber-900">🏆 Achievement Unlocked!</p>
+              <p className="text-sm font-bold text-amber-900">Achievement Unlocked!</p>
               <p className="mt-1 text-lg font-bold text-white">{achievement.name}</p>
               <p className="text-sm text-amber-100">{achievement.description}</p>
               {achievement.xp_reward > 0 && (

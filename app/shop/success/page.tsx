@@ -21,9 +21,9 @@ export default async function CheckoutSuccessPage({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4 transition-colors">
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-950 flex items-center justify-center px-4 transition-colors">
       <div className="max-w-md w-full">
-        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-6 sm:p-8 text-center">
+        <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-xl p-6 sm:p-8 text-center">
           {/* Success Icon */}
           <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
             <svg
@@ -42,23 +42,23 @@ export default async function CheckoutSuccessPage({
           </div>
 
           {/* Success Message */}
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white mb-4 tracking-tight">
             Order Confirmed!
           </h1>
 
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-6">
+          <p className="text-sm sm:text-base text-stone-600 dark:text-stone-400 mb-6">
             Thank you for your purchase. Your order has been successfully placed.
           </p>
 
           {/* Order Details */}
           {order && (
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 mb-6 text-left">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Order ID</p>
-              <p className="font-mono text-xs text-gray-900 dark:text-white break-all">
+            <div className="bg-stone-50 dark:bg-stone-800 rounded-xl p-4 mb-6 text-left">
+              <p className="text-sm text-stone-600 dark:text-stone-400 mb-1">Order ID</p>
+              <p className="font-mono text-xs text-stone-900 dark:text-white break-all">
                 {order.id}
               </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-3 mb-1">Total</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-sm text-stone-600 dark:text-stone-400 mt-3 mb-1">Total</p>
+              <p className="text-2xl font-bold text-stone-900 dark:text-white">
                 ${(order.total_cents / 100).toFixed(2)}
               </p>
             </div>
@@ -82,11 +82,11 @@ export default async function CheckoutSuccessPage({
               href="/my-plants"
               className="block w-full py-3 min-h-[48px] flex items-center justify-center bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
             >
-              🌿 Go to My Plants
+              Go to My Plants
             </Link>
             <Link
               href="/shop"
-              className="block w-full py-3 min-h-[48px] flex items-center justify-center bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-700 transition"
+              className="block w-full py-3 min-h-[48px] flex items-center justify-center bg-stone-200 dark:bg-stone-800 text-stone-800 dark:text-stone-200 rounded-lg font-medium hover:bg-stone-300 dark:hover:bg-stone-700 transition"
             >
               Continue Shopping
             </Link>
