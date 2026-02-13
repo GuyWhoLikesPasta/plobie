@@ -82,7 +82,39 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
   }
 
   if (!profile) {
-    return null;
+    return (
+      <div className="min-h-screen bg-stone-50 dark:bg-stone-950 flex items-center justify-center transition-colors px-4">
+        <div className="text-center max-w-md">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-stone-200 dark:bg-stone-800 flex items-center justify-center">
+            <svg
+              className="w-10 h-10 text-stone-400 dark:text-stone-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+              />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold text-stone-800 dark:text-white mb-2">
+            Profile Not Found
+          </h1>
+          <p className="text-stone-600 dark:text-stone-400 mb-6">
+            This user doesn&apos;t exist or their profile is unavailable.
+          </p>
+          <button
+            onClick={() => router.push('/hobbies')}
+            className="px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
+          >
+            Back to Community
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (

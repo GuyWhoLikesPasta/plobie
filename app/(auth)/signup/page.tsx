@@ -229,6 +229,7 @@ export default function SignupPage() {
               <button
                 onClick={handleGoogleSignup}
                 disabled={loading || !ageConfirmed || !conductConfirmed}
+                aria-label="Sign up with Google"
                 className="flex items-center justify-center px-4 py-3 min-h-[48px] border border-stone-300 dark:border-stone-700 rounded-xl hover:bg-stone-50 dark:hover:bg-stone-800 disabled:bg-stone-100 dark:disabled:bg-stone-800 disabled:cursor-not-allowed transition bg-white dark:bg-stone-900"
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
@@ -257,6 +258,7 @@ export default function SignupPage() {
               <button
                 onClick={handleAppleSignup}
                 disabled={loading || !ageConfirmed || !conductConfirmed}
+                aria-label="Sign up with Apple"
                 className="flex items-center justify-center px-4 py-3 min-h-[48px] border border-stone-300 dark:border-stone-700 rounded-xl hover:bg-stone-50 dark:hover:bg-stone-800 disabled:bg-stone-100 dark:disabled:bg-stone-800 disabled:cursor-not-allowed transition bg-white dark:bg-stone-900"
               >
                 <svg

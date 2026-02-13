@@ -307,6 +307,7 @@ export default function PlantdexPage() {
               <input
                 type="text"
                 placeholder="Search plants..."
+                aria-label="Search plants"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 className="w-full rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-2.5 text-stone-900 dark:text-white placeholder-stone-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
@@ -444,6 +445,7 @@ export default function PlantdexPage() {
               </div>
               <button
                 onClick={() => setSelectedPlant(null)}
+                aria-label="Close plant details"
                 className="rounded-xl p-2 text-stone-500 hover:bg-stone-100 dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-white"
               >
                 ×

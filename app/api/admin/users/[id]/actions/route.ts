@@ -9,8 +9,8 @@ const adminSupabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// Helper to verify admin status
-async function verifyAdmin(userId: string) {
+// Helper to verify the authenticated user is an admin
+async function verifyAdmin() {
   const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const { action } = body;
 
     // Verify admin
-    const authResult = await verifyAdmin(targetUserId);
+    const authResult = await verifyAdmin();
     if ('error' in authResult) {
       return NextResponse.json({ error: authResult.error }, { status: authResult.status });
     }

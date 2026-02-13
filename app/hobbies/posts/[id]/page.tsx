@@ -96,7 +96,37 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
   }
 
   if (!post) {
-    return null;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-stone-900 dark:via-stone-800 dark:to-stone-900 flex items-center justify-center px-4">
+        <div className="text-center max-w-md">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-stone-200 dark:bg-stone-800 flex items-center justify-center">
+            <svg
+              className="w-10 h-10 text-stone-400 dark:text-stone-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+              />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold text-stone-800 dark:text-white mb-2">Post Not Found</h1>
+          <p className="text-stone-600 dark:text-stone-400 mb-6">
+            This post doesn&apos;t exist or has been removed.
+          </p>
+          <button
+            onClick={() => router.push('/hobbies')}
+            className="px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
+          >
+            Back to Community
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (

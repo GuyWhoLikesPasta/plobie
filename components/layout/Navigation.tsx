@@ -164,7 +164,8 @@ export default function Navigation() {
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="lg:hidden p-2 rounded-lg text-stone-600 hover:bg-stone-100 dark:text-stone-400 dark:hover:bg-stone-800 transition-colors"
-              aria-label="Toggle menu"
+              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileOpen}
             >
               {mobileOpen ? (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

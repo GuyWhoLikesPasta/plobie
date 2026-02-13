@@ -234,6 +234,7 @@ export default function HobbiesPage() {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Search posts..."
+              aria-label="Search community posts"
               className="w-full px-4 py-3 pl-11 border border-stone-200 dark:border-stone-800 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent text-stone-900 dark:text-white bg-white dark:bg-stone-900 text-base"
             />
             <span className="absolute left-4 top-3.5 text-stone-500 dark:text-stone-500 pointer-events-none">

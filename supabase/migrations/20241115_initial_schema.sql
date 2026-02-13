@@ -42,14 +42,18 @@ create index if not exists idx_profiles_is_admin on public.profiles(is_admin) wh
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer as $$
 begin
-  insert into public.users(id, email)
-  values (new.id, new.email)
+  insert into public.profiles(id, username, full_name)
+  values (
+    new.id,
+    coalesce(new.raw_user_meta_data->>'username', split_part(new.email,'@',1)),
+    coalesce(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'username', split_part(new.email,'@',1))
+  )
   on conflict do nothing;
-  
-  insert into public.profiles(user_id, username)
-  values (new.id, coalesce(new.raw_user_meta_data->>'name', split_part(new.email,'@',1)))
+
+  insert into public.xp_balances(profile_id)
+  values (new.id)
   on conflict do nothing;
-  
+
   return new;
 end $$;
 

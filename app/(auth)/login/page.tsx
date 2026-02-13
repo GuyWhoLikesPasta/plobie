@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { trackEvent } from '@/lib/analytics';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -12,6 +12,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/';
   const supabase = createClient();
 
   const handleEmailLogin = async (e: React.FormEvent) => {
@@ -28,8 +30,8 @@ export default function LoginPage() {
       setError(error.message);
       setLoading(false);
     } else {
-      trackEvent('user_signup', 'email');
-      router.push('/');
+      trackEvent('user_login', 'email');
+      router.push(redirectTo);
       router.refresh();
     }
   };
@@ -41,7 +43,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectTo)}`,
       },
     });
 
@@ -58,7 +60,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'apple',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectTo)}`,
       },
     });
 
@@ -162,6 +164,7 @@ export default function LoginPage() {
               <button
                 onClick={handleGoogleLogin}
                 disabled={loading}
+                aria-label="Sign in with Google"
                 className="flex items-center justify-center px-4 py-3 min-h-[48px] border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-700 disabled:bg-stone-100 dark:disabled:bg-stone-700 disabled:cursor-not-allowed transition bg-white dark:bg-stone-800"
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
@@ -190,6 +193,7 @@ export default function LoginPage() {
               <button
                 onClick={handleAppleLogin}
                 disabled={loading}
+                aria-label="Sign in with Apple"
                 className="flex items-center justify-center px-4 py-3 min-h-[48px] border border-stone-300 dark:border-stone-700 rounded-xl hover:bg-stone-50 dark:hover:bg-stone-800 disabled:bg-stone-100 dark:disabled:bg-stone-800 disabled:cursor-not-allowed transition bg-white dark:bg-stone-900"
               >
                 <svg
