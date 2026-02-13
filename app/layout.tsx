@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
 import ToastProvider from '@/components/providers/ToastProvider';
 import { AnalyticsProviders } from './analytics';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
@@ -146,7 +147,8 @@ export default function RootLayout({
         <ThemeProvider>
           <ToastProvider />
           <Navigation />
-          {children}
+          <main className="min-h-[calc(100vh-4rem)]">{children}</main>
+          <Footer />
           <AnalyticsProviders />
         </ThemeProvider>
       </body>

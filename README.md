@@ -1,105 +1,96 @@
-# 🌱 Plobie
+# Plobie
 
 A plant-centered social commerce platform connecting real-world pottery, digital gardens, and a vibrant community of plant enthusiasts.
 
-## 🚀 Features
-
-**Core Systems:**
-- ✅ Authentication - Email, OAuth (Google, Apple), Password Reset
-- ✅ Shop - E-commerce with Stripe integration
-- ✅ Gift Cards - Special offers ($20 → $45 value, 125% bonus)
-- ✅ QR Claiming - Link physical pots (+500 XP per pot)
-- ✅ XP System - Tiered leveling (250 levels), 25+ action types, 3000 XP daily cap
-
-**Community:**
-- ✅ Posts & Comments - Create content, earn XP
-- ✅ Image Uploads - Share photos (5MB limit)
-- ✅ Reactions - Like posts with ❤️
-- ✅ Search & Filters - Find posts by keyword or hobby group
-- ✅ User Profiles - View stats, posts, and achievements
-
-**Content:**
-- ✅ Learn Articles - 24 educational guides (+10 XP per article, cap 10/day)
-- ✅ My Plants Dashboard - View collection and stats
-- ✅ Achievements System - 15+ unlockable achievements with XP rewards
-
-**Admin:**
-- ✅ User Management - Promote admins, view user stats
-- ✅ Content Moderation - Delete/hide posts and comments
-- ✅ Feature Flags - Toggle features on/off
-- ✅ Analytics Dashboard - View platform metrics
-
-**Notifications:**
-- ✅ Real-time Notifications - Bell icon with unread badge
-- ✅ Notification Types - Comments, likes, level-ups, XP caps, achievements
-- ✅ Achievement Notifications - Auto-notify when unlocking achievements
-- ✅ Full Notifications Page - History, filters, management
-- ✅ Auto-refresh - 30-second polling for updates
-
-**Performance:**
-- ✅ Lighthouse Scores - 94-98% perf, 100% a11y, 100% bp, 100% seo (production)
-- ✅ WCAG AA Compliant - 4.5:1 contrast ratio on all buttons
-- ✅ Image Optimization - next/image with AVIF/WebP
-- ✅ Lazy Loading - Images load on scroll
-- ✅ Database Indexes - 15+ optimized queries
-- ✅ Bundle Optimization - Code splitting and tree-shaking
-- ✅ Core Web Vitals - Optimized LCP, FID, CLS
-- ✅ Font Optimization - Preloaded with display swap
-
-**Quality:**
-- ✅ 101 unit tests passing
-- ✅ TypeScript strict mode
-- ✅ 100% mobile responsive (16 pages)
-- ✅ Toast notifications
-- ✅ Skeleton loading states
-- ✅ Error boundaries (loading, error, 404 pages)
-- ✅ SEO optimized (metadata, Open Graph, Twitter Cards)
-- ✅ WCAG 2.1 AA compliant (accessibility)
-- ✅ Pre-commit hooks (ESLint, Prettier, TypeScript)
-
-**Monitoring:**
-- ✅ Sentry Error Tracking - Client, server, and edge
-- ✅ Vercel Analytics - Page views and user metrics
-- ✅ Speed Insights - Core Web Vitals (LCP, FID, CLS)
-- ✅ Session Replay - Debug user issues (10% sampling)
-- ✅ Performance Monitoring - Real user metrics
-
-**Developer Tools:**
-- ✅ Database Reset Script - Clean dev environment
-- ✅ Test User Creation - test@plobie.com
-- ✅ Admin Role Management - Grant/revoke admin
-- ✅ Data Seeding - Products, pots, sample data
-
-**Unity Integration:** ✅ **Deployed - Testing with James**
-- ✅ User Profile API - Get user data, XP, level, stats
-- ✅ Game Session API - Track playtime, award XP (20 XP per 30 min block)
-- ✅ Game Progress API - Save/load game state (up to 1MB)
-- ✅ Action XP API - Award XP for game actions (up to 500 XP)
-- ✅ JavaScript Bridge - `window.plobie.getAccessToken()` for auth
-- ✅ Unity WebGL Build - Live at `/games` page
-- ✅ Game Actions - `register_plant` (160 XP), `daily_reward` (5 XP), `fetch_throw` (5 XP)
-- ✅ Complete Documentation - See `.local-docs/unity/JAMES_COMPLETE_GUIDE.md`
-
 **Production:** https://plobie.vercel.app
 
-**Status:** ✅ All systems operational | Unity build deployed | Awaiting James QA
+---
+
+## Features
+
+**Core Systems:**
+- Authentication -- Email, OAuth (Google, Apple), Password Reset
+- Shop -- E-commerce with Stripe integration
+- Gift Cards -- Special offers ($20 to $45 value, 125% bonus)
+- QR Claiming -- Link physical pots (+500 XP per pot)
+- XP System -- Tiered leveling (250 levels), 25+ action types, 3000 XP daily cap
+
+**Community:**
+- Posts and Comments -- Create content, earn XP
+- Image Uploads -- Share photos (5MB limit)
+- Reactions -- Like posts with hearts
+- Search and Filters -- Find posts by keyword or hobby group
+- User Profiles -- View stats, posts, and achievements
+
+**Content:**
+- Learn Articles -- 24 educational guides (+10 XP per article, cap 10/day)
+- My Plants Dashboard -- View collection and stats
+- Achievements System -- 15+ unlockable achievements with XP rewards
+- Plantdex -- 50 plant species encyclopedia with collection tracking
+
+**Unity Integration:**
+- 3D WebGL Garden -- Live at `/games` page
+- Auth Bridge -- `window.plobie.getAccessToken()` for seamless auth
+- Game Actions -- register_plant (160 XP), daily_reward (5 XP), fetch_throw (5 XP)
+- Session tracking, progress save/load, action-based XP
+
+**Admin:**
+- User Management -- Promote admins, view user stats
+- Content Moderation -- Delete/hide posts and comments
+- Feature Flags -- Toggle features on/off
+- Analytics Dashboard -- View platform metrics
+
+**Notifications:**
+- Real-time bell icon with unread badge
+- Types: comments, likes, level-ups, XP caps, achievements
+- Full notifications page with history, filters, management
+- 30-second auto-refresh polling
 
 **Security:**
-- ✅ Centralized middleware for route protection (auth + admin)
-- ✅ Rate limiting (Upstash Redis in production, in-memory for dev)
-- ✅ RLS policies on all database tables
-- ✅ Input validation with Zod schemas
-- ✅ CSRF protection via Supabase auth
-- ✅ No secrets in codebase (env vars only, `.env.example` template provided)
-- ✅ .gitignore excludes all .env files and .local-docs
+- Centralized middleware for route protection (auth + admin)
+- Rate limiting (Upstash Redis in production, in-memory for dev)
+- RLS policies on all database tables
+- Input validation with Zod schemas
+- CSRF protection via Supabase auth
+- No secrets in codebase (env vars only, `.env.example` template provided)
 
-## Overview
+**Performance:**
+- Lighthouse Scores: 94-98% perf, 100% a11y, 100% bp, 100% seo
+- Image optimization with AVIF/WebP via next/image
+- Skeleton loading states on all pages
+- Database indexes on 15+ queries
+- Core Web Vitals optimized (LCP, FID, CLS)
+- Font preloading with display swap
 
-Plobie combines four core experiences:
-- **Hobbies** - Reddit-style community forum for plant lovers
-- **My Plants** - Interactive Unity WebGL garden with QR-linked pottery
-- **Games** - Plant-themed web games with XP rewards
-- **Shop** - E-commerce for pottery, plants, and accessories
+**Monitoring:**
+- Sentry error tracking (client, server, edge)
+- Vercel Analytics and Speed Insights
+- Session replay (10% sampling)
+
+---
+
+## Design System
+
+The app uses a luxury-tier design language with these principles:
+
+**Color Palette:** Stone neutrals (`stone-50` through `stone-950`) as the primary neutral system. Green (`green-600`, `green-500`, `green-400`) as the accent color, used sparingly.
+
+**No Emoji UI:** Emojis are never used as UI decoration (icons, headers, buttons, badges). SVG icons from Heroicons are used instead. Emojis are acceptable only as data content (e.g., plant species icons stored in the database).
+
+**Typography:** Geist Sans font, `tracking-tight` on headings, `leading-relaxed` on body text. `-webkit-font-smoothing: antialiased` for crisp rendering.
+
+**Components:**
+- Cards: `bg-white dark:bg-stone-900`, `border-stone-200 dark:border-stone-800`, `rounded-2xl`
+- Buttons: Primary `bg-green-600 hover:bg-green-500`, secondary with stone borders
+- Inputs: `rounded-xl`, `border-stone-300 dark:border-stone-700`
+- Navigation: Sticky glass-morphism header with `backdrop-blur`
+- Footer: Clean four-column layout with brand, nav links, copyright
+
+**Effects:** Glass morphism (`.glass` class), subtle card hover borders, green shadow accents on primary CTAs, custom scrollbar styling.
+
+**Dark Mode:** Full dark mode support with class-based toggle (light/dark/system). All components have explicit dark variants.
+
+---
 
 ## Tech Stack
 
@@ -109,7 +100,8 @@ Plobie combines four core experiences:
 - **Hosting:** Vercel
 - **Analytics:** Vercel Analytics, Speed Insights, Google Analytics 4
 - **Error Tracking:** Sentry (client, server, edge)
-- **Code Quality:** Husky, lint-staged, Prettier, ESLint
+- **Rate Limiting:** Upstash Redis (production), in-memory (dev)
+- **Code Quality:** Husky, lint-staged, Prettier, ESLint, TypeScript strict mode
 
 ## Getting Started
 
@@ -122,87 +114,22 @@ Plobie combines four core experiences:
 ### Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/GuyWhoLikesPasta/plobie.git
 cd plobie
-
-# Install dependencies
 npm install
-
-# Copy environment template
 cp .env.example .env.local
 ```
 
 ### Environment Setup
 
-Fill in `.env.local` with your credentials:
-
-```bash
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-
-# Stripe
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-
-# App
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
-JWT_SECRET=your_jwt_secret
-
-# Analytics (optional)
-NEXT_PUBLIC_GA4_MEASUREMENT_ID=G-...
-NEXT_PUBLIC_SENTRY_DSN=https://...
-SENTRY_DSN=https://...
-```
+Fill in `.env.local` with your credentials. See `.env.example` for all required and optional variables.
 
 ### Database Setup
 
 1. Go to your Supabase project dashboard
 2. Navigate to SQL Editor
-3. Run migrations in order from `supabase/migrations/`:
-   ```
-   20241115_initial_schema.sql
-   20241115_rls_policies.sql
-   20241126_xp_system.sql
-   20241126_compatibility_fix.sql
-   20241126_posts_compatibility.sql
-   20241126_fix_posts_rls.sql
-   20241202_admin_features.sql
-   20241202_fix_order_items_rls.sql
-   20241207_notifications_system.sql
-   20241207_level_up_notifications.sql
-   20241207_performance_indexes.sql
-   20241217_unity_game_tables.sql
-   ```
-
-**See**: `.local-docs/week5/NOTIFICATIONS_SETUP.md`, `.local-docs/week5/PERFORMANCE_SETUP.md`, and `.local-docs/unity/` for detailed setup guides.
-
-### Seed Development Data
-
-```bash
-# Seed products
-npm run seed:products
-
-# Seed pots
-npm run seed:pots
-
-# Seed sample data (posts, comments, users)
-npm run seed
-
-# Create test user
-npm run user:create
-
-# Make test user admin
-npm run user:admin test@plobie.com
-```
-
-This creates:
-- Feature flags
-- Test pots (TEST001-003, DEMO123, DEMO456)
-- Sample products with variants
+3. Run migrations in order from `supabase/migrations/`
+4. Or use `supabase/CANONICAL_RESTORE.sql` for a full clean setup
 
 ### Run Development Server
 
@@ -210,7 +137,7 @@ This creates:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see the application.
+Open http://localhost:3000
 
 ## Available Scripts
 
@@ -221,8 +148,6 @@ npm run start           # Start production server
 npm run lint            # Run ESLint
 npm run typecheck       # Run TypeScript compiler check
 npm test                # Run unit tests
-npm test:ui             # Run tests with UI
-npm test:coverage       # Run tests with coverage
 npm run seed            # Seed development data
 ```
 
@@ -230,151 +155,60 @@ npm run seed            # Seed development data
 
 ```
 plobie/
-├── app/                 # Next.js app directory
+├── app/                 # Next.js app directory (23 pages)
 │   ├── api/            # API routes
-│   │   ├── checkout/   # Stripe checkout
-│   │   ├── flags/      # Feature flags
-│   │   ├── healthz/    # Health check
-│   │   └── stripe/     # Stripe webhooks
-│   └── page.tsx        # Home page
-├── components/         # React components
+│   ├── (auth)/         # Login, signup, password reset
+│   ├── hobbies/        # Community feed + learn articles
+│   ├── shop/           # E-commerce + gift cards
+│   └── games/          # Unity WebGL garden
+├── components/
+│   ├── layout/         # Navigation, Footer
+│   ├── notifications/  # NotificationBell
+│   ├── onboarding/     # WelcomeModal
+│   ├── posts/          # LikeButton
+│   ├── shop/           # AddToCartButton
+│   ├── skeletons/      # Loading skeletons
+│   └── theme/          # ThemeToggle, ThemeProvider
 ├── lib/                # Shared utilities
-│   ├── analytics.ts    # GA4 events
-│   ├── feature-flags.ts
-│   ├── stripe.ts
 │   ├── supabase.ts     # Database clients
-│   ├── types.ts        # TypeScript types
-│   └── xp-engine.ts    # Gamification
-├── scripts/            # Utility scripts
-│   └── seed-dev.ts     # Database seeding
+│   ├── rate-limit.ts   # Upstash Redis rate limiting
+│   ├── xp-engine.ts    # Gamification engine
+│   └── claim-tokens.ts # JWT for pot claims
+├── middleware.ts        # Centralized auth protection
 ├── supabase/
-│   └── migrations/     # Database migrations
-└── public/             # Static assets
+│   ├── migrations/     # Database migrations
+│   └── CANONICAL_RESTORE.sql  # Full schema + seed
+└── public/             # Static assets + Unity build
 ```
-
-## Key Features
-
-### XP System
-Tiered leveling system with 250 levels:
-- **Tier 1 (1-49):** 150 + 17*(level-1) XP per level
-- **Tier 2 (50-99):** 1000 + 30*(level-50) XP per level  
-- **Tier 3 (100-249):** 2500 + 40*(level-100) XP per level
-
-Key XP actions:
-- Claiming pots: +500 XP (one-time per pot)
-- Creating posts: +20 XP (cap 10/day)
-- Playing games: +20 XP per 30 min (cap 6 blocks/day)
-- Reading articles: +10 XP (cap 10/day)
-- Garden care: +25 XP (cap 200/day)
-- Planting new: +50 XP (cap 10/day)
-- Watering plants: +5 XP (cap 20/day)
-- Plant maturity: +100 XP (one-time per plant)
-
-Daily cap: 3000 XP across all activities
-
-### Feature Flags
-Control features dynamically:
-- `shop_enabled`
-- `games_enabled`
-- `hobbies_enabled`
-- `my_plants_enabled`
-- `qr_claim_enabled`
-
-### Stripe Integration
-- Product variants (size, color)
-- Secure checkout with idempotency
-- Webhook event processing
-- Order tracking
 
 ## API Endpoints
 
-**System:**
-- `GET /api/healthz` - Health check
-- `GET /api/flags` - Get feature flags
-- `PATCH /api/flags` - Toggle flag (admin only)
+**System:** healthz, flags
 
-**Posts & Community:**
-- `GET /api/posts` - List posts with filters
-- `POST /api/posts` - Create post (+20 XP)
-- `GET /api/posts/[id]` - Get post detail
-- `POST /api/posts/[id]/comments` - Add comment (+2 XP)
-- `POST /api/posts/[id]/like` - Like post
-- `DELETE /api/posts/[id]/like` - Unlike post
+**Community:** posts (CRUD), comments, likes, profiles, avatar upload
 
-**Notifications:**
-- `GET /api/notifications` - Fetch notifications
-- `PATCH /api/notifications` - Mark as read
-- `DELETE /api/notifications` - Delete notifications
-- `POST /api/notifications` - Create test notification
+**Notifications:** fetch, mark read, delete, create
 
-**User:**
-- `GET /api/profiles/[username]` - Get user profile
-- `POST /api/profiles/avatar` - Upload avatar
+**Shop:** checkout (Stripe), webhooks, gift cards (purchase, redeem)
 
-**Shop:**
-- `POST /api/checkout` - Create Stripe checkout (rate limited: 10/hr)
-- `POST /api/stripe/webhook` - Handle Stripe events
-- `GET /api/gift-cards` - List user's gift cards
-- `POST /api/gift-cards` - Purchase gift card (rate limited: 5/hr)
-- `POST /api/gift-cards/redeem` - Redeem gift card code
+**Learn:** articles (list, detail), mark-read (+10 XP)
 
-**Learn Articles:**
-- `GET /api/articles` - List all published articles (filter by category, difficulty)
-- `GET /api/articles/[id]` - Get article by ID or slug (includes full content)
-- `POST /api/learn/mark-read` - Mark article read (+10 XP)
+**XP and Claims:** award XP, claim pots (+500 XP)
 
-**XP & Claims:**
-- `POST /api/xp/award` - Award XP (admin)
-- `POST /api/pots/claim` - Claim pot (+500 XP)
+**Unity/Games:** sessions, progress save/load, action XP
 
-**Unity/Games:**
-- `POST /api/games/session` - Start/end game session
-- `GET /api/games/session` - Get active session
-- `GET /api/games/progress` - Load game state
-- `POST /api/games/progress` - Save game state (1MB max)
-- `POST /api/games/xp` - Award action-based XP
-- `POST /api/dev/reset-xp` - Reset XP caps (dev only)
-- `GET /api/dev/xp-status` - Inspect XP status (dev only)
+**Plantdex:** species list, details, user collection (plant, water, care, grow)
 
-**My Plants:**
-- `GET /api/my-plants` - Get user's garden
-
-**Plantdex (Plant Encyclopedia & Collection):**
-- `GET /api/plantdex` - List all 50 plant species (filter by category, difficulty)
-- `GET /api/plantdex/[id]` - Get plant details by ID or key (includes toxicity, rarity, biome)
-- `GET /api/user/plants` - Get user's plant collection + stats
-- `POST /api/user/plants` - Plant something new (+50 XP)
-- `GET /api/user/plants/[id]` - Get specific user plant
-- `PUT /api/user/plants/[id]` - Water/care/grow/rename plant
-- `DELETE /api/user/plants/[id]` - Remove plant from collection
-
-## Development
-
-### Testing Stripe Locally
-
-```bash
-# In separate terminal, forward webhooks
-stripe listen --forward-to localhost:3000/api/stripe/webhook
-```
-
-### Database Migrations
-
-```bash
-# Create new migration
-npx supabase migration new migration_name
-
-# Apply migrations
-npx supabase db push
-```
+**My Plants:** garden overview
 
 ## Contributing
 
 1. Create a feature branch from `main`
-2. Make your changes
+2. Follow the design system (stone palette, no emoji UI, rounded-xl/2xl)
 3. Run `npm run typecheck` and `npm run lint`
 4. Commit with descriptive messages
 5. Push and create a pull request
 
 ## License
 
-Proprietary - All rights reserved
+Proprietary -- All rights reserved

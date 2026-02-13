@@ -100,8 +100,20 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-xl overflow-hidden">
             <div className="grid md:grid-cols-2 gap-0">
               {/* Product Image */}
-              <div className="relative bg-gradient-to-br from-green-100 to-emerald-200 dark:from-green-900/30 dark:to-emerald-900/30 p-8 flex items-center justify-center min-h-[400px]">
-                <span className="text-[12rem] opacity-90">🏺</span>
+              <div className="relative bg-gradient-to-br from-stone-100 to-stone-200 dark:from-stone-800 dark:to-stone-900 p-8 flex items-center justify-center min-h-[400px]">
+                <svg
+                  className="w-32 h-32 text-stone-300 dark:text-stone-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={0.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a1.5 1.5 0 001.5-1.5V5.25a1.5 1.5 0 00-1.5-1.5H3.75a1.5 1.5 0 00-1.5 1.5v14.25a1.5 1.5 0 001.5 1.5z"
+                  />
+                </svg>
 
                 {/* Badges */}
                 <div className="absolute top-4 left-4 flex flex-col gap-2">
