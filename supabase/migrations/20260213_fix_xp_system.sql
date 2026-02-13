@@ -182,6 +182,8 @@ GRANT EXECUTE ON FUNCTION public.calculate_level TO authenticated;
 GRANT EXECUTE ON FUNCTION public.calculate_level TO service_role;
 
 -- Also fix the check_achievements function to use the new level calculation
+DROP FUNCTION IF EXISTS public.check_achievements(UUID);
+
 CREATE OR REPLACE FUNCTION public.check_achievements(p_profile_id UUID)
 RETURNS TABLE (
   achievement_id UUID,
