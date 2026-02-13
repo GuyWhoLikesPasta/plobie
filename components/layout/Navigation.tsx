@@ -12,6 +12,7 @@ export default function Navigation() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [profileUsername, setProfileUsername] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -24,14 +25,16 @@ export default function Navigation() {
       if (user) {
         supabase
           .from('profiles')
-          .select('is_admin')
+          .select('is_admin, username')
           .eq('id', user.id)
           .single()
           .then(({ data }) => {
             setIsAdmin(data?.is_admin || false);
+            setProfileUsername(data?.username || null);
           });
       } else {
         setIsAdmin(false);
+        setProfileUsername(null);
       }
     });
 
@@ -123,14 +126,14 @@ export default function Navigation() {
               <div className="flex items-center gap-2">
                 <NotificationBell />
                 <Link
-                  href={`/profile/${user.email?.split('@')[0]}`}
+                  href={`/profile/${profileUsername || user.email?.split('@')[0]}`}
                   className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
                 >
                   <div className="w-7 h-7 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-xs font-bold text-green-700 dark:text-green-400">
-                    {(user.email?.[0] || 'U').toUpperCase()}
+                    {(profileUsername?.[0] || user.email?.[0] || 'U').toUpperCase()}
                   </div>
                   <span className="text-sm font-medium text-stone-700 dark:text-stone-300">
-                    {user.email?.split('@')[0]}
+                    {profileUsername || user.email?.split('@')[0]}
                   </span>
                 </Link>
                 <button
