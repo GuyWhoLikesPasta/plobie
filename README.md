@@ -13,7 +13,7 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - Shop -- E-commerce with Stripe integration
 - Gift Cards -- Special offers ($20 to $45 value, 125% bonus)
 - QR Claiming -- Link physical pots (+500 XP per pot)
-- XP System -- Tiered leveling (250 levels), 25+ action types, 3000 XP daily cap
+- XP System -- Tiered leveling (250 levels, 3-tier formula), 25+ action types, 3000 XP daily cap, level-up notifications
 
 **Community:**
 - Posts and Comments -- Create content, earn XP
@@ -193,13 +193,15 @@ plobie/
 
 **Learn:** articles (list, detail), mark-read (+10 XP)
 
-**XP and Claims:** award XP, claim pots (+500 XP)
+**XP and Claims:** award XP, claim pots (+500 XP via apply_xp RPC)
 
 **Unity/Games:** sessions, progress save/load, action XP
 
 **Plantdex:** species list, details, user collection (plant, water, care, grow)
 
 **My Plants:** garden overview
+
+**Reports:** submit content reports (post, comment, profile)
 
 ## Contributing
 
