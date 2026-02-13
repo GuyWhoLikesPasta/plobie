@@ -169,7 +169,7 @@ export async function POST(
       const { error: notificationError } = await adminSupabase.rpc('create_notification', {
         p_user_id: post.author_id,
         p_type: 'comment',
-        p_title: '💬 New comment on your post',
+        p_title: 'New comment on your post',
         p_message: `${commenterProfile?.username || 'Someone'} commented on "${post.title?.substring(0, 50) || 'your post'}"`,
         p_link: `/hobbies/posts/${postId}`,
         p_metadata: {

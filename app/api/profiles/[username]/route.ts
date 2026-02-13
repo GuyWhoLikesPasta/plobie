@@ -11,17 +11,17 @@ import { levelFromTotalXp } from '@/lib/xp-engine';
 
 function getActionIcon(actionType: string): string {
   const icons: Record<string, string> = {
-    post: '📝',
-    comment: '💬',
-    claim: '🪴',
-    article_read: '📖',
-    game_session: '🎮',
-    game_action: '🎯',
-    admin_award: '⭐',
-    achievement_bonus: '🏆',
-    daily_login: '🔥',
+    post: 'post',
+    comment: 'comment',
+    claim: 'claim',
+    article_read: 'article',
+    game_session: 'game',
+    game_action: 'game',
+    admin_award: 'award',
+    achievement_bonus: 'achievement',
+    daily_login: 'login',
   };
-  return icons[actionType] || '✨';
+  return icons[actionType] || 'default';
 }
 
 export async function GET(
