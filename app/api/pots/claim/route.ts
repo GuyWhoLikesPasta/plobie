@@ -13,6 +13,7 @@ import { verifyClaimToken } from '@/lib/claim-tokens';
 import { RateLimits } from '@/lib/rate-limit';
 import { ApiResponse, ErrorCodes } from '@/lib/types';
 import { trackEvent, GA4_EVENTS } from '@/lib/analytics';
+import { XP_RULES } from '@/lib/xp-engine';
 
 const RequestSchema = z.object({
   token: z.string().min(1),
@@ -182,16 +183,14 @@ export async function POST(
       );
     }
 
-    // Award +500 XP for pot linking
-    const xpAmount = 500;
-    const { error: xpError } = await adminSupabase.from('xp_events').insert({
-      user_id: user.id,
-      action_type: 'pot_link',
-      amount: xpAmount,
-      metadata: {
-        pot_id: pot.id,
-        pot_code: payload.pot_code,
-      },
+    // Award XP via apply_xp stored procedure (enforces daily cap, level calc, etc.)
+    const xpAmount = XP_RULES.pot_link.base;
+    const { data: xpResult, error: xpError } = await adminSupabase.rpc('apply_xp', {
+      p_profile_id: profile.id,
+      p_action_type: 'pot_link',
+      p_xp_amount: xpAmount,
+      p_description: `Pot claimed: ${payload.pot_code}`,
+      p_reference_id: pot.id,
     });
 
     if (xpError) {
@@ -199,29 +198,17 @@ export async function POST(
       // Don't fail the claim if XP fails, but log it
     }
 
-    // Update XP balance
-    const { data: currentBalance } = await adminSupabase
-      .from('xp_balances')
-      .select('balance')
-      .eq('user_id', user.id)
-      .single();
-
-    const newTotal = (currentBalance?.balance || 0) + xpAmount;
-    await adminSupabase.from('xp_balances').upsert({
-      user_id: user.id,
-      balance: newTotal,
-      updated_at: new Date().toISOString(),
-    });
+    const xpAwarded = xpResult?.[0]?.xp_awarded ?? xpAmount;
 
     // Track analytics event
-    trackEvent('pot_claim_succeeded', pot.id, xpAmount);
+    trackEvent('pot_claim_succeeded', pot.id, xpAwarded);
 
     return NextResponse.json(
       {
         success: true,
         data: {
           pot_id: pot.id,
-          xp_awarded: xpAmount,
+          xp_awarded: xpAwarded,
         },
       },
       { status: 200 }

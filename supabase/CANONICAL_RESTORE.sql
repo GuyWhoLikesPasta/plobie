@@ -690,7 +690,10 @@ DECLARE
   v_level_after INT;
   v_xp_to_add INT;
   v_capped BOOLEAN := false;
-  v_daily_cap INT := 100;
+  v_daily_cap INT := 3000;
+  v_xp_acc INT := 0;
+  v_lvl INT := 1;
+  v_needed INT;
 BEGIN
   -- Get current XP balance (may not exist)
   SELECT xp_balances.total_xp, xp_balances.daily_xp, xp_balances.last_reset_at
@@ -711,8 +714,18 @@ BEGIN
     v_last_reset_at := NOW();
   END IF;
   
-  -- Calculate level before
-  v_level_before := GREATEST(1, FLOOR(v_current_total_xp / 100.0) + 1);
+  -- Calculate level before using tiered formula
+  v_xp_acc := 0; v_lvl := 1;
+  WHILE v_lvl < 250 LOOP
+    IF v_lvl < 50 THEN v_needed := 150 + 17 * (v_lvl - 1);
+    ELSIF v_lvl < 100 THEN v_needed := 1000 + 30 * (v_lvl - 50);
+    ELSE v_needed := 2500 + 40 * (v_lvl - 100);
+    END IF;
+    EXIT WHEN v_xp_acc + v_needed > v_current_total_xp;
+    v_xp_acc := v_xp_acc + v_needed;
+    v_lvl := v_lvl + 1;
+  END LOOP;
+  v_level_before := v_lvl;
   
   -- Check if daily cap would be exceeded
   IF v_current_daily_xp + p_xp_amount > v_daily_cap THEN
@@ -755,8 +768,18 @@ BEGIN
   INSERT INTO public.xp_events (profile_id, action_type, xp_amount, description)
   VALUES (p_profile_id, p_action_type, v_xp_to_add, p_description);
   
-  -- Calculate level after
-  v_level_after := GREATEST(1, FLOOR(v_current_total_xp / 100.0) + 1);
+  -- Calculate level after using tiered formula
+  v_xp_acc := 0; v_lvl := 1;
+  WHILE v_lvl < 250 LOOP
+    IF v_lvl < 50 THEN v_needed := 150 + 17 * (v_lvl - 1);
+    ELSIF v_lvl < 100 THEN v_needed := 1000 + 30 * (v_lvl - 50);
+    ELSE v_needed := 2500 + 40 * (v_lvl - 100);
+    END IF;
+    EXIT WHEN v_xp_acc + v_needed > v_current_total_xp;
+    v_xp_acc := v_xp_acc + v_needed;
+    v_lvl := v_lvl + 1;
+  END LOOP;
+  v_level_after := v_lvl;
   
   -- Return results
   RETURN QUERY SELECT 

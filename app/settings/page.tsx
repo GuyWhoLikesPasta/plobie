@@ -140,7 +140,7 @@ export default function SettingsPage() {
 
     try {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('avatar', file);
 
       const res = await fetch('/api/profiles/avatar', {
         method: 'POST',

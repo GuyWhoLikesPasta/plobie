@@ -86,7 +86,9 @@ function getApiBaseUrl() {
  * @param {string} message - Message to log
  */
 function logFromUnity(message) {
-  console.log('[Unity]', message);
+  if (typeof window !== 'undefined' && window.__PLOBIE_DEV__) {
+    console.log('[Unity]', message);
+  }
 }
 
 /**
@@ -141,8 +143,10 @@ window.plobie = {
   version: '1.0.0'
 };
 
-// Log bridge initialization
-console.log('[Unity Bridge] Initialized v1.0.0');
-console.log('[Unity Bridge] User logged in:', isUserLoggedIn());
-console.log('[Unity Bridge] Access via window.plobie.getAccessToken()');
+// Log bridge initialization (dev only)
+if (typeof window !== 'undefined' && window.__PLOBIE_DEV__) {
+  console.log('[Unity Bridge] Initialized v1.0.0');
+  console.log('[Unity Bridge] User logged in:', isUserLoggedIn());
+  console.log('[Unity Bridge] Access via window.plobie.getAccessToken()');
+}
 

@@ -102,6 +102,11 @@ export default function RootLayout({
           }}
         />
         {/* Unity Bridge - exposes window.plobie for WebGL auth */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.__PLOBIE_DEV__=${process.env.NODE_ENV === 'development'};`,
+          }}
+        />
         <script src="/unity-bridge.js" defer />
         {/* JSON-LD Structured Data */}
         <script
