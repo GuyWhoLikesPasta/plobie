@@ -5,10 +5,9 @@ const features = [
     title: 'Shop',
     description: 'Handcrafted pottery and curated plant accessories from independent makers.',
     href: '/shop',
-    gradient: 'from-amber-500 to-orange-600',
     icon: (
       <svg
-        className="w-6 h-6"
+        className="w-5 h-5"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -26,10 +25,9 @@ const features = [
     title: 'Community',
     description: 'Connect with fellow plant enthusiasts. Share tips, photos, and grow together.',
     href: '/hobbies',
-    gradient: 'from-green-500 to-emerald-600',
     icon: (
       <svg
-        className="w-6 h-6"
+        className="w-5 h-5"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -47,10 +45,9 @@ const features = [
     title: 'My Garden',
     description: 'Track your plants, monitor health, and build your personal botanical collection.',
     href: '/my-plants',
-    gradient: 'from-teal-500 to-cyan-600',
     icon: (
       <svg
-        className="w-6 h-6"
+        className="w-5 h-5"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -68,10 +65,9 @@ const features = [
     title: 'Play',
     description: 'Immersive 3D plant world. Earn XP, unlock achievements, and level up.',
     href: '/games',
-    gradient: 'from-violet-500 to-purple-600',
     icon: (
       <svg
-        className="w-6 h-6"
+        className="w-5 h-5"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -96,36 +92,46 @@ const xpActions = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white dark:bg-stone-950">
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-green-50 via-emerald-50/50 to-stone-50 dark:from-green-950/20 dark:via-stone-950 dark:to-stone-950" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-green-100/40 via-transparent to-transparent dark:from-green-900/10" />
+        {/* Light mode: clean warm white. Dark mode: subtle green glow */}
+        <div className="absolute inset-0 bg-stone-50 dark:bg-stone-950" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-stone-50 to-white dark:from-stone-950 dark:via-stone-900/50 dark:to-stone-950" />
+        {/* Subtle decorative element */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-green-500/[0.03] dark:bg-green-500/[0.05] rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-green-500/[0.02] dark:bg-green-500/[0.03] rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-28 sm:pt-28 sm:pb-36">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-100/80 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-sm font-medium mb-6">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32 sm:pt-28 sm:pb-40">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 dark:bg-green-950/40 border border-green-200/60 dark:border-green-800/40 text-green-700 dark:text-green-400 text-xs font-medium tracking-wide uppercase mb-8">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-              Now live with 3D Unity garden
+              Now live with 3D garden
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-stone-900 dark:text-white leading-[1.1] mb-6">
-              Where plant lovers
-              <span className="text-green-600 dark:text-green-400"> grow together</span>
+            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold tracking-tight leading-[1.08] mb-6">
+              <span className="text-stone-900 dark:text-white">Where plant lovers</span>
+              <br />
+              <span className="text-green-600 dark:text-green-400">grow together</span>
             </h1>
 
-            <p className="text-lg sm:text-xl text-stone-600 dark:text-stone-400 leading-relaxed mb-10 max-w-2xl">
-              A platform for plant enthusiasts to connect, learn, shop handcrafted pottery, and
-              cultivate a digital garden that grows with you.
+            <p className="text-base sm:text-lg text-stone-500 dark:text-stone-400 leading-relaxed mb-10 max-w-lg">
+              Connect, learn, shop handcrafted pottery, and cultivate a digital garden that grows
+              with you.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/signup"
-                className="inline-flex items-center justify-center px-7 py-3.5 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-green-600/20 hover:shadow-green-500/30 text-sm sm:text-base"
+                className="inline-flex items-center justify-center px-6 py-3 bg-stone-900 dark:bg-white hover:bg-stone-800 dark:hover:bg-stone-100 text-white dark:text-stone-900 font-medium rounded-xl transition-all text-sm"
               >
-                Create your garden
-                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                Get started free
+                <svg
+                  className="w-3.5 h-3.5 ml-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -136,7 +142,7 @@ export default function HomePage() {
               </Link>
               <Link
                 href="/shop"
-                className="inline-flex items-center justify-center px-7 py-3.5 bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold rounded-xl border border-stone-200 dark:border-stone-700 hover:border-stone-300 dark:hover:border-stone-600 transition-all text-sm sm:text-base"
+                className="inline-flex items-center justify-center px-6 py-3 text-stone-600 dark:text-stone-300 font-medium rounded-xl border border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-800 transition-all text-sm"
               >
                 Browse the shop
               </Link>
@@ -146,32 +152,25 @@ export default function HomePage() {
       </section>
 
       {/* Features */}
-      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 sm:-mt-16 pb-20">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <section className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 sm:-mt-20 pb-24">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {features.map(feature => (
             <Link
               key={feature.title}
               href={feature.href}
-              className="group relative bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6 hover:border-transparent transition-all hover:shadow-xl dark:hover:shadow-stone-950/50"
+              className="group relative bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 p-5 sm:p-6 hover:border-green-200 dark:hover:border-green-900/50 transition-all duration-300 hover:shadow-lg hover:shadow-stone-200/50 dark:hover:shadow-stone-950/50"
             >
-              <div
-                className={`inline-flex p-2.5 rounded-xl bg-gradient-to-br ${feature.gradient} text-white mb-4 shadow-lg shadow-stone-900/5`}
-              >
+              <div className="w-10 h-10 rounded-xl bg-green-50 dark:bg-green-950/40 flex items-center justify-center text-green-600 dark:text-green-400 mb-4 group-hover:bg-green-100 dark:group-hover:bg-green-900/30 transition-colors">
                 {feature.icon}
               </div>
-              <h3 className="text-base font-semibold text-stone-900 dark:text-white mb-1.5">
+              <h3 className="text-sm font-semibold text-stone-900 dark:text-white mb-1">
                 {feature.title}
               </h3>
-              <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
+              <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
                 {feature.description}
               </p>
-              <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                <svg
-                  className="w-4 h-4 text-stone-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+              <div className="absolute bottom-5 right-5 opacity-0 group-hover:opacity-100 transition-opacity text-green-500 dark:text-green-400">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -186,32 +185,37 @@ export default function HomePage() {
       </section>
 
       {/* XP System */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-        <div className="bg-stone-900 dark:bg-stone-800/50 rounded-3xl p-8 sm:p-12 overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-green-500/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-60 h-60 bg-emerald-500/10 rounded-full blur-3xl" />
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+        <div className="bg-stone-950 dark:bg-stone-900/60 rounded-2xl sm:rounded-3xl p-6 sm:p-10 lg:p-12 overflow-hidden relative">
+          {/* Subtle glow */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/10 rounded-full blur-3xl" />
 
           <div className="relative">
+            <p className="text-xs font-medium tracking-widest uppercase text-green-400 mb-3">
+              Progression
+            </p>
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">Earn XP. Level up.</h2>
-            <p className="text-stone-400 mb-8 max-w-xl">
+            <p className="text-stone-400 text-sm sm:text-base mb-8 max-w-lg">
               Every action earns experience points. Climb 250 levels, unlock achievements, and watch
               your garden flourish.
             </p>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
               {xpActions.map(action => (
                 <div
                   key={action.label}
-                  className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 sm:p-5"
+                  className="bg-white/[0.04] border border-white/[0.06] rounded-xl p-4 sm:p-5 hover:bg-white/[0.07] transition-colors"
                 >
-                  <p className="text-xl sm:text-2xl font-bold text-green-400 mb-1">{action.xp}</p>
+                  <p className="text-lg sm:text-xl font-bold text-green-400 mb-1 tracking-tight">
+                    {action.xp}
+                  </p>
                   <p className="text-sm font-medium text-white mb-0.5">{action.label}</p>
-                  <p className="text-xs text-stone-400">{action.sublabel}</p>
+                  <p className="text-xs text-stone-500">{action.sublabel}</p>
                 </div>
               ))}
             </div>
 
-            <p className="text-xs text-stone-400 mt-6">
+            <p className="text-xs text-stone-600 mt-6">
               Daily cap: 3,000 XP to keep things balanced
             </p>
           </div>
@@ -219,21 +223,25 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        <div className="text-center max-w-2xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white mb-4">
-            Start growing today
-          </h2>
-          <p className="text-stone-600 dark:text-stone-400 mb-8 text-lg">
-            Join a community of plant lovers building something beautiful together.
-          </p>
-          <Link
-            href="/signup"
-            className="inline-flex items-center justify-center px-8 py-4 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-green-600/20 hover:shadow-green-500/30 text-base"
-          >
-            Create free account
-          </Link>
-          <p className="text-sm text-stone-500 dark:text-stone-500 mt-4">No credit card required</p>
+      <section className="border-t border-stone-100 dark:border-stone-800">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
+          <div className="text-center max-w-lg mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white mb-3 tracking-tight">
+              Start growing today
+            </h2>
+            <p className="text-stone-500 dark:text-stone-400 mb-8 text-sm sm:text-base">
+              Join a community of plant lovers building something beautiful together.
+            </p>
+            <Link
+              href="/signup"
+              className="inline-flex items-center justify-center px-7 py-3.5 bg-green-600 hover:bg-green-500 text-white font-medium rounded-xl transition-all shadow-lg shadow-green-600/15 hover:shadow-green-500/25 text-sm"
+            >
+              Create free account
+            </Link>
+            <p className="text-xs text-stone-400 dark:text-stone-500 mt-4">
+              No credit card required
+            </p>
+          </div>
         </div>
       </section>
     </div>
