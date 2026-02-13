@@ -364,7 +364,7 @@ export default function GamesPage() {
 
       case 'playing':
         return (
-          <div className="relative bg-black rounded-2xl overflow-hidden shadow-2xl border border-stone-800">
+          <div className="relative bg-black rounded-2xl overflow-hidden shadow-2xl border border-stone-200 dark:border-stone-800">
             {/* Unity WebGL Container */}
             <div
               className="relative"

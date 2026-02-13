@@ -117,15 +117,17 @@ p {
 
 /* Luxury glass effect */
 .glass {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(214, 211, 209, 0.5);
 }
 
 .dark .glass {
-  background: rgba(28, 25, 23, 0.8);
+  background: rgba(28, 25, 23, 0.85);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(68, 64, 60, 0.5);
 }
 
 /* Subtle grain texture */

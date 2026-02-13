@@ -254,7 +254,7 @@ export default function PlantdexPage() {
       {/* Plant Detail Modal */}
       {selectedPlant && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/70 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-stone-950/70 p-4"
           onClick={() => setSelectedPlant(null)}
         >
           <div

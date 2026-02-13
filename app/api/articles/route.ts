@@ -32,7 +32,12 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       // Table may not exist yet if migration hasn't been applied
-      if (error.code === '42P01' || error.message.includes('does not exist')) {
+      if (
+        error.code === '42P01' ||
+        error.message.includes('does not exist') ||
+        error.message.includes('schema cache') ||
+        error.message.includes('Could not find')
+      ) {
         return NextResponse.json({ articles: [] });
       }
       return NextResponse.json({ error: error.message }, { status: 500 });

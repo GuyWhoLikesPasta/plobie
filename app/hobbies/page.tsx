@@ -292,7 +292,7 @@ export default function HobbiesPage() {
 
         {/* Create Post Form Modal */}
         {showCreateForm && (
-          <div className="fixed inset-0 bg-stone-950/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="fixed inset-0 bg-black/40 dark:bg-stone-950/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
             <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <h2 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white mb-6">
                 Create a Post

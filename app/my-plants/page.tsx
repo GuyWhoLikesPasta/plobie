@@ -106,7 +106,7 @@ export default function MyPlantsPage() {
       } = await supabase.auth.getUser();
 
       if (!user) {
-        router.push('/login?redirect=/my-plants');
+        setLoading(false);
         return;
       }
 
@@ -133,6 +133,42 @@ export default function MyPlantsPage() {
     return (
       <div className="min-h-screen bg-stone-50 dark:bg-stone-950 flex items-center justify-center transition-colors">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-stone-50 dark:bg-stone-950 flex items-center justify-center transition-colors">
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="mb-6">
+            <svg
+              className="w-16 h-16 text-stone-400 dark:text-stone-500 mx-auto"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+              />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white mb-2">
+            Sign in to view your garden
+          </h2>
+          <p className="text-stone-600 dark:text-stone-400 mb-6">
+            Claim pottery, grow plants, and track your progress in your personal garden.
+          </p>
+          <button
+            onClick={() => router.push('/login?redirect=/my-plants')}
+            className="px-6 py-3 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-xl transition-colors"
+          >
+            Sign In
+          </button>
+        </div>
       </div>
     );
   }

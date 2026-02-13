@@ -24,7 +24,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     if (error) {
       // Table may not exist yet
-      if (error.code === '42P01' || error.message.includes('does not exist')) {
+      if (
+        error.code === '42P01' ||
+        error.message.includes('does not exist') ||
+        error.message.includes('schema cache') ||
+        error.message.includes('Could not find')
+      ) {
         return NextResponse.json({ error: 'Articles not available' }, { status: 404 });
       }
       return NextResponse.json({ error: 'Article not found' }, { status: 404 });

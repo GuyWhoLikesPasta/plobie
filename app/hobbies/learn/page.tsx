@@ -33,8 +33,9 @@ export default function LearnPage() {
   const fetchArticles = useCallback(async () => {
     try {
       const res = await fetch('/api/articles');
+      if (!res.ok) return;
       const data = await res.json();
-      if (data.articles) {
+      if (data.articles && Array.isArray(data.articles)) {
         setArticles(data.articles);
         const cats = ['All', ...Array.from(new Set(data.articles.map((a: Article) => a.category)))];
         setCategories(cats as string[]);

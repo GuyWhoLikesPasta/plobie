@@ -206,12 +206,12 @@ export default function HomePage() {
                 >
                   <p className="text-xl sm:text-2xl font-bold text-green-400 mb-1">{action.xp}</p>
                   <p className="text-sm font-medium text-white mb-0.5">{action.label}</p>
-                  <p className="text-xs text-stone-500">{action.sublabel}</p>
+                  <p className="text-xs text-stone-400">{action.sublabel}</p>
                 </div>
               ))}
             </div>
 
-            <p className="text-xs text-stone-500 mt-6">
+            <p className="text-xs text-stone-400 mt-6">
               Daily cap: 3,000 XP to keep things balanced
             </p>
           </div>

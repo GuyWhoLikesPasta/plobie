@@ -43,6 +43,7 @@ export default function AchievementsPage() {
   const router = useRouter();
   const supabase = createClient();
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checking, setChecking] = useState(false);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [grouped, setGrouped] = useState<Record<string, Achievement[]>>({});
@@ -60,10 +61,11 @@ export default function AchievementsPage() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      router.push('/login?redirect=/achievements');
+      setLoading(false);
       return;
     }
 
+    setIsAuthenticated(true);
     fetchAchievements();
   };
 
@@ -129,6 +131,42 @@ export default function AchievementsPage() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-stone-400 dark:border-stone-500 mx-auto"></div>
           <p className="mt-4 text-stone-600 dark:text-stone-400">Loading achievements...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-stone-50 dark:bg-stone-950 flex items-center justify-center transition-colors">
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="mb-6">
+            <svg
+              className="w-16 h-16 text-stone-400 dark:text-stone-500 mx-auto"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white mb-2">
+            Sign in to view achievements
+          </h2>
+          <p className="text-stone-600 dark:text-stone-400 mb-6">
+            Track your progress, unlock rewards, and earn bonus XP as you grow.
+          </p>
+          <button
+            onClick={() => router.push('/login?redirect=/achievements')}
+            className="px-6 py-3 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-xl transition-colors"
+          >
+            Sign In
+          </button>
         </div>
       </div>
     );

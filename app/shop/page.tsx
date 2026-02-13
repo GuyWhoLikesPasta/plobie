@@ -61,26 +61,38 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
   const selectedCategory = params.category || 'all';
 
   // Build query
-  let query = supabase
-    .from('products')
-    .select('*, variants:product_variants(*)')
-    .order('featured', { ascending: false })
-    .order('created_at', { ascending: false });
+  let products: Product[] | null = null;
+  let allProducts: { category: string | null }[] | null = null;
 
-  // Filter by category if selected
-  if (selectedCategory !== 'all') {
-    query = query.eq('category', selectedCategory);
+  try {
+    let query = supabase
+      .from('products')
+      .select('*, variants:product_variants(*)')
+      .order('featured', { ascending: false })
+      .order('created_at', { ascending: false });
+
+    // Filter by category if selected
+    if (selectedCategory !== 'all') {
+      query = query.eq('category', selectedCategory);
+    }
+
+    const { data } = await query;
+    products = data as Product[] | null;
+
+    // Get all products for category counts (unfiltered)
+    const { data: allData } = await supabase.from('products').select('category');
+    allProducts = allData;
+  } catch {
+    // Gracefully handle missing table or connection issues
+    products = null;
+    allProducts = null;
   }
 
-  const { data: products } = await query;
   const typedProducts = (products || []) as Product[];
-
-  // Get all products for category counts (unfiltered)
-  const { data: allProducts } = await supabase.from('products').select('category');
 
   // Get unique categories with counts
   const categoryCounts: Record<string, number> = {};
-  (allProducts || []).forEach(p => {
+  (allProducts || []).forEach((p: { category: string | null }) => {
     if (p.category) {
       categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1;
     }
@@ -259,7 +271,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
             <div>
               <div className="flex justify-center mb-2">
                 <svg
-                  className="w-8 h-8 text-green-600"
+                  className="w-8 h-8 text-green-600 dark:text-green-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -278,7 +290,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
             <div>
               <div className="flex justify-center mb-2">
                 <svg
-                  className="w-8 h-8 text-green-600"
+                  className="w-8 h-8 text-green-600 dark:text-green-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -297,7 +309,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
             <div>
               <div className="flex justify-center mb-2">
                 <svg
-                  className="w-8 h-8 text-green-600"
+                  className="w-8 h-8 text-green-600 dark:text-green-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -316,7 +328,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
             <div>
               <div className="flex justify-center mb-2">
                 <svg
-                  className="w-8 h-8 text-green-600"
+                  className="w-8 h-8 text-green-600 dark:text-green-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

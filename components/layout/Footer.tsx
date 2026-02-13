@@ -78,7 +78,7 @@ export default function Footer() {
           </p>
           <div className="flex items-center gap-4 text-xs text-stone-400 dark:text-stone-500">
             <span>Built with Next.js</span>
-            <span className="w-1 h-1 rounded-full bg-stone-300 dark:bg-stone-700" />
+            <span className="w-1 h-1 rounded-full bg-stone-400 dark:bg-stone-600" />
             <span>Powered by Vercel</span>
           </div>
         </div>
