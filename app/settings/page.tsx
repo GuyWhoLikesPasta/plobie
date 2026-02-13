@@ -471,7 +471,7 @@ export default function SettingsPage() {
                   >
                     <span
                       className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
-                        item.value ? 'transtone-x-5' : 'transtone-x-0'
+                        item.value ? 'translate-x-5' : 'translate-x-0'
                       }`}
                     />
                   </button>

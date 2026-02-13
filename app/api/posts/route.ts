@@ -87,16 +87,8 @@ export async function GET(
 
     const { data: posts, error, count } = await query;
 
-    console.log('Posts query result:', {
-      postsCount: posts?.length,
-      totalCount: count,
-      hasError: !!error,
-      error: error ? JSON.stringify(error) : null,
-    });
-
     if (error) {
-      console.error('Posts fetch error:', error);
-      console.error('Posts fetch error details:', JSON.stringify(error, null, 2));
+      console.error('Posts fetch error:', error.code, error.message);
       return NextResponse.json(
         {
           success: false,
@@ -109,8 +101,6 @@ export async function GET(
         { status: 500 }
       );
     }
-
-    console.log('Returning posts:', posts?.length || 0);
 
     // Fetch profiles and counts separately
     if (posts && posts.length > 0) {

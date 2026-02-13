@@ -9,9 +9,12 @@ import { z } from 'zod';
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json(
         { success: false, error: { message: 'Unauthorized' } },
@@ -81,9 +84,12 @@ const MarkReadSchema = z.object({
 export async function PATCH(request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json(
         { success: false, error: { message: 'Unauthorized' } },
@@ -158,19 +164,38 @@ export async function PATCH(request: NextRequest) {
 
 /**
  * POST /api/notifications/test
- * Create a test notification (for development)
+ * Create a test notification (development/admin only)
  */
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json(
         { success: false, error: { message: 'Unauthorized' } },
         { status: 401 }
       );
+    }
+
+    // Only allow in development or for admins in production
+    if (process.env.NODE_ENV !== 'development') {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('is_admin')
+        .eq('id', user.id)
+        .single();
+
+      if (!profile?.is_admin) {
+        return NextResponse.json(
+          { success: false, error: { message: 'Admin access required' } },
+          { status: 403 }
+        );
+      }
     }
 
     // Create a test notification
@@ -216,9 +241,12 @@ const DeleteSchema = z.object({
 export async function DELETE(request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
-    
+
     // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json(
         { success: false, error: { message: 'Unauthorized' } },
@@ -290,4 +318,3 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
-

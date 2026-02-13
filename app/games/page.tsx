@@ -55,12 +55,13 @@ export default function GamesPage() {
         isLoggedIn: () => !!token,
         getUserId: () => userId,
         getApiUrl: () => window.location.origin + '/api',
-        log: (msg: string) => console.log('[Unity]', msg),
+        log: (msg: string) => {
+          if (process.env.NODE_ENV === 'development') console.log('[Unity]', msg);
+        },
         redirectToLogin: () => router.push('/login?redirect=/games'),
         version: '1.0.0',
       };
-      console.log('[Games Page] Unity bridge configured with token');
-      console.log('[Games Page] window.plobie.getAccessToken() ready:', !!token);
+      // Unity bridge ready
     },
     [router]
   );

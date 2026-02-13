@@ -35,6 +35,39 @@ export async function POST(
   request: NextRequest
 ): Promise<NextResponse<ApiResponse<{ xp_awarded: number; new_total: number }>>> {
   try {
+    // Verify the request is from an internal server call, not a direct client request
+    const internalSecret = request.headers.get('x-internal-secret');
+    if (internalSecret !== process.env.JWT_SECRET) {
+      // Fallback: check if the caller is the authenticated user matching the profile_id
+      const { createServerSupabaseClient } = await import('@/lib/supabase');
+      const supabase = await createServerSupabaseClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: { code: ErrorCodes.UNAUTHORIZED, message: 'Authentication required' },
+          },
+          { status: 401 }
+        );
+      }
+
+      // Only allow users to award XP to themselves (prevent spoofing)
+      const body_check = await request.clone().json();
+      if (body_check.profile_id && body_check.profile_id !== user.id) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: { code: ErrorCodes.FORBIDDEN, message: 'Cannot award XP to other users' },
+          },
+          { status: 403 }
+        );
+      }
+    }
+
     // Parse request body
     const body = await request.json();
     const validation = RequestSchema.safeParse(body);

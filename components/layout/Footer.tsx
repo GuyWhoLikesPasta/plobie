@@ -23,8 +23,8 @@ const footerNav = [
     title: 'Company',
     links: [
       { name: 'Gift Cards', href: '/shop/gift-cards' },
-      { name: 'Privacy Policy', href: '#' },
-      { name: 'Terms of Service', href: '#' },
+      { name: 'Privacy Policy', href: '/privacy' },
+      { name: 'Terms of Service', href: '/terms' },
     ],
   },
 ];
