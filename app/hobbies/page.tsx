@@ -1,23 +1,61 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase';
 import LikeButton from '@/components/posts/LikeButton';
 import toast from 'react-hot-toast';
 import { PostCardSkeleton } from '@/components/skeletons';
 import { checkAndShowAchievements } from '@/lib/achievement-toast';
+import TopPostsBanner from '@/components/shared/TopPostsBanner';
+import LoginPromptBanner from '@/components/shared/LoginPromptBanner';
+import CommunityFollowButton from '@/components/shared/CommunityFollowButton';
+
+const PAGE_SIZE = 20;
+const COMMUNITY_HIGHLIGHT_INTERVAL = 15;
+const SCROLL_STORAGE_KEY = 'hobbies-scroll';
+
+const hobbyGroups = [
+  { slug: 'indoor-plants', name: 'Indoor Plants' },
+  { slug: 'succulents', name: 'Succulents & Cacti' },
+  { slug: 'herbs', name: 'Herbs & Edibles' },
+  { slug: 'orchids', name: 'Orchids' },
+  { slug: 'bonsai', name: 'Bonsai' },
+  { slug: 'propagation', name: 'Propagation Tips' },
+  { slug: 'fruit-trees', name: 'Fruit Trees' },
+  { slug: 'outdoor-garden', name: 'Outdoor Garden' },
+  { slug: 'hydroponics', name: 'Hydroponics' },
+  { slug: 'terrariums', name: 'Terrariums' },
+];
+
+function slugForGroup(name: string): string {
+  return hobbyGroups.find(g => g.name === name)?.slug ?? name.toLowerCase().replace(/\s+/g, '-');
+}
+
+interface SuggestedPost {
+  id: string;
+  title: string;
+  content: string;
+  hobby_group: string;
+  profiles?: { username?: string } | null;
+}
 
 export default function HobbiesPage() {
   const router = useRouter();
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [offset, setOffset] = useState(0);
   const [selectedGroup, setSelectedGroup] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<'recent' | 'trending'>('recent');
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [suggestedPost, setSuggestedPost] = useState<SuggestedPost | null>(null);
   const [formData, setFormData] = useState({
     hobby_group: 'Indoor Plants',
     title: '',
@@ -28,19 +66,18 @@ export default function HobbiesPage() {
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const hobbyGroups = [
-    { slug: 'indoor-plants', name: 'Indoor Plants' },
-    { slug: 'succulents', name: 'Succulents & Cacti' },
-    { slug: 'herbs', name: 'Herbs & Edibles' },
-    { slug: 'orchids', name: 'Orchids' },
-    { slug: 'bonsai', name: 'Bonsai' },
-    { slug: 'propagation', name: 'Propagation Tips' },
-  ];
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const scrollRestoredRef = useRef(false);
 
+  // Stable random community for highlight blocks (seeded per mount)
+  const highlightCommunitySeed = useRef(Math.random());
+
+  const activeTab: 'feed' | 'learn' = 'feed';
+
+  // ---------- Auth ----------
   useEffect(() => {
     checkAuth();
-    fetchPosts();
-  }, [selectedGroup, searchQuery, sortBy]);
+  }, []);
 
   const checkAuth = async () => {
     const supabase = createClient();
@@ -50,37 +87,133 @@ export default function HobbiesPage() {
     setIsAuthenticated(!!user);
   };
 
-  const fetchPosts = async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams();
-      params.append('limit', '50');
-      if (selectedGroup) params.append('hobby_group', selectedGroup);
-      if (searchQuery) params.append('search', searchQuery);
-      if (sortBy) params.append('sort', sortBy);
-
-      const response = await fetch(`/api/posts?${params.toString()}`);
-      const data = await response.json();
-
-      if (data.success) {
-        setPosts(data.data.posts);
-      } else {
-        console.error('API returned error:', data.error);
-        toast.error(`Failed to load posts: ${data.error?.message || 'Unknown error'}`);
+  // ---------- Suggested Post ----------
+  useEffect(() => {
+    const fetchSuggested = async () => {
+      try {
+        const res = await fetch('/api/posts/top?limit=1&days=30');
+        const data = await res.json();
+        if (data.success && data.data.posts.length > 0) {
+          setSuggestedPost(data.data.posts[0]);
+        }
+      } catch {
+        // non-critical
       }
-    } catch (error) {
-      console.error('Failed to fetch posts:', error);
-      toast.error('Network error loading posts');
-    } finally {
-      setLoading(false);
+    };
+    fetchSuggested();
+  }, []);
+
+  // ---------- Fetch Posts ----------
+  const fetchPosts = useCallback(
+    async (pageOffset: number, append = false) => {
+      if (append) {
+        setLoadingMore(true);
+      } else {
+        setLoading(true);
+      }
+
+      try {
+        const params = new URLSearchParams();
+        params.append('limit', String(PAGE_SIZE));
+        params.append('offset', String(pageOffset));
+        if (selectedGroup) params.append('hobby_group', selectedGroup);
+        if (searchQuery) params.append('search', searchQuery);
+        if (sortBy) params.append('sort', sortBy);
+
+        const response = await fetch(`/api/posts?${params.toString()}`);
+        const data = await response.json();
+
+        if (data.success) {
+          const newPosts: any[] = data.data.posts;
+          if (append) {
+            setPosts(prev => [...prev, ...newPosts]);
+          } else {
+            setPosts(newPosts);
+          }
+          setHasMore(newPosts.length === PAGE_SIZE);
+        } else {
+          console.error('API returned error:', data.error);
+          toast.error(`Failed to load posts: ${data.error?.message || 'Unknown error'}`);
+        }
+      } catch (error) {
+        console.error('Failed to fetch posts:', error);
+        toast.error('Network error loading posts');
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
+      }
+    },
+    [selectedGroup, searchQuery, sortBy]
+  );
+
+  // Initial fetch + filter changes
+  useEffect(() => {
+    setOffset(0);
+    setHasMore(true);
+    fetchPosts(0, false);
+  }, [fetchPosts]);
+
+  // ---------- Scroll Position Restoration ----------
+  useEffect(() => {
+    if (scrollRestoredRef.current) return;
+    scrollRestoredRef.current = true;
+
+    const saved = sessionStorage.getItem(SCROLL_STORAGE_KEY);
+    if (saved) {
+      sessionStorage.removeItem(SCROLL_STORAGE_KEY);
+      const y = parseInt(saved, 10);
+      if (!isNaN(y)) {
+        requestAnimationFrame(() => window.scrollTo(0, y));
+      }
     }
+  }, []);
+
+  const saveScrollAndNavigate = (href: string) => {
+    sessionStorage.setItem(SCROLL_STORAGE_KEY, window.scrollY.toString());
+    router.push(href);
   };
 
+  // ---------- Infinite Scroll ----------
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && hasMore && !loading && !loadingMore) {
+          const nextOffset = offset + PAGE_SIZE;
+          setOffset(nextOffset);
+          fetchPosts(nextOffset, true);
+        }
+      },
+      { rootMargin: '200px' }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, loading, loadingMore, offset, fetchPosts]);
+
+  // ---------- Community Highlight ----------
+  const getHighlightCommunity = useCallback((blockIndex: number) => {
+    const seed = highlightCommunitySeed.current;
+    const idx = Math.floor((seed * 1000 + blockIndex * 7) % hobbyGroups.length);
+    return hobbyGroups[idx];
+  }, []);
+
+  const communityHighlightPosts = useCallback(
+    (communityName: string) => {
+      return posts.filter(p => p.hobby_group === communityName).slice(0, 3);
+    },
+    [posts]
+  );
+
+  // ---------- Create Post ----------
   const handleCreatePost = () => {
     if (!isAuthenticated) {
-      router.push('/login?redirect=/hobbies');
+      setShowLoginPrompt(true);
       return;
     }
+    setShowLoginPrompt(false);
     setShowCreateForm(true);
   };
 
@@ -108,7 +241,6 @@ export default function HobbiesPage() {
     try {
       let imageUrl = '';
 
-      // Upload image if one is selected
       if (selectedImage) {
         setUploading(true);
         const uploadFormData = new FormData();
@@ -132,7 +264,6 @@ export default function HobbiesPage() {
         setUploading(false);
       }
 
-      // Create post with optional image URL
       const response = await fetch('/api/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -149,15 +280,14 @@ export default function HobbiesPage() {
         setFormData({ hobby_group: 'Indoor Plants', title: '', content: '' });
         setSelectedImage(null);
         setImagePreview('');
-        fetchPosts();
+        setOffset(0);
+        fetchPosts(0, false);
         toast.success(`Post created! You earned +${data.data.xp_awarded} XP!`);
-
-        // Check for newly unlocked achievements
         checkAndShowAchievements();
       } else {
         toast.error(data.error?.message || 'Failed to create post');
       }
-    } catch (error) {
+    } catch {
       toast.error('Network error. Please try again.');
     } finally {
       setSubmitting(false);
@@ -165,6 +295,152 @@ export default function HobbiesPage() {
     }
   };
 
+  // ---------- Feed with interspersed community highlights ----------
+  const feedElements = useMemo(() => {
+    const elements: React.ReactNode[] = [];
+    let highlightBlock = 0;
+
+    posts.forEach((post, idx) => {
+      // Insert community highlight every COMMUNITY_HIGHLIGHT_INTERVAL posts
+      if (idx > 0 && idx % COMMUNITY_HIGHLIGHT_INTERVAL === 0) {
+        const community = getHighlightCommunity(highlightBlock);
+        const communityPosts = communityHighlightPosts(community.name);
+        highlightBlock++;
+
+        elements.push(
+          <div
+            key={`highlight-${idx}`}
+            className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-900/40 rounded-2xl p-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <p className="text-xs font-medium text-green-600 dark:text-green-400 mb-1">
+                  Community Spotlight
+                </p>
+                <h3 className="text-lg font-semibold text-stone-900 dark:text-white">
+                  p/{community.slug}
+                </h3>
+              </div>
+              <CommunityFollowButton communitySlug={community.slug} isFollowed={false} size="sm" />
+            </div>
+            {communityPosts.length > 0 ? (
+              <ul className="space-y-2 mb-4">
+                {communityPosts.map(cp => (
+                  <li key={cp.id}>
+                    <button
+                      onClick={() => saveScrollAndNavigate(`/hobbies/posts/${cp.id}`)}
+                      className="text-sm text-stone-700 dark:text-stone-300 hover:text-green-700 dark:hover:text-green-400 transition-colors text-left line-clamp-1"
+                    >
+                      {cp.title}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-stone-500 dark:text-stone-400 mb-4">
+                No recent posts in this community yet.
+              </p>
+            )}
+            <button
+              onClick={() => setSelectedGroup(community.name)}
+              className="text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors inline-flex items-center gap-1"
+            >
+              View all posts
+              <svg
+                className="w-3.5 h-3.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                />
+              </svg>
+            </button>
+          </div>
+        );
+      }
+
+      // Post card
+      elements.push(
+        <div
+          key={post.id}
+          className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 cursor-pointer hover:border-stone-300 dark:hover:border-stone-700 transition-all"
+          onClick={() => saveScrollAndNavigate(`/hobbies/posts/${post.id}`)}
+        >
+          <div className="flex items-start gap-4">
+            <div className="shrink-0 w-12 h-12 bg-stone-200 dark:bg-stone-800 rounded-xl flex items-center justify-center text-stone-600 dark:text-stone-400 font-semibold text-sm">
+              {post.profiles?.username?.[0]?.toUpperCase() || '?'}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-2">
+                <button
+                  onClick={e => {
+                    e.stopPropagation();
+                    router.push(`/profile/${post.profiles?.username}`);
+                  }}
+                  className="font-semibold text-stone-900 dark:text-white hover:text-green-600 dark:hover:text-green-400 transition-colors"
+                >
+                  {post.profiles?.username || 'Anonymous'}
+                </button>
+                <span className="text-stone-500 dark:text-stone-500">&middot;</span>
+                <span className="text-sm font-medium text-green-600 dark:text-green-400">
+                  p/{slugForGroup(post.hobby_group)}
+                </span>
+                <span className="text-stone-500 dark:text-stone-500">&middot;</span>
+                <span className="text-sm text-stone-500 dark:text-stone-500">
+                  {new Date(post.created_at).toLocaleDateString()}
+                </span>
+              </div>
+              <h3 className="text-xl font-semibold tracking-tight text-stone-900 dark:text-white mb-2">
+                {post.title}
+              </h3>
+              <p className="text-stone-600 dark:text-stone-400 line-clamp-3 leading-relaxed">
+                {post.content}
+              </p>
+              {post.image_url && (
+                <div className="relative w-full h-64 mt-4">
+                  <Image
+                    src={post.image_url}
+                    alt={post.title}
+                    fill
+                    className="rounded-xl object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              <div className="mt-4 flex items-center gap-4" onClick={e => e.stopPropagation()}>
+                <LikeButton
+                  postId={post.id}
+                  initialCount={post.reactions?.[0]?.count || 0}
+                  initialLiked={post.liked_by_user || false}
+                />
+                <span className="flex items-center gap-1.5 text-sm text-stone-500 dark:text-stone-500">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                    />
+                  </svg>
+                  {post.comments?.[0]?.count || 0}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    });
+
+    return elements;
+  }, [posts, getHighlightCommunity, communityHighlightPosts, router]);
+
+  // ---------- Render ----------
   return (
     <div className="min-h-screen bg-stone-50 dark:bg-stone-950 transition-colors">
       {/* Hero Section */}
@@ -180,26 +456,6 @@ export default function HobbiesPage() {
               </p>
             </div>
             <div className="flex gap-3 w-full sm:w-auto">
-              <button
-                onClick={() => router.push('/hobbies/learn')}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 px-4 sm:px-6 py-3 min-h-[48px] rounded-xl font-medium text-sm sm:text-base hover:bg-stone-200 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 transition-all"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                  />
-                </svg>
-                Learn (+10 XP)
-              </button>
               <button
                 onClick={handleCreatePost}
                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-stone-900 dark:bg-white text-white dark:text-stone-900 px-4 sm:px-6 py-3 min-h-[48px] rounded-xl font-medium text-sm sm:text-base hover:bg-stone-800 dark:hover:bg-stone-100 transition-all"
@@ -222,10 +478,30 @@ export default function HobbiesPage() {
               </button>
             </div>
           </div>
+
+          {/* Feed / Learn pill tabs */}
+          <div className="mt-6 flex gap-2">
+            <button className="px-5 py-2 rounded-full text-sm font-medium transition-all bg-green-600 text-white">
+              Feed
+            </button>
+            <Link
+              href="/hobbies/learn"
+              className="px-5 py-2 rounded-full text-sm font-medium transition-all bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-700"
+            >
+              Learn
+            </Link>
+          </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Login prompt for unauthenticated users trying to post */}
+        {showLoginPrompt && !isAuthenticated && (
+          <div className="mb-6">
+            <LoginPromptBanner context="post" />
+          </div>
+        )}
+
         {/* Search Bar */}
         <div className="mb-6 flex flex-col sm:flex-row gap-3">
           <div className="flex-1 relative">
@@ -289,6 +565,44 @@ export default function HobbiesPage() {
               {group.name}
             </button>
           ))}
+        </div>
+
+        {/* Suggested Post Banner */}
+        {suggestedPost && (
+          <div
+            className="mb-6 bg-white dark:bg-stone-900 border border-green-200 dark:border-green-900/40 border-l-2 border-l-green-500 rounded-2xl p-5 sm:p-6 cursor-pointer hover:border-green-300 dark:hover:border-green-800 transition-all"
+            onClick={() => saveScrollAndNavigate(`/hobbies/posts/${suggestedPost.id}`)}
+          >
+            <div className="flex items-start gap-4">
+              <div className="shrink-0">
+                <span className="inline-block px-2.5 py-1 bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 text-xs font-semibold rounded-lg">
+                  Suggested
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-green-600 dark:text-green-400 mb-1">
+                  p/{slugForGroup(suggestedPost.hobby_group)}
+                  {suggestedPost.profiles?.username && (
+                    <span className="text-stone-500 dark:text-stone-500">
+                      {' '}
+                      &middot; {suggestedPost.profiles.username}
+                    </span>
+                  )}
+                </p>
+                <h3 className="text-base sm:text-lg font-semibold text-stone-900 dark:text-white mb-1 line-clamp-1">
+                  {suggestedPost.title}
+                </h3>
+                <p className="text-sm text-stone-600 dark:text-stone-400 line-clamp-2 leading-relaxed">
+                  {suggestedPost.content}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Top / Trending Posts */}
+        <div className="mb-8">
+          <TopPostsBanner count={6} title="Trending" />
         </div>
 
         {/* Create Post Form Modal */}
@@ -472,84 +786,22 @@ export default function HobbiesPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            {posts.map(post => (
-              <div
-                key={post.id}
-                className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 cursor-pointer hover:border-stone-300 dark:hover:border-stone-700 transition-all"
-                onClick={() => router.push(`/hobbies/posts/${post.id}`)}
-              >
-                <div className="flex items-start gap-4">
-                  <div className="shrink-0 w-12 h-12 bg-stone-200 dark:bg-stone-800 rounded-xl flex items-center justify-center text-stone-600 dark:text-stone-400 font-semibold text-sm">
-                    {post.profiles?.username?.[0]?.toUpperCase() || '?'}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-2">
-                      <button
-                        onClick={e => {
-                          e.stopPropagation();
-                          router.push(`/profile/${post.profiles?.username}`);
-                        }}
-                        className="font-semibold text-stone-900 dark:text-white hover:text-green-600 dark:hover:text-green-400 transition-colors"
-                      >
-                        {post.profiles?.username || 'Anonymous'}
-                      </button>
-                      <span className="text-stone-500 dark:text-stone-500">·</span>
-                      <span className="text-sm text-stone-500 dark:text-stone-500">
-                        {post.hobby_group}
-                      </span>
-                      <span className="text-stone-500 dark:text-stone-500">·</span>
-                      <span className="text-sm text-stone-500 dark:text-stone-500">
-                        {new Date(post.created_at).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <h3 className="text-xl font-semibold tracking-tight text-stone-900 dark:text-white mb-2">
-                      {post.title}
-                    </h3>
-                    <p className="text-stone-600 dark:text-stone-400 line-clamp-3 leading-relaxed">
-                      {post.content}
-                    </p>
-                    {post.image_url && (
-                      <div className="relative w-full h-64 mt-4">
-                        <Image
-                          src={post.image_url}
-                          alt={post.title}
-                          fill
-                          className="rounded-xl object-cover"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          loading="lazy"
-                        />
-                      </div>
-                    )}
-                    <div
-                      className="mt-4 flex items-center gap-4"
-                      onClick={e => e.stopPropagation()}
-                    >
-                      <LikeButton
-                        postId={post.id}
-                        initialCount={post.reactions?.[0]?.count || 0}
-                        initialLiked={post.liked_by_user || false}
-                      />
-                      <span className="flex items-center gap-1.5 text-sm text-stone-500 dark:text-stone-500">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                          />
-                        </svg>
-                        {post.comments?.[0]?.count || 0}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+            {feedElements}
+
+            {/* Sentinel for infinite scroll */}
+            <div ref={sentinelRef} className="h-1" />
+
+            {loadingMore && (
+              <div className="flex justify-center py-8">
+                <div className="w-8 h-8 border-2 border-green-600 border-t-transparent rounded-full animate-spin" />
               </div>
-            ))}
+            )}
+
+            {!hasMore && posts.length > 0 && (
+              <p className="text-center text-sm text-stone-500 dark:text-stone-400 py-8">
+                No more posts
+              </p>
+            )}
           </div>
         )}
       </div>

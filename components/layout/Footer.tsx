@@ -7,14 +7,14 @@ const footerNav = [
       { name: 'Shop', href: '/shop' },
       { name: 'Community', href: '/hobbies' },
       { name: 'Learn', href: '/hobbies/learn' },
-      { name: 'Games', href: '/games' },
+      { name: 'Game Play', href: '/gameplay' },
     ],
   },
   {
     title: 'Account',
     links: [
       { name: 'My Plants', href: '/my-plants' },
-      { name: 'Plantdex', href: '/plantdex' },
+      { name: 'Plantdex', href: '/my-plants?tab=plantdex' },
       { name: 'Achievements', href: '/achievements' },
       { name: 'Settings', href: '/settings' },
     ],

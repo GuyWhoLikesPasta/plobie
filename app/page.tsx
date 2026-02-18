@@ -1,4 +1,46 @@
+'use client';
+
+import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase';
+import { levelFromTotalXp, xpProgressInLevel } from '@/lib/xp-engine';
+import TopPostsBanner from '@/components/shared/TopPostsBanner';
+import NewsletterSection from '@/components/shared/NewsletterSection';
+import PromoRotator from '@/components/shared/PromoRotator';
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+interface Profile {
+  username: string;
+  newsletter_subscribed: boolean;
+}
+
+interface XpData {
+  total_xp: number;
+}
+
+interface ProductVariant {
+  price_cents: number;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  product_variants: ProductVariant[];
+}
+
+interface DashboardData {
+  profile: Profile;
+  totalXp: number;
+  plantCount: number;
+  products: Product[];
+}
+
+// ---------------------------------------------------------------------------
+// Splash page features
+// ---------------------------------------------------------------------------
 
 const features = [
   {
@@ -22,7 +64,7 @@ const features = [
     ),
   },
   {
-    title: 'Community',
+    title: 'Plant Hobbies',
     description: 'Connect with fellow plant enthusiasts. Share tips, photos, and grow together.',
     href: '/hobbies',
     icon: (
@@ -62,9 +104,9 @@ const features = [
     ),
   },
   {
-    title: 'Play',
+    title: 'Game Play',
     description: 'Immersive 3D plant world. Earn XP, unlock achievements, and level up.',
-    href: '/games',
+    href: '/gameplay',
     icon: (
       <svg
         className="w-5 h-5"
@@ -90,17 +132,96 @@ const xpActions = [
   { label: 'Read an Article', xp: '+10', sublabel: 'Expand knowledge' },
 ];
 
-export default function HomePage() {
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function formatPrice(cents: number): string {
+  return `$${(cents / 100).toFixed(2)}`;
+}
+
+// ---------------------------------------------------------------------------
+// Loading skeleton for the dashboard
+// ---------------------------------------------------------------------------
+
+function DashboardSkeleton() {
+  return (
+    <div className="min-h-screen bg-white dark:bg-stone-950">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        {/* Welcome skeleton */}
+        <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 animate-pulse">
+          <div className="h-5 bg-stone-200 dark:bg-stone-700 rounded-lg w-48 mb-3" />
+          <div className="h-3 bg-stone-200 dark:bg-stone-700 rounded-lg w-32" />
+        </div>
+        {/* Garden skeleton */}
+        <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 border-t-4 border-t-green-500 rounded-2xl p-6 animate-pulse">
+          <div className="h-5 bg-stone-200 dark:bg-stone-700 rounded-lg w-36 mb-3" />
+          <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded-lg w-52 mb-4" />
+          <div className="h-9 bg-stone-200 dark:bg-stone-700 rounded-xl w-32" />
+        </div>
+        {/* Posts skeleton */}
+        <div className="space-y-3">
+          <div className="h-5 bg-stone-200 dark:bg-stone-700 rounded-lg w-44 animate-pulse" />
+          <div className="grid sm:grid-cols-3 gap-3">
+            {[1, 2, 3].map(i => (
+              <div
+                key={i}
+                className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 animate-pulse"
+              >
+                <div className="h-3 bg-stone-200 dark:bg-stone-700 rounded-lg w-16 mb-3" />
+                <div className="h-5 bg-stone-200 dark:bg-stone-700 rounded-lg w-3/4 mb-4" />
+                <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded-lg w-20" />
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* Newsletter skeleton */}
+        <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 animate-pulse">
+          <div className="h-5 bg-stone-200 dark:bg-stone-700 rounded-lg w-40 mb-3" />
+          <div className="h-10 bg-stone-200 dark:bg-stone-700 rounded-xl w-full" />
+        </div>
+        {/* Shop skeleton */}
+        <div className="space-y-3">
+          <div className="h-5 bg-stone-200 dark:bg-stone-700 rounded-lg w-32 animate-pulse" />
+          <div className="grid sm:grid-cols-3 gap-3">
+            {[1, 2, 3].map(i => (
+              <div
+                key={i}
+                className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 animate-pulse"
+              >
+                <div className="h-5 bg-stone-200 dark:bg-stone-700 rounded-lg w-3/4 mb-3" />
+                <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded-lg w-16" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Splash page (unauthenticated visitors)
+// ---------------------------------------------------------------------------
+
+function SplashPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-stone-950">
       {/* Hero */}
       <section className="relative overflow-hidden">
-        {/* Light mode: clean warm white. Dark mode: subtle green glow */}
         <div className="absolute inset-0 bg-stone-50 dark:bg-stone-950" />
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-stone-50 to-white dark:from-stone-950 dark:via-stone-900/50 dark:to-stone-950" />
-        {/* Subtle decorative element */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-green-500/[0.03] dark:bg-green-500/[0.05] rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-green-500/[0.02] dark:bg-green-500/[0.03] rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+        <div className="absolute inset-0 bg-linear-to-b from-white via-stone-50 to-white dark:from-stone-950 dark:via-stone-900/50 dark:to-stone-950" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-green-500/3 dark:bg-green-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-green-500/2 dark:bg-green-500/3 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32 sm:pt-28 sm:pb-40">
           <div className="max-w-2xl">
@@ -125,7 +246,7 @@ export default function HomePage() {
                 href="/signup"
                 className="inline-flex items-center justify-center px-6 py-3 bg-stone-900 dark:bg-white hover:bg-stone-800 dark:hover:bg-stone-100 text-white dark:text-stone-900 font-medium rounded-xl transition-all text-sm"
               >
-                Get started free
+                Get Started Free
                 <svg
                   className="w-3.5 h-3.5 ml-2"
                   fill="none"
@@ -144,7 +265,7 @@ export default function HomePage() {
                 href="/shop"
                 className="inline-flex items-center justify-center px-6 py-3 text-stone-600 dark:text-stone-300 font-medium rounded-xl border border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-800 transition-all text-sm"
               >
-                Browse the shop
+                Browse the Shop
               </Link>
             </div>
           </div>
@@ -187,9 +308,7 @@ export default function HomePage() {
       {/* XP System */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
         <div className="bg-stone-950 dark:bg-stone-900/60 rounded-2xl sm:rounded-3xl p-6 sm:p-10 lg:p-12 overflow-hidden relative">
-          {/* Subtle glow */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/10 rounded-full blur-3xl" />
-
           <div className="relative">
             <p className="text-xs font-medium tracking-widest uppercase text-green-400 mb-3">
               Progression
@@ -199,12 +318,11 @@ export default function HomePage() {
               Every action earns experience points. Climb 250 levels, unlock achievements, and watch
               your garden flourish.
             </p>
-
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
               {xpActions.map(action => (
                 <div
                   key={action.label}
-                  className="bg-white/[0.04] border border-white/[0.06] rounded-xl p-4 sm:p-5 hover:bg-white/[0.07] transition-colors"
+                  className="bg-white/4 border border-white/6 rounded-xl p-4 sm:p-5 hover:bg-white/[0.07] transition-colors"
                 >
                   <p className="text-lg sm:text-xl font-bold text-green-400 mb-1 tracking-tight">
                     {action.xp}
@@ -214,7 +332,6 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-
             <p className="text-xs text-stone-600 mt-6">
               Daily cap: 3,000 XP to keep things balanced
             </p>
@@ -246,4 +363,242 @@ export default function HomePage() {
       </section>
     </div>
   );
+}
+
+// ---------------------------------------------------------------------------
+// Dashboard (authenticated users)
+// ---------------------------------------------------------------------------
+
+function Dashboard({ data }: { data: DashboardData }) {
+  const { profile, totalXp, plantCount, products } = data;
+  const level = useMemo(() => levelFromTotalXp(totalXp), [totalXp]);
+  const progress = useMemo(() => xpProgressInLevel(totalXp), [totalXp]);
+
+  return (
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-950">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        {/* 1. Welcome banner */}
+        <section className="relative overflow-hidden bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 border-l-4 border-l-green-500 rounded-2xl p-6">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-green-500/4 rounded-full blur-2xl -translate-y-1/2 translate-x-1/4" />
+          <div className="relative">
+            <h1 className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-white mb-1">
+              Welcome back, {profile.username}
+            </h1>
+            <div className="flex items-center gap-3 text-sm text-stone-500 dark:text-stone-400">
+              <span className="inline-flex items-center gap-1.5 font-medium text-green-600 dark:text-green-400">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
+                  />
+                </svg>
+                Level {level}
+              </span>
+              <span className="text-stone-300 dark:text-stone-600">|</span>
+              <span>
+                {totalXp.toLocaleString()} XP &middot; {progress.percentage}% to next level
+              </span>
+            </div>
+            {/* XP progress bar */}
+            <div className="mt-3 h-1.5 bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-green-500 rounded-full transition-all duration-500"
+                style={{ width: `${progress.percentage}%` }}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* 2. My Plants banner (Garden stub) */}
+        <section className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 border-t-4 border-t-green-500 rounded-2xl p-6">
+          <div className="flex items-start justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-stone-900 dark:text-white mb-1">
+                Your Garden
+              </h2>
+              <p className="text-sm text-stone-500 dark:text-stone-400">
+                You have{' '}
+                <span className="font-medium text-green-600 dark:text-green-400">{plantCount}</span>{' '}
+                {plantCount === 1 ? 'plant' : 'plants'} growing
+              </p>
+            </div>
+            <div className="shrink-0 w-10 h-10 rounded-xl bg-green-50 dark:bg-green-950/40 flex items-center justify-center text-green-600 dark:text-green-400">
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                />
+              </svg>
+            </div>
+          </div>
+          <Link
+            href="/my-plants"
+            className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-500 text-white text-sm font-medium rounded-xl transition-colors"
+          >
+            View Garden
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+              />
+            </svg>
+          </Link>
+        </section>
+
+        {/* 3. Top Posts from Plant Hobbies */}
+        <TopPostsBanner
+          count={5}
+          title="Top from Plant Hobbies"
+          showContinueLink
+          continueHref="/hobbies"
+        />
+
+        {/* 4. Newsletter */}
+        <NewsletterSection subscribed={profile.newsletter_subscribed} nextDate={null} />
+
+        {/* 5. Store Preview */}
+        {products.length > 0 && (
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-stone-900 dark:text-white">
+                From the Shop
+              </h2>
+              <Link
+                href="/shop"
+                className="inline-flex items-center gap-1 text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
+              >
+                Browse all
+                <svg
+                  className="w-3.5 h-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                  />
+                </svg>
+              </Link>
+            </div>
+            <div className="grid sm:grid-cols-3 gap-3">
+              {products.map(product => {
+                const price = product.product_variants?.[0]?.price_cents;
+                return (
+                  <Link
+                    key={product.id}
+                    href={`/shop/${product.id}`}
+                    className="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 hover:border-green-200 dark:hover:border-green-900/50 transition-all"
+                  >
+                    <h3 className="text-sm font-semibold text-stone-900 dark:text-white mb-1.5 group-hover:text-green-700 dark:group-hover:text-green-300 transition-colors line-clamp-2">
+                      {product.name}
+                    </h3>
+                    {price != null && (
+                      <p className="text-sm font-medium text-green-600 dark:text-green-400 mb-3">
+                        {formatPrice(price)}
+                      </p>
+                    )}
+                    <span className="text-xs font-medium text-stone-500 dark:text-stone-400 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
+                      View &rarr;
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* 6. PromoRotator */}
+        <PromoRotator />
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Root page component
+// ---------------------------------------------------------------------------
+
+export default function HomePage() {
+  const [state, setState] = useState<'loading' | 'splash' | 'dashboard'>('loading');
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function init() {
+      const supabase = createClient();
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        if (!cancelled) setState('splash');
+        return;
+      }
+
+      const [profileRes, xpRes, plantCountRes, productsRes] = await Promise.all([
+        supabase
+          .from('profiles')
+          .select('username, newsletter_subscribed')
+          .eq('id', user.id)
+          .single(),
+        supabase.from('xp_balances').select('total_xp').eq('profile_id', user.id).single(),
+        supabase
+          .from('user_plants')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', user.id),
+        supabase.from('products').select('id, name, product_variants(price_cents)').limit(20),
+      ]);
+
+      if (cancelled) return;
+
+      const profile: Profile = {
+        username: profileRes.data?.username ?? user.email?.split('@')[0] ?? 'Grower',
+        newsletter_subscribed: profileRes.data?.newsletter_subscribed ?? false,
+      };
+
+      const totalXp: number = (xpRes.data as XpData | null)?.total_xp ?? 0;
+      const plantCount: number = plantCountRes.count ?? 0;
+
+      const allProducts = (productsRes.data ?? []) as Product[];
+      const products = shuffle(allProducts).slice(0, 3);
+
+      setDashboardData({ profile, totalXp, plantCount, products });
+      setState('dashboard');
+    }
+
+    init();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (state === 'loading') return <DashboardSkeleton />;
+  if (state === 'dashboard' && dashboardData) return <Dashboard data={dashboardData} />;
+  return <SplashPage />;
 }

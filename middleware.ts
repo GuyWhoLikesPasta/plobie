@@ -67,6 +67,7 @@ export async function middleware(request: NextRequest) {
     '/api/notifications',
     '/api/pots/claim',
     '/api/games',
+    '/api/communities',
     '/api/gift-cards',
     '/api/checkout',
     '/api/upload',

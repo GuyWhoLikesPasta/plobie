@@ -251,7 +251,7 @@ export default function WelcomeModal({ username, onComplete }: WelcomeModalProps
                 </span>
               </button>
               <button
-                onClick={() => handleQuickAction('/games')}
+                onClick={() => handleQuickAction('/gameplay')}
                 className="p-3 bg-stone-50 dark:bg-stone-800 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-xl text-center transition-colors border border-stone-200 dark:border-stone-700"
               >
                 <span className="text-sm font-medium text-stone-700 dark:text-stone-300">

@@ -59,11 +59,10 @@ export default function Navigation() {
   };
 
   const navItems = [
-    { name: 'Community', href: '/hobbies' },
-    { name: 'Learn', href: '/hobbies/learn' },
+    { name: 'Home', href: '/' },
+    { name: 'Plant Hobbies', href: '/hobbies' },
     { name: 'My Plants', href: '/my-plants' },
-    { name: 'Plantdex', href: '/plantdex' },
-    { name: 'Games', href: '/games' },
+    { name: 'Game Play', href: '/gameplay' },
     { name: 'Shop', href: '/shop' },
   ];
 
