@@ -15,21 +15,31 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - QR Claiming -- Link physical pots (+500 XP per pot)
 - XP System -- Tiered leveling (250 levels, 3-tier formula), 25+ action types, 3000 XP daily cap, level-up notifications
 
-**Community:**
+**Plant Hobbies (Community):**
 - Posts and Comments -- Create content, earn XP
+- 10 Communities -- indoor-plants, succulents, herbs, orchids, bonsai, propagation, fruit-trees, outdoor-garden, hydroponics, terrariums
+- Community Follow/Unfollow -- Personalized feed based on followed communities
+- Infinite Scroll Feed -- Hot posts block, suggested banner, sub-community highlights
 - Image Uploads -- Share photos (5MB limit)
 - Reactions -- Like posts with hearts
-- Search and Filters -- Find posts by keyword or hobby group
+- Search and Filters -- Find posts by keyword or community
 - User Profiles -- View stats, posts, and achievements
-
-**Content:**
 - Learn Articles -- 24 educational guides (+10 XP per article, cap 10/day)
-- My Plants Dashboard -- View collection and stats
-- Achievements System -- 15+ unlockable achievements with XP rewards
+
+**My Plants:**
+- Unity 3D WebGL Garden -- Embedded on My Plants tab
+- My Garden / Plantdex Sub-tabs -- Switch between garden view and plant encyclopedia
 - Plantdex -- 50 plant species encyclopedia with collection tracking
+- Dashboard -- Stats, XP progress, pots collection, plant cards
+- Achievements System -- 15+ unlockable achievements with XP rewards
+
+**Game Play (Arcade):**
+- 8 HTML5 Games -- Soccer Bubbles, Curve Ball 3D, Goalkeeper Champ, Table Tennis World Tour, Color Tunnel, Soccer Heads, Square Stacker, Crazy Hill Driver
+- Iframe Player -- Games playable inline with other games visible below
+- Timed XP -- +20 XP per 30 minutes of play, page-visibility based tracking
 
 **Unity Integration:**
-- 3D WebGL Garden -- Live at `/games` page
+- 3D WebGL Garden -- Embedded on My Plants tab (extracted `UnityEmbed` component)
 - Auth Bridge -- `window.plobie.getAccessToken()` for seamless auth
 - Game Actions -- register_plant (160 XP), daily_reward (5 XP), fetch_throw (5 XP)
 - Session tracking, progress save/load, action-based XP
@@ -155,17 +165,22 @@ npm run seed            # Seed development data
 
 ```
 plobie/
-├── app/                 # Next.js app directory (23 pages)
-│   ├── api/            # API routes
+├── app/                 # Next.js app directory
+│   ├── api/            # API routes (25+ endpoints)
 │   ├── (auth)/         # Login, signup, password reset
-│   ├── hobbies/        # Community feed + learn articles
+│   ├── hobbies/        # Plant Hobbies feed + learn articles
+│   ├── gameplay/       # Game Play arcade (Famobi iframes)
+│   ├── my-plants/      # My Plants (Unity + Plantdex sub-tabs)
 │   ├── shop/           # E-commerce + gift cards
-│   └── games/          # Unity WebGL garden
+│   └── games/          # Redirect to /gameplay
 ├── components/
+│   ├── games/          # UnityEmbed
 │   ├── layout/         # Navigation, Footer
 │   ├── notifications/  # NotificationBell
 │   ├── onboarding/     # WelcomeModal
+│   ├── plantdex/       # PlantdexView
 │   ├── posts/          # LikeButton
+│   ├── shared/         # TopPostsBanner, PromoRotator, LoginPromptBanner, NewsletterSection, CommunityFollowButton
 │   ├── shop/           # AddToCartButton
 │   ├── skeletons/      # Loading skeletons
 │   └── theme/          # ThemeToggle, ThemeProvider
@@ -185,7 +200,9 @@ plobie/
 
 **System:** healthz, flags
 
-**Community:** posts (CRUD), comments, likes, profiles, avatar upload
+**Community:** posts (CRUD), comments, likes, profiles, avatar upload, top posts (hot-score ranked)
+
+**Communities:** follow, unfollow, list followed communities
 
 **Notifications:** fetch, mark read, delete, create
 
@@ -200,6 +217,8 @@ plobie/
 **Plantdex:** species list, details, user collection (plant, water, care, grow)
 
 **My Plants:** garden overview
+
+**Newsletter:** subscribe/unsubscribe
 
 **Reports:** submit content reports (post, comment, profile)
 
