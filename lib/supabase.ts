@@ -13,14 +13,14 @@ export function createClient() {
 export async function createServerSupabaseClient() {
   const { cookies } = await import('next/headers');
   const cookieStore = await cookies();
-  
+
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll: () => cookieStore.getAll(),
-        setAll: (cookiesToSet) => {
+        setAll: cookiesToSet => {
           try {
             cookiesToSet.forEach(({ name, value, options }) => {
               cookieStore.set(name, value, options);
@@ -34,15 +34,40 @@ export async function createServerSupabaseClient() {
   );
 }
 
+/**
+ * Creates a Supabase client from an incoming Request.
+ * Checks for an Authorization: Bearer <token> header first (Unity WebGL),
+ * then falls back to cookie-based auth (browser).
+ */
+export async function createSupabaseFromRequest(request: Request) {
+  const authHeader = request.headers.get('authorization');
+
+  if (authHeader?.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+    return createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        global: { headers: { Authorization: `Bearer ${token}` } },
+        cookies: {
+          getAll: () => [],
+          setAll: () => {},
+        },
+      }
+    );
+  }
+
+  return createServerSupabaseClient();
+}
+
 // Admin client with service role (use sparingly, only for webhooks and server-side operations)
 export function createAdminClient() {
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
     throw new Error('SUPABASE_SERVICE_ROLE_KEY is not set');
   }
-  
+
   return createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 }
-

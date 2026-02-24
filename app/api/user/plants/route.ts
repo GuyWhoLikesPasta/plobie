@@ -1,4 +1,4 @@
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase';
+import { createSupabaseFromRequest, createAdminClient } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -17,9 +17,9 @@ const CreatePlantSchema = z.object({
 // =====================================
 // GET - Get User's Plants
 // =====================================
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createSupabaseFromRequest(request);
 
     // Get current user
     const {
@@ -75,7 +75,7 @@ export async function GET() {
 // =====================================
 export async function POST(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createSupabaseFromRequest(request);
     const adminSupabase = createAdminClient();
 
     // Get current user
@@ -152,8 +152,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Failed to plant' }, { status: 500 });
     }
 
-    // Award XP for planting
-    const { data: xpResult } = await adminSupabase.rpc('apply_xp', {
+    await adminSupabase.rpc('apply_xp', {
       p_profile_id: user.id,
       p_action_type: 'plant_new',
       p_xp_amount: 50,

@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase';
+import { createSupabaseFromRequest } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 
 // =====================================
@@ -9,7 +9,7 @@ import { NextResponse } from 'next/server';
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createSupabaseFromRequest(request);
 
     // Try to find by UUID first, then by key
     const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);

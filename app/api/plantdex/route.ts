@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase';
+import { createSupabaseFromRequest } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 
 // =====================================
@@ -8,7 +8,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createSupabaseFromRequest(request);
 
     // Parse query params for filtering
     const { searchParams } = new URL(request.url);

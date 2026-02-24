@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase';
+import { createSupabaseFromRequest } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 import { levelFromTotalXp, xpProgressInLevel, DAILY_TOTAL_CAP } from '@/lib/xp-engine';
 
@@ -11,9 +11,9 @@ import { levelFromTotalXp, xpProgressInLevel, DAILY_TOTAL_CAP } from '@/lib/xp-e
 // =====================================
 // GET - Get Current User Profile
 // =====================================
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createSupabaseFromRequest(request);
 
     // Get current user
     const {
@@ -69,6 +69,12 @@ export async function GET() {
       .select('*', { count: 'exact', head: true })
       .eq('author_id', profile.id);
 
+    // Get user's plant count
+    const { count: plantCount } = await supabase
+      .from('user_plants')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', profile.id);
+
     return NextResponse.json({
       success: true,
       profile: {
@@ -85,11 +91,12 @@ export async function GET() {
         daily_xp: dailyXp,
         level: level,
         xp_for_next_level: xpForNextLevel,
-        xp_progress: xpProgress, // XP earned within current level
+        xp_progress: xpProgress,
         remaining_today: Math.max(0, DAILY_TOTAL_CAP - dailyXp),
       },
       stats: {
         pots: potCount || 0,
+        plants: plantCount || 0,
         posts: postCount || 0,
         comments: commentCount || 0,
       },

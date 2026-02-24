@@ -1,4 +1,4 @@
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase';
+import { createSupabaseFromRequest, createAdminClient } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { levelFromTotalXp, DAILY_TOTAL_CAP } from '@/lib/xp-engine';
@@ -26,9 +26,9 @@ const SessionRequestSchema = z.union([StartSessionSchema, EndSessionSchema]);
 // =====================================
 // GET - Get Active Session
 // =====================================
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createSupabaseFromRequest(request);
 
     // Get current user
     const {
@@ -73,7 +73,7 @@ export async function GET() {
 // =====================================
 export async function POST(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createSupabaseFromRequest(request);
     const adminSupabase = createAdminClient();
 
     // Get current user

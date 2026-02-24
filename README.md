@@ -40,9 +40,14 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 
 **Unity Integration:**
 - 3D WebGL Garden -- Embedded on My Plants tab (extracted `UnityEmbed` component)
-- Auth Bridge -- `window.plobie.getAccessToken()` for seamless auth
-- Game Actions -- register_plant (160 XP), daily_reward (5 XP), fetch_throw (5 XP)
+- Auth Bridge v2 -- `window.plobie` with `ready` flag, `getAccessToken()`, `refreshAccessToken()`, `getUserId()`, `getApiUrl()`
+- Bearer Token Auth -- All API routes accept `Authorization: Bearer <token>` headers (Unity WebGL) alongside cookie-based auth (browser)
+- CORS Support -- Preflight (OPTIONS) handling for cross-origin Unity testing (Firebase, Vercel preview URLs)
+- Game Actions -- register_plant (160 XP), daily_reward (5 XP), fetch_throw (5 XP), plant_water (5 XP)
 - Session tracking, progress save/load, action-based XP
+- Garden Summary API -- Lightweight endpoint for Home tab Unity scene (plants, pots, reminders)
+- Placement Spots -- Predefined garden positions (6 default slots) for 3D scene layout
+- Asset Bundle Storage -- Supabase Storage bucket for Unity streaming assets
 
 **Admin:**
 - User Management -- Promote admins, view user stats
@@ -56,8 +61,16 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - Full notifications page with history, filters, management
 - 30-second auto-refresh polling
 
+**Newsletter:**
+- Resend email integration for weekly digests
+- Top posts + Learn articles condensed into email
+- Vercel Cron (Mondays 2 PM UTC)
+- Subscribe/unsubscribe toggle on profile
+
 **Security:**
 - Centralized middleware for route protection (auth + admin)
+- Dual auth: Bearer token (Unity) + cookie-based (browser)
+- CORS with allowlisted origins (plobie.vercel.app, Firebase test builds)
 - Rate limiting (Upstash Redis in production, in-memory for dev)
 - RLS policies on all database tables
 - Input validation with Zod schemas
@@ -107,6 +120,7 @@ The app uses a luxury-tier design language with these principles:
 - **Frontend:** Next.js 16 (App Router), TypeScript, Tailwind CSS v4
 - **Backend:** Supabase (Postgres, Auth, Storage)
 - **Payments:** Stripe
+- **Email:** Resend (newsletter digests)
 - **Hosting:** Vercel
 - **Analytics:** Vercel Analytics, Speed Insights, Google Analytics 4
 - **Error Tracking:** Sentry (client, server, edge)
@@ -185,7 +199,8 @@ plobie/
 │   ├── skeletons/      # Loading skeletons
 │   └── theme/          # ThemeToggle, ThemeProvider
 ├── lib/                # Shared utilities
-│   ├── supabase.ts     # Database clients
+│   ├── supabase.ts     # Database clients (cookie + Bearer token)
+│   ├── resend.ts       # Resend email client
 │   ├── rate-limit.ts   # Upstash Redis rate limiting
 │   ├── xp-engine.ts    # Gamification engine
 │   └── claim-tokens.ts # JWT for pot claims
@@ -212,13 +227,15 @@ plobie/
 
 **XP and Claims:** award XP, claim pots (+500 XP via apply_xp RPC)
 
-**Unity/Games:** sessions, progress save/load, action XP
+**Unity/Games:** sessions, progress save/load, action XP (all accept Bearer tokens)
 
-**Plantdex:** species list, details, user collection (plant, water, care, grow)
+**Plantdex:** species list, details (public, no auth)
 
-**My Plants:** garden overview
+**My Plants:** garden overview, garden-summary (lightweight for Unity scene), placement-spots (CRUD)
 
-**Newsletter:** subscribe/unsubscribe
+**Newsletter:** subscribe/unsubscribe, send-digest (cron/admin)
+
+**Admin:** users, unity-assets (list/upload streaming bundles)
 
 **Reports:** submit content reports (post, comment, profile)
 

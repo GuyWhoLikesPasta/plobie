@@ -2,16 +2,43 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
-/**
- * Centralized middleware for auth validation and route protection.
- *
- * - Refreshes auth session on every request (keeps cookies in sync)
- * - Protects /admin routes (redirects non-admin to /)
- * - Protects authenticated API routes (returns 401)
- */
+const CORS_HEADERS = {
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Authorization, Content-Type, X-Requested-With',
+  'Access-Control-Max-Age': '86400',
+};
+
+function getCorsOrigin(request: NextRequest): string {
+  const origin = request.headers.get('origin');
+  const allowed = [
+    process.env.NEXT_PUBLIC_BASE_URL,
+    'https://plobie.vercel.app',
+    'https://plobie-test-desktop.web.app',
+  ].filter(Boolean);
+
+  if (origin && allowed.includes(origin)) return origin;
+  if (origin?.endsWith('.vercel.app') || origin?.endsWith('.web.app')) return origin;
+  return '';
+}
+
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // --- CORS preflight: let OPTIONS through immediately for API routes ---
+  if (request.method === 'OPTIONS' && pathname.startsWith('/api/')) {
+    const corsOrigin = getCorsOrigin(request);
+    return new NextResponse(null, {
+      status: 204,
+      headers: {
+        ...(corsOrigin ? { 'Access-Control-Allow-Origin': corsOrigin } : {}),
+        ...CORS_HEADERS,
+      },
+    });
+  }
+
   let response = NextResponse.next({ request });
 
+  // --- Build Supabase client from cookies ---
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -29,12 +56,20 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // Refresh session - this keeps the auth cookie in sync
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // --- Resolve user: try Bearer token first, then cookies ---
+  let user = null;
+  const authHeader = request.headers.get('authorization');
 
-  const { pathname } = request.nextUrl;
+  if (authHeader?.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+    const { data } = await supabase.auth.getUser(token);
+    user = data.user;
+  }
+
+  if (!user) {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  }
 
   // --- Admin page protection ---
   if (pathname.startsWith('/admin')) {
@@ -45,7 +80,6 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    // Check admin status
     const { data: profile } = await supabase
       .from('profiles')
       .select('is_admin')
@@ -91,6 +125,15 @@ export async function middleware(request: NextRequest) {
 
     if (!profile?.is_admin) {
       return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
+    }
+  }
+
+  // --- Attach CORS headers to API responses ---
+  if (pathname.startsWith('/api/')) {
+    const corsOrigin = getCorsOrigin(request);
+    if (corsOrigin) {
+      response.headers.set('Access-Control-Allow-Origin', corsOrigin);
+      Object.entries(CORS_HEADERS).forEach(([k, v]) => response.headers.set(k, v));
     }
   }
 

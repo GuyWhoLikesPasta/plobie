@@ -1,4 +1,4 @@
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase';
+import { createSupabaseFromRequest, createAdminClient } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { DAILY_TOTAL_CAP, levelFromTotalXp } from '@/lib/xp-engine';
@@ -20,7 +20,7 @@ const AwardXPSchema = z.object({
 // =====================================
 export async function POST(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createSupabaseFromRequest(request);
     const adminSupabase = createAdminClient();
 
     // Get current user

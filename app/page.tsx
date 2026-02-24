@@ -31,11 +31,23 @@ interface Product {
   product_variants: ProductVariant[];
 }
 
+interface GardenPlant {
+  id: string;
+  nickname: string | null;
+  growth_stage: number;
+  health: number;
+  water_level: number;
+  last_watered_at: string | null;
+  plant: { name: string; key: string; category: string } | null;
+}
+
 interface DashboardData {
   profile: Profile;
   totalXp: number;
   plantCount: number;
   products: Product[];
+  gardenPlants: GardenPlant[];
+  needsWaterCount: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -219,9 +231,25 @@ function SplashPage() {
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-stone-50 dark:bg-stone-950" />
-        <div className="absolute inset-0 bg-linear-to-b from-white via-stone-50 to-white dark:from-stone-950 dark:via-stone-900/50 dark:to-stone-950" />
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-green-500/3 dark:bg-green-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-green-500/2 dark:bg-green-500/3 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+        <div className="absolute inset-0 bg-linear-to-b from-green-50/60 via-white to-white dark:from-stone-950 dark:via-stone-900/50 dark:to-stone-950" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-green-500/5 dark:bg-green-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-400/4 dark:bg-green-500/3 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+
+        {/* Decorative plant silhouettes */}
+        <div className="absolute top-12 right-8 sm:right-24 opacity-[0.06] dark:opacity-[0.08] select-none pointer-events-none">
+          <svg
+            width="320"
+            height="400"
+            viewBox="0 0 320 400"
+            fill="currentColor"
+            className="text-green-700 dark:text-green-400"
+          >
+            <ellipse cx="160" cy="200" rx="80" ry="160" />
+            <ellipse cx="100" cy="140" rx="50" ry="120" transform="rotate(-20 100 140)" />
+            <ellipse cx="220" cy="140" rx="50" ry="120" transform="rotate(20 220 140)" />
+            <rect x="155" y="300" width="10" height="100" rx="5" />
+          </svg>
+        </div>
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32 sm:pt-28 sm:pb-40">
           <div className="max-w-2xl">
@@ -370,7 +398,7 @@ function SplashPage() {
 // ---------------------------------------------------------------------------
 
 function Dashboard({ data }: { data: DashboardData }) {
-  const { profile, totalXp, plantCount, products } = data;
+  const { profile, totalXp, plantCount, products, gardenPlants, needsWaterCount } = data;
   const level = useMemo(() => levelFromTotalXp(totalXp), [totalXp]);
   const progress = useMemo(() => xpProgressInLevel(totalXp), [totalXp]);
 
@@ -416,54 +444,96 @@ function Dashboard({ data }: { data: DashboardData }) {
           </div>
         </section>
 
-        {/* 2. My Plants banner (Garden stub) */}
-        <section className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 border-t-4 border-t-green-500 rounded-2xl p-6">
-          <div className="flex items-start justify-between">
+        {/* 2. Garden Viewer */}
+        <section className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl overflow-hidden">
+          <div className="px-6 pt-6 pb-4 flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-stone-900 dark:text-white mb-1">
-                Your Garden
-              </h2>
-              <p className="text-sm text-stone-500 dark:text-stone-400">
-                You have{' '}
+              <h2 className="text-lg font-semibold text-stone-900 dark:text-white">Your Garden</h2>
+              <p className="text-sm text-stone-500 dark:text-stone-400 mt-0.5">
                 <span className="font-medium text-green-600 dark:text-green-400">{plantCount}</span>{' '}
                 {plantCount === 1 ? 'plant' : 'plants'} growing
+                {needsWaterCount > 0 && (
+                  <span className="ml-2 text-amber-600 dark:text-amber-400">
+                    &middot; {needsWaterCount} need{needsWaterCount === 1 ? 's' : ''} water
+                  </span>
+                )}
               </p>
             </div>
-            <div className="shrink-0 w-10 h-10 rounded-xl bg-green-50 dark:bg-green-950/40 flex items-center justify-center text-green-600 dark:text-green-400">
+            <Link
+              href="/my-plants"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-500 text-white text-sm font-medium rounded-xl transition-colors"
+            >
+              Open Garden
               <svg
-                className="w-5 h-5"
+                className="w-3.5 h-3.5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                strokeWidth={1.5}
+                strokeWidth={2}
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                  d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
                 />
               </svg>
-            </div>
+            </Link>
           </div>
-          <Link
-            href="/my-plants"
-            className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-500 text-white text-sm font-medium rounded-xl transition-colors"
-          >
-            View Garden
-            <svg
-              className="w-3.5 h-3.5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-              />
-            </svg>
-          </Link>
+
+          {gardenPlants.length > 0 ? (
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-px bg-stone-100 dark:bg-stone-800 border-t border-stone-100 dark:border-stone-800">
+              {gardenPlants.map(gp => {
+                const waterLow = gp.water_level < 30;
+                const healthLow = gp.health < 40;
+                return (
+                  <Link
+                    key={gp.id}
+                    href="/my-plants"
+                    className="group relative bg-white dark:bg-stone-900 p-3 flex flex-col items-center text-center hover:bg-green-50 dark:hover:bg-green-950/30 transition-colors"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-950/50 flex items-center justify-center mb-2">
+                      <span className="text-lg" role="img" aria-label="plant">
+                        {gp.growth_stage >= 4
+                          ? '\u{1F333}'
+                          : gp.growth_stage >= 2
+                            ? '\u{1F331}'
+                            : '\u{1FAB4}'}
+                      </span>
+                    </div>
+                    <span className="text-xs font-medium text-stone-700 dark:text-stone-300 truncate w-full">
+                      {gp.nickname || gp.plant?.name || 'Plant'}
+                    </span>
+                    <div className="flex items-center gap-1 mt-1">
+                      {waterLow && (
+                        <span
+                          className="w-1.5 h-1.5 rounded-full bg-blue-400"
+                          title="Needs water"
+                        />
+                      )}
+                      {healthLow && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-400" title="Low health" />
+                      )}
+                      {!waterLow && !healthLow && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-400" title="Healthy" />
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="px-6 pb-6 pt-2">
+              <p className="text-sm text-stone-400 dark:text-stone-500">
+                No plants yet.{' '}
+                <Link
+                  href="/my-plants"
+                  className="text-green-600 dark:text-green-400 hover:underline"
+                >
+                  Start your garden
+                </Link>
+              </p>
+            </div>
+          )}
         </section>
 
         {/* 3. Top Posts from Plant Hobbies */}
@@ -561,7 +631,7 @@ export default function HomePage() {
         return;
       }
 
-      const [profileRes, xpRes, plantCountRes, productsRes] = await Promise.all([
+      const [profileRes, xpRes, plantCountRes, productsRes, gardenRes] = await Promise.all([
         supabase
           .from('profiles')
           .select('username, newsletter_subscribed')
@@ -573,6 +643,15 @@ export default function HomePage() {
           .select('id', { count: 'exact', head: true })
           .eq('user_id', user.id),
         supabase.from('products').select('id, name, product_variants(price_cents)').limit(20),
+        supabase
+          .from('user_plants')
+          .select(
+            'id, nickname, growth_stage, health, water_level, last_watered_at, plant:plants(name, key, category)'
+          )
+          .eq('user_id', user.id)
+          .eq('is_dead', false)
+          .order('created_at', { ascending: false })
+          .limit(6),
       ]);
 
       if (cancelled) return;
@@ -584,11 +663,19 @@ export default function HomePage() {
 
       const totalXp: number = (xpRes.data as XpData | null)?.total_xp ?? 0;
       const plantCount: number = plantCountRes.count ?? 0;
+      const gardenPlants = (gardenRes.data ?? []) as unknown as GardenPlant[];
+
+      const now = Date.now();
+      const TWELVE_HOURS = 12 * 60 * 60 * 1000;
+      const needsWaterCount = gardenPlants.filter(p => {
+        if (!p.last_watered_at) return true;
+        return now - new Date(p.last_watered_at).getTime() > TWELVE_HOURS;
+      }).length;
 
       const allProducts = (productsRes.data ?? []) as Product[];
       const products = shuffle(allProducts).slice(0, 3);
 
-      setDashboardData({ profile, totalXp, plantCount, products });
+      setDashboardData({ profile, totalXp, plantCount, products, gardenPlants, needsWaterCount });
       setState('dashboard');
     }
 

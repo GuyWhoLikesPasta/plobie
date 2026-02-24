@@ -21,7 +21,9 @@ type GameState =
 declare global {
   interface Window {
     plobie?: {
+      ready: boolean;
       getAccessToken: () => string;
+      refreshAccessToken: () => Promise<string>;
       isLoggedIn: () => boolean;
       getUserId: () => string;
       getApiUrl: () => string;
@@ -52,19 +54,28 @@ export default function UnityEmbed({ redirectPath = '/my-plants', className }: U
 
   const setupUnityBridge = useCallback(
     (token: string, userId: string) => {
+      let currentToken = token;
       window.plobie = {
-        getAccessToken: () => token,
-        isLoggedIn: () => !!token,
+        ready: true,
+        getAccessToken: () => currentToken,
+        refreshAccessToken: async () => {
+          const { data } = await supabase.auth.getSession();
+          if (data.session?.access_token) {
+            currentToken = data.session.access_token;
+          }
+          return currentToken;
+        },
+        isLoggedIn: () => !!currentToken,
         getUserId: () => userId,
         getApiUrl: () => window.location.origin + '/api',
         log: (msg: string) => {
           if (process.env.NODE_ENV === 'development') console.log('[Unity]', msg);
         },
         redirectToLogin: () => router.push(loginUrl),
-        version: '1.0.0',
+        version: '2.0.0',
       };
     },
-    [router, loginUrl]
+    [router, loginUrl, supabase.auth]
   );
 
   useEffect(() => {

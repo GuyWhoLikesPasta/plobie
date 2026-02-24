@@ -1,6 +1,7 @@
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase';
+import { createSupabaseFromRequest, createAdminClient } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { levelFromTotalXp, DAILY_TOTAL_CAP } from '@/lib/xp-engine';
 
 // =====================================
 // USER PLANT DETAIL API
@@ -41,7 +42,7 @@ const UpdatePlantSchema = z.object({
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createSupabaseFromRequest(request);
 
     // Get current user
     const {
@@ -80,7 +81,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createSupabaseFromRequest(request);
     const adminSupabase = createAdminClient();
 
     // Get current user
@@ -270,8 +271,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       }
 
       // Award XP if applicable
+      let xpResult: Record<string, unknown> | null = null;
       if (xpAction && xpAmount > 0) {
-        await adminSupabase.rpc('apply_xp', {
+        const { data: xpData } = await adminSupabase.rpc('apply_xp', {
           p_profile_id: user.id,
           p_action_type: xpAction,
           p_xp_amount: xpAmount,
@@ -279,7 +281,20 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
           p_reference_id: id,
         });
 
-        // Update plant's earned XP
+        const xpRaw = (xpData as unknown as Record<string, unknown>[])?.[0];
+        if (xpRaw) {
+          const newTotalXp = (xpRaw.new_total_xp as number) || 0;
+          const newDailyXp = (xpRaw.new_daily_xp as number) || 0;
+          xpResult = {
+            awarded: (xpRaw.xp_awarded as number) || 0,
+            capped: xpRaw.capped || false,
+            new_total_xp: newTotalXp,
+            new_level: levelFromTotalXp(newTotalXp),
+            level_up: ((xpRaw.level_after as number) || 0) > ((xpRaw.level_before as number) || 0),
+            remaining_today: Math.max(0, DAILY_TOTAL_CAP - newDailyXp),
+          };
+        }
+
         await adminSupabase
           .from('user_plants')
           .update({ xp_earned: (currentPlant.xp_earned || 0) + xpAmount })
@@ -290,6 +305,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         success: true,
         plant: updatedPlant,
         xp_awarded: xpAmount,
+        xp_result: xpResult,
         message,
       });
     }
@@ -311,7 +327,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createSupabaseFromRequest(request);
     const adminSupabase = createAdminClient();
 
     // Get current user

@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase';
+import { createSupabaseFromRequest } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -19,9 +19,9 @@ const MAX_STATE_SIZE = 1024 * 1024; // 1 MB in bytes
 // =====================================
 // GET - Load Game State
 // =====================================
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createSupabaseFromRequest(request);
 
     // Get current user
     const {
@@ -29,10 +29,7 @@ export async function GET() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get user's game progress
@@ -69,10 +66,7 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Error in GET /api/games/progress:', error);
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -81,7 +75,7 @@ export async function GET() {
 // =====================================
 export async function POST(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createSupabaseFromRequest(request);
 
     // Get current user
     const {
@@ -89,10 +83,7 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse request body
@@ -191,19 +182,16 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error('Error in POST /api/games/progress:', error);
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
 
 // =====================================
 // DELETE - Clear Game State (optional)
 // =====================================
-export async function DELETE() {
+export async function DELETE(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createSupabaseFromRequest(request);
 
     // Get current user
     const {
@@ -211,17 +199,11 @@ export async function DELETE() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
     // Delete user's game progress
-    const { error } = await supabase
-      .from('game_progress')
-      .delete()
-      .eq('user_id', user.id);
+    const { error } = await supabase.from('game_progress').delete().eq('user_id', user.id);
 
     if (error) {
       console.error('Error deleting game progress:', error);
@@ -237,10 +219,6 @@ export async function DELETE() {
     });
   } catch (error) {
     console.error('Error in DELETE /api/games/progress:', error);
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
-
