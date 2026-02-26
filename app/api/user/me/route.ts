@@ -27,7 +27,9 @@ export async function GET(request: Request) {
     // Get user's profile (profiles.id = auth.users.id directly)
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('id, username, full_name, bio, avatar_url, is_admin, created_at')
+      .select(
+        'id, username, full_name, bio, avatar_url, is_admin, character_model_id, max_placement_spots, created_at'
+      )
       .eq('id', user.id)
       .single();
 
@@ -84,6 +86,8 @@ export async function GET(request: Request) {
         bio: profile.bio,
         avatar_url: profile.avatar_url,
         is_admin: profile.is_admin,
+        character_model_id: profile.character_model_id || null,
+        max_placement_spots: profile.max_placement_spots ?? 6,
         joined_at: profile.created_at,
       },
       xp: {

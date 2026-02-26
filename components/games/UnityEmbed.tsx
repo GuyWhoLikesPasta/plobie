@@ -4,19 +4,12 @@ import { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 
-const GAME_WIDTH = 960;
-const GAME_HEIGHT = 600;
+const GAME_WIDTH = 1280;
+const GAME_HEIGHT = 720;
 
 const UNITY_BUILD_URL = process.env.NEXT_PUBLIC_UNITY_BUILD_URL || '/unity/index.html';
 
-type GameState =
-  | 'loading'
-  | 'checking-auth'
-  | 'not-logged-in'
-  | 'mobile'
-  | 'ready'
-  | 'playing'
-  | 'error';
+type GameState = 'loading' | 'checking-auth' | 'not-logged-in' | 'mobile' | 'playing' | 'error';
 
 declare global {
   interface Window {
@@ -115,7 +108,7 @@ export default function UnityEmbed({ redirectPath = '/my-plants', className }: U
         setupUnityBridge(session.access_token, session.user.id);
 
         setError(null);
-        setGameState('ready');
+        setGameState('playing');
       } catch (err) {
         console.error('Game page error:', err);
         setError(err instanceof Error ? err.message : 'Something went wrong');
@@ -134,14 +127,6 @@ export default function UnityEmbed({ redirectPath = '/my-plants', className }: U
 
   const handleUnityLoad = () => {
     setUnityLoaded(true);
-    setGameState('playing');
-  };
-
-  const handlePlay = () => {
-    if (!UNITY_BUILD_URL) {
-      setError('Game build not available.');
-      return;
-    }
     setGameState('playing');
   };
 
@@ -319,53 +304,6 @@ export default function UnityEmbed({ redirectPath = '/my-plants', className }: U
           </div>
         );
 
-      case 'ready':
-        return (
-          <div className="flex flex-col items-center justify-center h-96 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-8 relative overflow-hidden">
-            <div className="mb-4">
-              <svg
-                className="w-20 h-20 text-green-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                />
-              </svg>
-            </div>
-            <h2 className="text-3xl font-bold tracking-tight text-stone-900 dark:text-white mb-2">
-              Your Garden Awaits
-            </h2>
-            <p className="text-stone-600 dark:text-stone-400 mb-6 text-center max-w-md">
-              Enter your virtual garden, tend to your plants, and earn XP!
-            </p>
-
-            {UNITY_BUILD_URL ? (
-              <button
-                onClick={handlePlay}
-                className="px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-xl shadow-lg transition-all transform hover:scale-105"
-              >
-                Enter Garden
-              </button>
-            ) : (
-              <div className="text-center">
-                <div className="px-8 py-4 bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300 font-semibold rounded-xl mb-3">
-                  Build Unavailable
-                </div>
-                <p className="text-stone-500 dark:text-stone-400 text-sm">
-                  Unity build not deployed
-                </p>
-              </div>
-            )}
-
-            {error && <p className="text-red-600 dark:text-red-400 mt-4 text-sm">{error}</p>}
-          </div>
-        );
-
       case 'playing':
         return (
           <div className="relative bg-black rounded-2xl overflow-hidden shadow-2xl border border-stone-200 dark:border-stone-800">
@@ -420,7 +358,7 @@ export default function UnityEmbed({ redirectPath = '/my-plants', className }: U
                     The Unity game build hasn&apos;t been deployed yet.
                   </p>
                   <button
-                    onClick={() => setGameState('ready')}
+                    onClick={() => router.push('/')}
                     className="mt-6 px-4 py-2 bg-stone-700 hover:bg-stone-600 text-white rounded-xl transition-colors text-sm"
                   >
                     <span className="inline-flex items-center gap-1">
@@ -437,7 +375,7 @@ export default function UnityEmbed({ redirectPath = '/my-plants', className }: U
                           d="M10 19l-7-7m0 0l7-7m-7 7h18"
                         />
                       </svg>
-                      Go Back
+                      Go Home
                     </span>
                   </button>
                 </div>
@@ -448,7 +386,7 @@ export default function UnityEmbed({ redirectPath = '/my-plants', className }: U
             <div className="bg-stone-900 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-4">
                 <button
-                  onClick={() => setGameState('ready')}
+                  onClick={() => router.push('/')}
                   className="px-3 py-1.5 bg-stone-700 hover:bg-stone-600 text-white text-sm rounded-xl transition-colors flex items-center gap-1"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

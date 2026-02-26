@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase';
 import LikeButton from '@/components/posts/LikeButton';
+import ShareButton from '@/components/posts/ShareButton';
 import toast from 'react-hot-toast';
 import { checkAndShowAchievements } from '@/lib/achievement-toast';
 
@@ -188,6 +189,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
             <span className="text-sm text-stone-500 dark:text-stone-400">
               {post.comments?.length || 0} comments
             </span>
+            <ShareButton postId={post.id} postTitle={post.title} />
           </div>
         </div>
 

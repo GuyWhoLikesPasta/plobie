@@ -28,6 +28,14 @@ export async function GET(request: Request) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('max_placement_spots')
+      .eq('id', user.id)
+      .single();
+
+    const maxSpots = profile?.max_placement_spots ?? DEFAULT_SLOTS;
+
     const { data: existingSpots, error } = await supabase
       .from('placement_spots')
       .select('*, user_plant:user_plants(id, nickname, plant:plants(name, key, image_url))')
@@ -40,10 +48,10 @@ export async function GET(request: Request) {
     }
 
     if (existingSpots && existingSpots.length > 0) {
-      return NextResponse.json({ success: true, spots: existingSpots });
+      return NextResponse.json({ success: true, spots: existingSpots, max_spots: maxSpots });
     }
 
-    const seeds = Array.from({ length: DEFAULT_SLOTS }, (_, i) => ({
+    const seeds = Array.from({ length: maxSpots }, (_, i) => ({
       user_id: user.id,
       slot_index: i,
       label: `Spot ${i + 1}`,
@@ -62,7 +70,7 @@ export async function GET(request: Request) {
       );
     }
 
-    return NextResponse.json({ success: true, spots: created ?? [] });
+    return NextResponse.json({ success: true, spots: created ?? [], max_spots: maxSpots });
   } catch (error) {
     console.error('Error in GET /api/user/placement-spots:', error);
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });

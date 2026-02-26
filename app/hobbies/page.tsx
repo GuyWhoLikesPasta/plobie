@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase';
 import LikeButton from '@/components/posts/LikeButton';
+import ShareButton from '@/components/posts/ShareButton';
 import toast from 'react-hot-toast';
 import { PostCardSkeleton } from '@/components/skeletons';
 import { checkAndShowAchievements } from '@/lib/achievement-toast';
@@ -430,6 +431,7 @@ export default function HobbiesPage() {
                   </svg>
                   {post.comments?.[0]?.count || 0}
                 </span>
+                <ShareButton postId={post.id} postTitle={post.title} />
               </div>
             </div>
           </div>
