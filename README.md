@@ -22,12 +22,13 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - Infinite Scroll Feed -- Hot posts block, suggested banner, sub-community highlights
 - Image Uploads -- Share photos (5MB limit)
 - Reactions -- Like posts with hearts
+- Share -- Web Share API (mobile native), clipboard copy fallback (desktop)
 - Search and Filters -- Find posts by keyword or community
 - User Profiles -- View stats, posts, and achievements
 - Learn Articles -- 24 educational guides (+10 XP per article, cap 10/day)
 
 **My Plants:**
-- Unity 3D WebGL Garden -- Embedded on My Plants tab
+- Unity 3D WebGL Garden -- Auto-loads on My Plants tab (1280x720, 16:9)
 - My Garden / Plantdex Sub-tabs -- Switch between garden view and plant encyclopedia
 - Plantdex -- 50 plant species encyclopedia with collection tracking
 - Dashboard -- Stats, XP progress, pots collection, plant cards
@@ -39,14 +40,16 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - Timed XP -- +20 XP per 30 minutes of play, page-visibility based tracking
 
 **Unity Integration:**
-- 3D WebGL Garden -- Embedded on My Plants tab (extracted `UnityEmbed` component)
+- 3D WebGL Garden -- Auto-loads on My Plants tab (no click gate), 1280x720 container
 - Auth Bridge v2 -- `window.plobie` with `ready` flag, `getAccessToken()`, `refreshAccessToken()`, `getUserId()`, `getApiUrl()`
+- Standalone Bridge (`plobie-bridge.js`) -- Self-contained auth for Firebase-hosted Unity builds with login overlay
 - Bearer Token Auth -- All API routes accept `Authorization: Bearer <token>` headers (Unity WebGL) alongside cookie-based auth (browser)
 - CORS Support -- Preflight (OPTIONS) handling for cross-origin Unity testing (Firebase, Vercel preview URLs)
+- Character Selection -- 3-4 preset models per user, stored on profile, API for get/set
 - Game Actions -- register_plant (160 XP), daily_reward (5 XP), fetch_throw (5 XP), plant_water (5 XP)
 - Session tracking, progress save/load, action-based XP
-- Garden Summary API -- Lightweight endpoint for Home tab Unity scene (plants, pots, reminders)
-- Placement Spots -- Predefined garden positions (6 default slots) for 3D scene layout
+- Garden Summary API -- Lightweight endpoint for Home tab Unity scene (plants, pots, reminders, planted_at for age)
+- Placement Spots -- Per-user garden positions (default 6, scales via max_placement_spots on profile)
 - Asset Bundle Storage -- Supabase Storage bucket for Unity streaming assets
 
 **Admin:**
@@ -231,7 +234,7 @@ plobie/
 
 **Plantdex:** species list, details (public, no auth)
 
-**My Plants:** garden overview, garden-summary (lightweight for Unity scene), placement-spots (CRUD)
+**My Plants:** garden overview, garden-summary (lightweight for Unity scene), placement-spots (CRUD), character (get/set model)
 
 **Newsletter:** subscribe/unsubscribe, send-digest (cron/admin)
 
