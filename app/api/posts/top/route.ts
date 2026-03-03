@@ -16,10 +16,15 @@ const TopPostsSchema = z.object({
   days: z.coerce.number().int().min(1).max(90).default(7),
 });
 
-function hotScore(likeCount: number, commentCount: number, createdAt: string): number {
+function hotScore(
+  likeCount: number,
+  commentCount: number,
+  createdAt: string,
+  superlikeCount: number = 0
+): number {
   const hoursSincePosted = (Date.now() - new Date(createdAt).getTime()) / (1000 * 60 * 60);
   const recencyBonus = Math.max(0, 10 - hoursSincePosted);
-  return likeCount * 2 + commentCount * 3 + recencyBonus;
+  return likeCount * 2 + superlikeCount * 5 + commentCount * 3 + recencyBonus;
 }
 
 export async function GET(
@@ -105,11 +110,19 @@ export async function GET(
     const postIds = posts.map((p: any) => p.id);
     const authorIds = [...new Set(posts.map((p: any) => p.author_id))];
 
-    // Fetch like counts (post_reactions)
+    // Fetch like counts (only 'like' type)
     const { data: reactionCounts } = await supabase
       .from('post_reactions')
       .select('post_id')
-      .in('post_id', postIds);
+      .in('post_id', postIds)
+      .eq('reaction_type', 'like');
+
+    // Fetch superlike counts
+    const { data: superlikeReactions } = await supabase
+      .from('post_reactions')
+      .select('post_id')
+      .in('post_id', postIds)
+      .eq('reaction_type', 'superlike');
 
     // Fetch comment counts
     const { data: commentCounts } = await supabase
@@ -128,6 +141,14 @@ export async function GET(
       return acc;
     }, {});
 
+    const superlikeCountMap = (superlikeReactions || []).reduce(
+      (acc: Record<string, number>, r: any) => {
+        acc[r.post_id] = (acc[r.post_id] || 0) + 1;
+        return acc;
+      },
+      {}
+    );
+
     const commentCountMap = (commentCounts || []).reduce((acc: Record<string, number>, c: any) => {
       acc[c.post_id] = (acc[c.post_id] || 0) + 1;
       return acc;
@@ -141,12 +162,14 @@ export async function GET(
     // Attach counts, profile, hot_score; sort by hot_score DESC; take top limit
     const enriched = posts.map((post: any) => {
       const likeCount = likeCountMap[post.id] || 0;
+      const superlikeCount = superlikeCountMap[post.id] || 0;
       const commentCount = commentCountMap[post.id] || 0;
-      const score = hotScore(likeCount, commentCount, post.created_at);
+      const score = hotScore(likeCount, commentCount, post.created_at, superlikeCount);
       const profile = profileMap[post.author_id] || null;
       return {
         ...post,
         like_count: likeCount,
+        superlike_count: superlikeCount,
         comment_count: commentCount,
         hot_score: Math.round(score * 100) / 100,
         profiles: profile

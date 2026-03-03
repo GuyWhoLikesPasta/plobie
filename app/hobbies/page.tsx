@@ -1,12 +1,14 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase';
 import LikeButton from '@/components/posts/LikeButton';
+import SuperlikeButton from '@/components/posts/SuperlikeButton';
 import ShareButton from '@/components/posts/ShareButton';
+import SuperlikePurchaseModal from '@/components/shared/SuperlikePurchaseModal';
 import toast from 'react-hot-toast';
 import { PostCardSkeleton } from '@/components/skeletons';
 import { checkAndShowAchievements } from '@/lib/achievement-toast';
@@ -66,9 +68,13 @@ export default function HobbiesPage() {
   const [imagePreview, setImagePreview] = useState<string>('');
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [filterLoading, setFilterLoading] = useState(false);
 
   const sentinelRef = useRef<HTMLDivElement>(null);
   const scrollRestoredRef = useRef(false);
+  const searchTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Stable random community for highlight blocks (seeded per mount)
   const highlightCommunitySeed = useRef(Math.random());
@@ -88,6 +94,28 @@ export default function HobbiesPage() {
     setIsAuthenticated(!!user);
   };
 
+  // ---------- Search Debounce ----------
+  useEffect(() => {
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    searchTimerRef.current = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+    return () => {
+      if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    };
+  }, [searchQuery]);
+
+  // ---------- Superlike Success Toast ----------
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('superlike_success') === 'true') {
+      toast.success('Superlikes purchased! You can now superlike posts.');
+      const url = new URL(window.location.href);
+      url.searchParams.delete('superlike_success');
+      window.history.replaceState({}, '', url.toString());
+    }
+  }, []);
+
   // ---------- Suggested Post ----------
   useEffect(() => {
     const fetchSuggested = async () => {
@@ -97,8 +125,8 @@ export default function HobbiesPage() {
         if (data.success && data.data.posts.length > 0) {
           setSuggestedPost(data.data.posts[0]);
         }
-      } catch {
-        // non-critical
+      } catch (err) {
+        console.error('Failed to fetch suggested post:', err);
       }
     };
     fetchSuggested();
@@ -111,6 +139,7 @@ export default function HobbiesPage() {
         setLoadingMore(true);
       } else {
         setLoading(true);
+        setFilterLoading(true);
       }
 
       try {
@@ -118,7 +147,7 @@ export default function HobbiesPage() {
         params.append('limit', String(PAGE_SIZE));
         params.append('offset', String(pageOffset));
         if (selectedGroup) params.append('hobby_group', selectedGroup);
-        if (searchQuery) params.append('search', searchQuery);
+        if (debouncedSearch) params.append('search', debouncedSearch);
         if (sortBy) params.append('sort', sortBy);
 
         const response = await fetch(`/api/posts?${params.toString()}`);
@@ -142,9 +171,10 @@ export default function HobbiesPage() {
       } finally {
         setLoading(false);
         setLoadingMore(false);
+        setFilterLoading(false);
       }
     },
-    [selectedGroup, searchQuery, sortBy]
+    [selectedGroup, debouncedSearch, sortBy]
   );
 
   // Initial fetch + filter changes
@@ -403,7 +433,7 @@ export default function HobbiesPage() {
                 {post.content}
               </p>
               {post.image_url && (
-                <div className="relative w-full h-64 mt-4">
+                <div className="relative w-full h-48 sm:h-64 mt-4">
                   <Image
                     src={post.image_url}
                     alt={post.title}
@@ -411,6 +441,10 @@ export default function HobbiesPage() {
                     className="rounded-xl object-cover"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     loading="lazy"
+                    onError={e => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
                   />
                 </div>
               )}
@@ -419,6 +453,13 @@ export default function HobbiesPage() {
                   postId={post.id}
                   initialCount={post.reactions?.[0]?.count || 0}
                   initialLiked={post.liked_by_user || false}
+                />
+                <SuperlikeButton
+                  postId={post.id}
+                  postAuthorId={post.author_id}
+                  initialCount={post.superlike_count || 0}
+                  initialSuperliked={post.superliked_by_user || false}
+                  onPurchaseNeeded={() => setShowPurchaseModal(true)}
                 />
                 <span className="flex items-center gap-1.5 text-sm text-stone-500 dark:text-stone-500">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -543,7 +584,9 @@ export default function HobbiesPage() {
         </div>
 
         {/* Hobby Group Filter */}
-        <div className="mb-8 flex flex-wrap gap-2">
+        <div
+          className={`mb-8 flex flex-wrap gap-2 ${filterLoading ? 'opacity-70 pointer-events-none' : ''}`}
+        >
           <button
             onClick={() => setSelectedGroup('')}
             className={`px-4 py-2.5 min-h-[44px] rounded-full font-medium text-sm sm:text-base transition-all border ${
@@ -749,6 +792,11 @@ export default function HobbiesPage() {
           </div>
         )}
 
+        {/* Superlike Purchase Modal */}
+        {showPurchaseModal && (
+          <SuperlikePurchaseModal onClose={() => setShowPurchaseModal(false)} />
+        )}
+
         {/* Posts Feed */}
         {loading ? (
           <div className="space-y-4">
@@ -774,16 +822,20 @@ export default function HobbiesPage() {
               </svg>
             </div>
             <h3 className="text-xl font-semibold tracking-tight text-stone-900 dark:text-white mb-2">
-              No posts yet
+              {selectedGroup || debouncedSearch
+                ? `No posts found${selectedGroup ? ` in ${selectedGroup}` : ''}${debouncedSearch ? ` matching "${debouncedSearch}"` : ''}`
+                : 'No posts yet'}
             </h3>
             <p className="text-stone-600 dark:text-stone-400 mb-6">
-              Be the first to share something with the community!
+              {selectedGroup || debouncedSearch
+                ? 'Try a different filter or be the first to post here!'
+                : 'Be the first to share something with the community!'}
             </p>
             <button
               onClick={handleCreatePost}
               className="bg-green-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-green-700 transition-all"
             >
-              Create First Post
+              {selectedGroup ? 'Create Post' : 'Create First Post'}
             </button>
           </div>
         ) : (

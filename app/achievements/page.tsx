@@ -330,7 +330,7 @@ export default function AchievementsPage() {
             </div>
             <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 text-center">
               <div className="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-500">
-                {Math.round((stats.earned / stats.total) * 100)}%
+                {stats.total > 0 ? Math.round((stats.earned / stats.total) * 100) : 0}%
               </div>
               <div className="text-sm text-stone-500 dark:text-stone-400">Complete</div>
             </div>

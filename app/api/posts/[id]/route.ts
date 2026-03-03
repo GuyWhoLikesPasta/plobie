@@ -65,27 +65,36 @@ export async function GET(
       profiles: commentProfiles.find((p: any) => p.id === comment.author_id) || null,
     }));
 
-    // Get reaction count for this post
+    // Get like count for this post (only 'like' type)
     const { count: reactionCount } = await supabase
       .from('post_reactions')
       .select('*', { count: 'exact', head: true })
-      .eq('post_id', id);
+      .eq('post_id', id)
+      .eq('reaction_type', 'like');
 
-    // Check if current user has liked the post
+    // Get superlike count
+    const { count: superlikeCount } = await supabase
+      .from('post_reactions')
+      .select('*', { count: 'exact', head: true })
+      .eq('post_id', id)
+      .eq('reaction_type', 'superlike');
+
+    // Check if current user has liked/superliked the post
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     let likedByUser = false;
+    let superlikedByUser = false;
     if (user) {
-      const { data: userReaction } = await supabase
+      const { data: userReactions } = await supabase
         .from('post_reactions')
-        .select('id')
+        .select('id, reaction_type')
         .eq('post_id', id)
-        .eq('user_id', user.id)
-        .single();
+        .eq('user_id', user.id);
 
-      likedByUser = !!userReaction;
+      likedByUser = (userReactions || []).some((r: any) => r.reaction_type === 'like');
+      superlikedByUser = (userReactions || []).some((r: any) => r.reaction_type === 'superlike');
     }
 
     // Attach to post
@@ -94,7 +103,9 @@ export async function GET(
       profiles: authorProfile,
       comments: commentsWithProfiles,
       reaction_count: reactionCount || 0,
+      superlike_count: superlikeCount || 0,
       liked_by_user: likedByUser,
+      superliked_by_user: superlikedByUser,
     };
 
     return NextResponse.json(

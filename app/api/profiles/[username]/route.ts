@@ -29,15 +29,16 @@ export async function GET(
   { params }: { params: Promise<{ username: string }> }
 ): Promise<NextResponse<ApiResponse<{ profile: any; posts: any[]; stats: any; activity: any[] }>>> {
   try {
-    const { username } = await params;
+    const { username: rawUsername } = await params;
+    const username = decodeURIComponent(rawUsername);
 
     const supabase = await createServerSupabaseClient();
 
-    // Get profile
+    // Get profile (case-insensitive lookup)
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('*')
-      .eq('username', username)
+      .ilike('username', username)
       .single();
 
     if (profileError || !profile) {
@@ -64,24 +65,57 @@ export async function GET(
     const totalXp = xpBalance?.total_xp || 0;
     const level = levelFromTotalXp(totalXp);
 
-    // Get user's posts
+    // Get user's posts (no FK joins, manual enrichment)
     const { data: posts } = await supabase
       .from('posts')
-      .select(
-        `
-        *,
-        comments(count)
-      `
-      )
+      .select('*')
       .eq('author_id', profile.id)
+      .or('hidden.is.null,hidden.eq.false')
       .order('created_at', { ascending: false })
       .limit(20);
+
+    // Enrich posts with comment counts
+    if (posts && posts.length > 0) {
+      const postIds = posts.map((p: any) => p.id);
+      const { data: commentCounts } = await supabase
+        .from('comments')
+        .select('post_id')
+        .in('post_id', postIds);
+
+      const commentCountMap = (commentCounts || []).reduce(
+        (acc: Record<string, number>, c: any) => {
+          acc[c.post_id] = (acc[c.post_id] || 0) + 1;
+          return acc;
+        },
+        {}
+      );
+
+      const { data: reactionCounts } = await supabase
+        .from('post_reactions')
+        .select('post_id')
+        .in('post_id', postIds)
+        .eq('reaction_type', 'like');
+
+      const reactionCountMap = (reactionCounts || []).reduce(
+        (acc: Record<string, number>, r: any) => {
+          acc[r.post_id] = (acc[r.post_id] || 0) + 1;
+          return acc;
+        },
+        {}
+      );
+
+      posts.forEach((post: any) => {
+        post.comments = [{ count: commentCountMap[post.id] || 0 }];
+        post.reactions = [{ count: reactionCountMap[post.id] || 0 }];
+      });
+    }
 
     // Get stats
     const { count: postCount } = await supabase
       .from('posts')
       .select('*', { count: 'exact', head: true })
-      .eq('author_id', profile.id);
+      .eq('author_id', profile.id)
+      .or('hidden.is.null,hidden.eq.false');
 
     const { count: commentCount } = await supabase
       .from('comments')

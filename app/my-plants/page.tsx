@@ -96,9 +96,9 @@ function MyPlantsContent() {
       const response = await fetch('/api/my-plants');
       const data = await response.json();
 
-      if (data.success) {
-        setPots(data.data.pots);
-        setStats(data.data.stats);
+      if (data.success && data.data) {
+        setPots(data.data.pots || []);
+        setStats(data.data.stats || null);
       }
 
       const plantsResponse = await fetch('/api/user/plants');
@@ -261,17 +261,17 @@ function MyPlantsContent() {
                   <div className="bg-white dark:bg-stone-900 rounded-xl shadow-lg p-6 mb-8 border border-stone-200 dark:border-stone-800">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-lg font-semibold text-stone-900 dark:text-white tracking-tight">
-                        Level {stats.level} Progress
+                        Level {stats.level ?? 1} Progress
                       </h3>
                       <span className="text-sm text-stone-600 dark:text-stone-400">
-                        {stats.xpProgress} / {stats.xpNeeded} XP
+                        {stats.xpProgress ?? 0} / {stats.xpNeeded ?? 150} XP
                       </span>
                     </div>
                     <div className="w-full bg-stone-200 dark:bg-stone-700 rounded-xl h-3 overflow-hidden">
                       <div
                         className="bg-green-500 h-3 rounded-xl transition-all duration-500"
                         style={{
-                          width: `${stats.xpNeeded > 0 ? (stats.xpProgress / stats.xpNeeded) * 100 : 0}%`,
+                          width: `${(stats.xpNeeded ?? 0) > 0 ? Math.min(100, ((stats.xpProgress ?? 0) / (stats.xpNeeded ?? 150)) * 100) : 0}%`,
                         }}
                       ></div>
                     </div>
@@ -342,14 +342,14 @@ function MyPlantsContent() {
                             <div className="flex items-center justify-between text-xs text-stone-600 dark:text-stone-400 mb-1">
                               <span>Growth</span>
                               <span>
-                                {userPlant.growth_stage}/{userPlant.plant?.growth_stages || 5}
+                                {userPlant.growth_stage || 0}/{userPlant.plant?.growth_stages || 5}
                               </span>
                             </div>
                             <div className="w-full bg-stone-200 dark:bg-stone-700 rounded-xl h-2 overflow-hidden">
                               <div
                                 className="bg-green-500 h-2 rounded-xl transition-all"
                                 style={{
-                                  width: `${(userPlant.growth_stage / (userPlant.plant?.growth_stages || 5)) * 100}%`,
+                                  width: `${Math.min(100, ((userPlant.growth_stage || 0) / Math.max(1, userPlant.plant?.growth_stages || 5)) * 100)}%`,
                                 }}
                               />
                             </div>
@@ -360,36 +360,36 @@ function MyPlantsContent() {
                             <div className="flex-1">
                               <div className="flex items-center justify-between text-xs text-stone-600 dark:text-stone-400 mb-1">
                                 <span>Health</span>
-                                <span>{userPlant.health}%</span>
+                                <span>{userPlant.health ?? 0}%</span>
                               </div>
                               <div className="w-full bg-stone-200 dark:bg-stone-700 rounded-xl h-2 overflow-hidden">
                                 <div
                                   className={`h-2 rounded-xl transition-all ${
-                                    userPlant.health > 60
+                                    (userPlant.health ?? 0) > 60
                                       ? 'bg-green-500'
-                                      : userPlant.health > 30
+                                      : (userPlant.health ?? 0) > 30
                                         ? 'bg-green-400'
                                         : 'bg-stone-500'
                                   }`}
-                                  style={{ width: `${userPlant.health}%` }}
+                                  style={{ width: `${userPlant.health ?? 0}%` }}
                                 />
                               </div>
                             </div>
                             <div className="flex-1">
                               <div className="flex items-center justify-between text-xs text-stone-600 dark:text-stone-400 mb-1">
                                 <span>Water</span>
-                                <span>{userPlant.water_level}%</span>
+                                <span>{userPlant.water_level ?? 0}%</span>
                               </div>
                               <div className="w-full bg-stone-200 dark:bg-stone-700 rounded-xl h-2 overflow-hidden">
                                 <div
                                   className={`h-2 rounded-xl transition-all ${
-                                    userPlant.water_level > 60
+                                    (userPlant.water_level ?? 0) > 60
                                       ? 'bg-green-500'
-                                      : userPlant.water_level > 30
+                                      : (userPlant.water_level ?? 0) > 30
                                         ? 'bg-green-400'
                                         : 'bg-stone-500'
                                   }`}
-                                  style={{ width: `${userPlant.water_level}%` }}
+                                  style={{ width: `${userPlant.water_level ?? 0}%` }}
                                 />
                               </div>
                             </div>

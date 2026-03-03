@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { trackEvent } from '@/lib/analytics';
+import { createClient } from '@/lib/supabase';
 
 interface Variant {
   id: string;
@@ -24,7 +25,33 @@ export default function AddToCartButton({
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [giftCardBalance, setGiftCardBalance] = useState(0);
+  const [applyGiftCard, setApplyGiftCard] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchGiftCardBalance = async () => {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+
+      try {
+        const res = await fetch('/api/gift-cards');
+        const data = await res.json();
+        if (data.success) {
+          const totalBalance = (data.data.gift_cards || [])
+            .filter((gc: any) => gc.redeemed_by === user.id && gc.status === 'active')
+            .reduce((sum: number, gc: any) => sum + (gc.current_balance_cents || 0), 0);
+          setGiftCardBalance(totalBalance);
+        }
+      } catch {
+        // Ignore — gift card balance is optional
+      }
+    };
+    fetchGiftCardBalance();
+  }, []);
 
   const selectedVariant = variants.find(v => v.id === selectedVariantId);
   const isInStock = selectedVariant && selectedVariant.stock_qty > 0;
@@ -45,12 +72,16 @@ export default function AddToCartButton({
         body: JSON.stringify({
           variant_ids: [selectedVariantId],
           quantities: [quantity],
+          apply_gift_card: applyGiftCard || undefined,
         }),
       });
 
       const result = await response.json();
 
-      if (result.success && result.data.url) {
+      if (result.success && result.data.paid_with_gift_card) {
+        router.push(`/shop/success?order_id=${result.data.order_id}&gift_card=true`);
+        return;
+      } else if (result.success && result.data.url) {
         window.location.href = result.data.url;
       } else {
         if (result.error?.code === 'UNAUTHORIZED') {
@@ -137,13 +168,45 @@ export default function AddToCartButton({
 
       {/* Total Price */}
       {selectedVariant && isInStock && (
-        <div className="bg-stone-50 dark:bg-stone-800 rounded-xl p-4">
+        <div className="bg-stone-50 dark:bg-stone-800 rounded-xl p-4 space-y-2">
           <div className="flex items-center justify-between text-lg">
             <span className="font-medium text-stone-600 dark:text-stone-400">Total</span>
             <span className="font-bold text-stone-900 dark:text-white">
               ${((selectedVariant.price_cents * quantity) / 100).toFixed(2)}
             </span>
           </div>
+          {giftCardBalance > 0 && (
+            <>
+              <div className="flex items-center justify-between pt-2 border-t border-stone-200 dark:border-stone-700">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={applyGiftCard}
+                    onChange={e => setApplyGiftCard(e.target.checked)}
+                    className="rounded border-stone-300 text-green-600 focus:ring-green-500"
+                    disabled={loading}
+                  />
+                  <span className="text-sm text-stone-600 dark:text-stone-400">
+                    Apply Gift Card Balance
+                  </span>
+                </label>
+                <span className="text-sm font-medium text-green-600 dark:text-green-400">
+                  ${(giftCardBalance / 100).toFixed(2)}
+                </span>
+              </div>
+              {applyGiftCard && (
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-green-600 dark:text-green-400">You pay</span>
+                  <span className="font-bold text-green-700 dark:text-green-300">
+                    $
+                    {(
+                      Math.max(0, selectedVariant.price_cents * quantity - giftCardBalance) / 100
+                    ).toFixed(2)}
+                  </span>
+                </div>
+              )}
+            </>
+          )}
         </div>
       )}
 

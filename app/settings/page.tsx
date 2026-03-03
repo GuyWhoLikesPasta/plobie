@@ -39,6 +39,12 @@ export default function SettingsPage() {
   const [xpNotifications, setXpNotifications] = useState(true);
   const [communityNotifications, setCommunityNotifications] = useState(true);
 
+  // Account deletion
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [deleteChecked, setDeleteChecked] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
   const router = useRouter();
   const supabase = createClient();
 
@@ -61,6 +67,14 @@ export default function SettingsPage() {
       setDisplayName(prof.display_name || '');
       setBio(prof.bio || '');
       setUsername(prof.username || '');
+
+      // Load notification preferences
+      const prefs = (prof as any).notification_prefs;
+      if (prefs) {
+        setXpNotifications(prefs.xp !== false);
+        setCommunityNotifications(prefs.community !== false);
+        setEmailNotifications(prefs.email !== false);
+      }
     }
 
     setLoading(false);
@@ -160,6 +174,38 @@ export default function SettingsPage() {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     router.push('/');
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== 'DELETE' || !deleteChecked) return;
+    setDeleting(true);
+
+    try {
+      const res = await fetch('/api/user/account', { method: 'DELETE' });
+      const data = await res.json();
+
+      if (!data.success) {
+        showMessage('error', data.error?.message || 'Failed to delete account');
+        setDeleting(false);
+        return;
+      }
+
+      await supabase.auth.signOut();
+      router.push('/?deleted=true');
+    } catch {
+      showMessage('error', 'Failed to delete account');
+      setDeleting(false);
+    }
+  };
+
+  const saveNotificationPrefs = async (key: string, value: boolean) => {
+    if (!user) return;
+    const prefs = {
+      xp: key === 'xp' ? value : xpNotifications,
+      community: key === 'community' ? value : communityNotifications,
+      email: key === 'email' ? value : emailNotifications,
+    };
+    await supabase.from('profiles').update({ notification_prefs: prefs }).eq('id', user.id);
   };
 
   if (loading) {
@@ -366,16 +412,94 @@ export default function SettingsPage() {
               <h2 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">
                 Danger Zone
               </h2>
-              <p className="text-sm text-stone-600 dark:text-stone-400 mb-4">
-                Sign out of your account on this device.
-              </p>
-              <button
-                onClick={handleSignOut}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-xl transition-colors"
-              >
-                Sign Out
-              </button>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-stone-600 dark:text-stone-400 mb-2">
+                    Sign out of your account on this device.
+                  </p>
+                  <button
+                    onClick={handleSignOut}
+                    className="px-4 py-2 bg-stone-600 hover:bg-stone-700 text-white text-sm font-medium rounded-xl transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+                <div className="border-t border-red-100 dark:border-red-900/30 pt-4">
+                  <p className="text-sm text-stone-600 dark:text-stone-400 mb-2">
+                    Permanently delete your account and all associated data. This action cannot be
+                    undone.
+                  </p>
+                  <button
+                    onClick={() => setShowDeleteModal(true)}
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-xl transition-colors"
+                  >
+                    Delete Account
+                  </button>
+                </div>
+              </div>
             </div>
+
+            {/* Delete Account Modal */}
+            {showDeleteModal && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+                <div className="bg-white dark:bg-stone-900 rounded-2xl p-6 max-w-md w-full shadow-xl border border-stone-200 dark:border-stone-700">
+                  <h3 className="text-lg font-bold text-red-600 dark:text-red-400 mb-2">
+                    Delete Your Account
+                  </h3>
+                  <p className="text-sm text-stone-600 dark:text-stone-400 mb-4">
+                    This will permanently delete your account including all posts, comments, plants,
+                    achievements, and XP. This cannot be reversed.
+                  </p>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
+                        Type <span className="font-mono font-bold">DELETE</span> to confirm
+                      </label>
+                      <input
+                        type="text"
+                        value={deleteConfirmText}
+                        onChange={e => setDeleteConfirmText(e.target.value)}
+                        placeholder="DELETE"
+                        className="w-full px-3 py-2 border border-stone-300 dark:border-stone-700 rounded-xl bg-white dark:bg-stone-900 text-stone-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      />
+                    </div>
+
+                    <label className="flex items-start gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={deleteChecked}
+                        onChange={e => setDeleteChecked(e.target.checked)}
+                        className="mt-0.5 rounded border-stone-300 text-red-600 focus:ring-red-500"
+                      />
+                      <span className="text-sm text-stone-600 dark:text-stone-400">
+                        I understand this action is permanent and all my data will be lost.
+                      </span>
+                    </label>
+                  </div>
+
+                  <div className="flex gap-3 mt-6">
+                    <button
+                      onClick={() => {
+                        setShowDeleteModal(false);
+                        setDeleteConfirmText('');
+                        setDeleteChecked(false);
+                      }}
+                      className="flex-1 px-4 py-2.5 border border-stone-300 dark:border-stone-600 text-stone-700 dark:text-stone-300 rounded-xl text-sm font-medium hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleDeleteAccount}
+                      disabled={deleteConfirmText !== 'DELETE' || !deleteChecked || deleting}
+                      className="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl text-sm font-medium transition-colors"
+                    >
+                      {deleting ? 'Deleting...' : 'Delete Forever'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -435,18 +559,21 @@ export default function SettingsPage() {
             <div className="space-y-4">
               {[
                 {
+                  key: 'xp',
                   label: 'XP & Achievements',
                   desc: 'Level ups, achievement unlocks, and XP milestones',
                   value: xpNotifications,
                   setter: setXpNotifications,
                 },
                 {
+                  key: 'community',
                   label: 'Community',
                   desc: 'Likes, comments, and replies on your posts',
                   value: communityNotifications,
                   setter: setCommunityNotifications,
                 },
                 {
+                  key: 'email',
                   label: 'Email Digest',
                   desc: 'Weekly summary of your garden activity',
                   value: emailNotifications,
@@ -464,7 +591,11 @@ export default function SettingsPage() {
                     <p className="text-xs text-stone-500 dark:text-stone-400">{item.desc}</p>
                   </div>
                   <button
-                    onClick={() => item.setter(!item.value)}
+                    onClick={() => {
+                      const newVal = !item.value;
+                      item.setter(newVal);
+                      saveNotificationPrefs(item.key, newVal);
+                    }}
                     className={`relative w-11 h-6 rounded-full transition-colors ${
                       item.value ? 'bg-green-600' : 'bg-stone-300 dark:bg-stone-600'
                     }`}
@@ -479,8 +610,7 @@ export default function SettingsPage() {
               ))}
             </div>
             <p className="text-xs text-stone-400 mt-4">
-              Notification preferences are saved locally. Email notifications require email
-              verification.
+              Preferences are saved automatically. Email notifications require email verification.
             </p>
           </div>
         )}

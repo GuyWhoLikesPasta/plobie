@@ -137,11 +137,12 @@ export async function POST(
       }
     }
 
-    // Get updated reaction count
+    // Get updated like count (only likes, not superlikes)
     const { count } = await adminSupabase
       .from('post_reactions')
       .select('*', { count: 'exact', head: true })
-      .eq('post_id', postId);
+      .eq('post_id', postId)
+      .eq('reaction_type', 'like');
 
     return NextResponse.json(
       {
@@ -195,13 +196,14 @@ export async function DELETE(
       );
     }
 
-    // Remove reaction
+    // Remove like reaction only
     const adminSupabase = createAdminClient();
     const { error: deleteError } = await adminSupabase
       .from('post_reactions')
       .delete()
       .eq('user_id', user.id)
-      .eq('post_id', postId);
+      .eq('post_id', postId)
+      .eq('reaction_type', 'like');
 
     if (deleteError) {
       console.error('Reaction deletion error:', deleteError);
@@ -217,11 +219,12 @@ export async function DELETE(
       );
     }
 
-    // Get updated reaction count
+    // Get updated like count
     const { count } = await adminSupabase
       .from('post_reactions')
       .select('*', { count: 'exact', head: true })
-      .eq('post_id', postId);
+      .eq('post_id', postId)
+      .eq('reaction_type', 'like');
 
     return NextResponse.json(
       {

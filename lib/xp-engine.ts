@@ -57,6 +57,10 @@ export const XP_RULES = {
   taxonomy_collector: { base: 1000, dailyCap: null, cooldown: 'once' },
   biome_collector: { base: 1000, dailyCap: null, cooldown: 'once' },
 
+  // Superlikes
+  superlike_sent: { base: 2, dailyCap: 20, cooldown: null },
+  superlike_received: { base: 5, dailyCap: 50, cooldown: null },
+
   // Admin
   admin_adjust: { base: null, dailyCap: null, cooldown: null },
 

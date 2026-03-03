@@ -192,14 +192,28 @@ export async function POST() {
 
     if (rpcError) {
       console.error('Check achievements RPC error:', rpcError);
-      return NextResponse.json(
-        { success: false, error: 'Failed to check achievements' },
-        { status: 500 }
-      );
+      // Fallback: if RPC doesn't exist or fails, return empty result
+      return NextResponse.json({
+        success: true,
+        data: {
+          newly_earned: [],
+          total_xp_bonus: 0,
+        },
+      });
     }
 
-    // Get details of newly earned achievements
-    const newlyEarnedIds = (result as { newly_earned: string[] }[])?.[0]?.newly_earned || [];
+    // Handle various possible result shapes from the RPC
+    let newlyEarnedIds: string[] = [];
+    let totalXpBonus = 0;
+
+    if (Array.isArray(result) && result.length > 0) {
+      newlyEarnedIds = result[0]?.newly_earned || [];
+      totalXpBonus = result[0]?.total_xp_bonus || 0;
+    } else if (result && typeof result === 'object' && !Array.isArray(result)) {
+      newlyEarnedIds = (result as any).newly_earned || [];
+      totalXpBonus = (result as any).total_xp_bonus || 0;
+    }
+
     let newAchievements: {
       id: string;
       name: string;
@@ -221,7 +235,7 @@ export async function POST() {
       success: true,
       data: {
         newly_earned: newAchievements,
-        total_xp_bonus: (result as { total_xp_bonus: number }[])?.[0]?.total_xp_bonus || 0,
+        total_xp_bonus: totalXpBonus,
       },
     });
   } catch (error) {

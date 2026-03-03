@@ -6,4 +6,4 @@ export function getResendClient() {
   return new Resend(key);
 }
 
-export const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Plobie <hello@plobie.com>';
+export const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Plobie <onboarding@resend.dev>';

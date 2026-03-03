@@ -173,12 +173,16 @@ export type XPActionType =
   | 'biome_collector' // 1000 XP - Collect all biomes
   // Legacy/Admin
   | 'pot_link' // 500 XP - Legacy pot linking
+  // Superlikes
+  | 'superlike_sent' // 2 XP - Send a superlike
+  | 'superlike_received' // 5 XP - Receive a superlike
   | 'admin_adjust'; // Variable - Admin XP adjustment
 
 // Zod Validators
 export const CreateCheckoutSchema = z.object({
   variant_ids: z.array(z.string().uuid()).min(1).max(20),
   quantities: z.array(z.number().int().positive()).min(1).max(20),
+  apply_gift_card: z.boolean().optional(),
 });
 
 export const ClaimTokenRequestSchema = z.object({
@@ -244,4 +248,6 @@ export const ErrorCodes = {
   INVALID_CLAIM_TOKEN: 'INVALID_CLAIM_TOKEN',
   INVALID_TOKEN: 'INVALID_TOKEN',
   XP_DAILY_CAP_REACHED: 'XP_DAILY_CAP_REACHED',
+  INSUFFICIENT_BALANCE: 'INSUFFICIENT_BALANCE',
+  SELF_ACTION: 'SELF_ACTION',
 } as const;

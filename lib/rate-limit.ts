@@ -116,6 +116,13 @@ export const RateLimits = {
   /** Gift card purchase: 5 purchases per hour per user */
   giftCardPurchase: (userId: string) => checkLimit(`gift-card:${userId}`, 5, 60 * 60 * 1000),
 
+  /** Superlike purchase: 5 purchases per hour per user */
+  superlikePurchase: (userId: string) =>
+    checkLimit(`superlike-purchase:${userId}`, 5, 60 * 60 * 1000),
+
+  /** Superlike send: 20 sends per hour per user */
+  superlikeSend: (userId: string) => checkLimit(`superlike-send:${userId}`, 20, 60 * 60 * 1000),
+
   /** Generic rate limit check */
   check: (key: string, limit: number, windowMs: number) => checkLimit(key, limit, windowMs),
 

@@ -124,22 +124,36 @@ export async function GET(
         .select('post_id')
         .in('post_id', postIds);
 
-      // Get reaction counts
+      // Get like counts (only count 'like' type, not 'superlike')
       const { data: reactionCounts } = await supabase
         .from('post_reactions')
         .select('post_id')
-        .in('post_id', postIds);
+        .in('post_id', postIds)
+        .eq('reaction_type', 'like');
+
+      // Get superlike counts
+      const { data: superlikeCounts } = await supabase
+        .from('post_reactions')
+        .select('post_id')
+        .in('post_id', postIds)
+        .eq('reaction_type', 'superlike');
 
       // Get user's likes (if logged in)
       let userLikes: string[] = [];
+      let userSuperlikes: string[] = [];
       if (user) {
         const { data: userReactions } = await supabase
           .from('post_reactions')
-          .select('post_id')
+          .select('post_id, reaction_type')
           .eq('user_id', user.id)
           .in('post_id', postIds);
 
-        userLikes = (userReactions || []).map((r: any) => r.post_id);
+        userLikes = (userReactions || [])
+          .filter((r: any) => r.reaction_type === 'like')
+          .map((r: any) => r.post_id);
+        userSuperlikes = (userReactions || [])
+          .filter((r: any) => r.reaction_type === 'superlike')
+          .map((r: any) => r.post_id);
       }
 
       // Map counts
@@ -153,12 +167,19 @@ export async function GET(
         return acc;
       }, {});
 
+      const superlikeCountMap = (superlikeCounts || []).reduce((acc: any, r: any) => {
+        acc[r.post_id] = (acc[r.post_id] || 0) + 1;
+        return acc;
+      }, {});
+
       // Attach profiles and counts to posts
       posts.forEach((post: any) => {
         post.profiles = profiles?.find((p: any) => p.id === post.author_id) || null;
         post.comments = [{ count: commentCountMap[post.id] || 0 }];
         post.reactions = [{ count: reactionCountMap[post.id] || 0 }];
+        post.superlike_count = superlikeCountMap[post.id] || 0;
         post.liked_by_user = userLikes.includes(post.id);
+        post.superliked_by_user = userSuperlikes.includes(post.id);
       });
     }
 
