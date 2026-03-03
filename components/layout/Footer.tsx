@@ -72,15 +72,10 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-10 pt-6 border-t border-stone-200 dark:border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-stone-400 dark:text-stone-500">
+        <div className="mt-10 pt-6 border-t border-stone-200 dark:border-stone-800">
+          <p className="text-xs text-stone-400 dark:text-stone-500 text-center sm:text-left">
             &copy; {new Date().getFullYear()} Plobie. All rights reserved.
           </p>
-          <div className="flex items-center gap-4 text-xs text-stone-400 dark:text-stone-500">
-            <span>Built with Next.js</span>
-            <span className="w-1 h-1 rounded-full bg-stone-400 dark:bg-stone-600" />
-            <span>Powered by Vercel</span>
-          </div>
         </div>
       </div>
     </footer>
