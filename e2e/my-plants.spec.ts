@@ -1,11 +1,12 @@
 import { test, expect } from '@playwright/test';
+import { TEST_USER } from './helpers/auth';
 
 test.describe('My Plants Page', () => {
   test.beforeEach(async ({ page }) => {
     // Login first
     await page.goto('/login');
-    await page.fill('input[type="email"]', 'test@example.com');
-    await page.fill('input[type="password"]', 'testpassword123');
+    await page.fill('input[type="email"]', TEST_USER.email);
+    await page.fill('input[type="password"]', TEST_USER.password);
     await page.click('button[type="submit"]');
     await page.waitForURL('/');
   });
@@ -19,7 +20,7 @@ test.describe('My Plants Page', () => {
 
   test('should display user stats', async ({ page }) => {
     await page.goto('/my-plants');
-    
+
     // Check for stat cards
     await expect(page.locator('text=Pots Claimed')).toBeVisible();
     await expect(page.locator('text=Level')).toBeVisible();
@@ -29,7 +30,7 @@ test.describe('My Plants Page', () => {
 
   test('should display XP progress bar', async ({ page }) => {
     await page.goto('/my-plants');
-    
+
     // Check for level progress
     await expect(page.locator('text=Level 1 Progress')).toBeVisible();
     await expect(page.locator('text=XP')).toBeVisible();
@@ -37,27 +38,27 @@ test.describe('My Plants Page', () => {
 
   test('should display empty collection state', async ({ page }) => {
     await page.goto('/my-plants');
-    
+
     // Check for collection section
     await expect(page.locator('text=Your Digital Garden')).toBeVisible();
-    
+
     // Check for empty state or collection
     const emptyState = page.locator('text=Claim your first plant');
     const collection = page.locator('[alt*="pot"]');
-    
+
     const hasEmptyState = await emptyState.isVisible();
-    const hasCollection = await collection.count() > 0;
-    
+    const hasCollection = (await collection.count()) > 0;
+
     expect(hasEmptyState || hasCollection).toBe(true);
   });
 
   test('should have call-to-action buttons', async ({ page }) => {
     await page.goto('/my-plants');
-    
+
     // Check for CTA buttons
     const exploreButton = page.locator('a:has-text("Explore Hobbies")');
     const shopButton = page.locator('a:has-text("Browse Shop")');
-    
+
     if (await exploreButton.isVisible()) {
       await expect(exploreButton).toBeVisible();
     }
@@ -69,10 +70,9 @@ test.describe('My Plants Page', () => {
   test('should be mobile responsive', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto('/my-plants');
-    
+
     // Check elements adapt to mobile
     await expect(page.locator('h1')).toBeVisible();
     await expect(page.locator('text=Pots Claimed')).toBeVisible();
   });
 });
-

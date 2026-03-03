@@ -168,15 +168,14 @@ test.describe('XP System', () => {
     expect(earnedXP).toBeGreaterThanOrEqual(4); // Should have at least 4 XP
   });
 
-  test.skip('should award 1 XP for reading a learn article', async ({ page }) => {
-    // TODO: Enable when /learn page is implemented
+  test('should award 1 XP for reading a learn article', async ({ page }) => {
     // Navigate to learn page
-    await page.goto('/learn');
+    await page.goto('/hobbies/learn');
     await expect(page.locator('h1, h2')).toContainText(/learn|articles/i);
     await page.waitForTimeout(1000);
 
     // Find and click on the first article
-    const articleLink = page.locator('a[href^="/learn/"]').first();
+    const articleLink = page.locator('a[href^="/hobbies/learn/"]').first();
     const hasArticles = (await articleLink.count()) > 0;
 
     if (!hasArticles) {
