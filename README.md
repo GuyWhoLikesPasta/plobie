@@ -11,7 +11,8 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 **Core Systems:**
 - Authentication -- Email, OAuth (Google, Apple), Password Reset
 - Shop -- E-commerce with Stripe integration
-- Gift Cards -- Special offers ($20 to $45 value, 125% bonus)
+- Gift Cards -- Special offers ($20 to $45 value, 125% bonus), balance usable at checkout (full or partial payment)
+- Order History -- View past purchases with status tracking
 - QR Claiming -- Link physical pots (+500 XP per pot)
 - XP System -- Tiered leveling (250 levels, 3-tier formula), 25+ action types, 3000 XP daily cap, level-up notifications
 
@@ -22,6 +23,8 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - Infinite Scroll Feed -- Hot posts block, suggested banner, sub-community highlights
 - Image Uploads -- Share photos (5MB limit)
 - Reactions -- Like posts with hearts
+- Superlikes -- Premium reactions ($7.25/5-pack via Stripe), creators earn $0.85 per superlike
+- Comment Edit/Delete -- Authors can edit, owners and admins can delete
 - Share -- Web Share API (mobile native), clipboard copy fallback (desktop)
 - Search and Filters -- Find posts by keyword or community
 - User Profiles -- View stats, posts, and achievements
@@ -52,6 +55,10 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 - Placement Spots -- Per-user garden positions (default 6, scales via max_placement_spots on profile)
 - Asset Bundle Storage -- Supabase Storage bucket for Unity streaming assets
 
+**Account Management:**
+- Email Verification Banner -- Dismissible prompt for unverified users with resend capability
+- Account Self-Deletion -- Full cascade delete with confirmation (type DELETE + checkbox)
+
 **Admin:**
 - User Management -- Promote admins, view user stats
 - Content Moderation -- Delete/hide posts and comments
@@ -60,9 +67,10 @@ A plant-centered social commerce platform connecting real-world pottery, digital
 
 **Notifications:**
 - Real-time bell icon with unread badge
-- Types: comments, likes, level-ups, XP caps, achievements
+- Types: comments, likes, superlikes, level-ups, XP caps, achievements
 - Full notifications page with history, filters, management
 - 30-second auto-refresh polling
+- Notification preferences persistence (saved to profile, survives logout)
 
 **Newsletter:**
 - Resend email integration for weekly digests
@@ -183,7 +191,7 @@ npm run seed            # Seed development data
 ```
 plobie/
 ├── app/                 # Next.js app directory
-│   ├── api/            # API routes (25+ endpoints)
+│   ├── api/            # API routes (35+ endpoints)
 │   ├── (auth)/         # Login, signup, password reset
 │   ├── hobbies/        # Plant Hobbies feed + learn articles
 │   ├── gameplay/       # Game Play arcade (Famobi iframes)
@@ -196,9 +204,9 @@ plobie/
 │   ├── notifications/  # NotificationBell
 │   ├── onboarding/     # WelcomeModal
 │   ├── plantdex/       # PlantdexView
-│   ├── posts/          # LikeButton
-│   ├── shared/         # TopPostsBanner, PromoRotator, LoginPromptBanner, NewsletterSection, CommunityFollowButton
-│   ├── shop/           # AddToCartButton
+│   ├── posts/          # LikeButton, SuperlikeButton
+│   ├── shared/         # TopPostsBanner, PromoRotator, LoginPromptBanner, NewsletterSection, CommunityFollowButton, SuperlikePurchaseModal, VerificationBanner
+│   ├── shop/           # AddToCartButton (with gift card balance integration)
 │   ├── skeletons/      # Loading skeletons
 │   └── theme/          # ThemeToggle, ThemeProvider
 ├── lib/                # Shared utilities
@@ -206,6 +214,7 @@ plobie/
 │   ├── resend.ts       # Resend email client
 │   ├── rate-limit.ts   # Upstash Redis rate limiting
 │   ├── xp-engine.ts    # Gamification engine
+│   ├── superlike.ts    # Superlike config (pack size, pricing, creator earnings)
 │   └── claim-tokens.ts # JWT for pot claims
 ├── middleware.ts        # Centralized auth protection
 ├── supabase/
@@ -218,13 +227,15 @@ plobie/
 
 **System:** healthz, flags
 
-**Community:** posts (CRUD), comments, likes, profiles, avatar upload, top posts (hot-score ranked)
+**Community:** posts (CRUD), comments (CRUD), likes, superlikes, profiles, avatar upload, top posts (hot-score ranked with superlike weighting)
 
 **Communities:** follow, unfollow, list followed communities
 
 **Notifications:** fetch, mark read, delete, create
 
-**Shop:** checkout (Stripe), webhooks, gift cards (purchase, redeem)
+**Shop:** checkout (Stripe, with gift card balance support), webhooks, gift cards (purchase, redeem), orders (history)
+
+**Superlikes:** purchase packs (Stripe Checkout), send superlikes, balance check, creator earnings tracking
 
 **Learn:** articles (list, detail), mark-read (+10 XP)
 
@@ -241,6 +252,10 @@ plobie/
 **Admin:** users, unity-assets (list/upload streaming bundles)
 
 **Reports:** submit content reports (post, comment, profile)
+
+**Auth:** resend email verification
+
+**Account:** self-deletion (cascade delete all user data)
 
 ## Contributing
 
